@@ -1,0 +1,18 @@
+﻿namespace Test {
+	public sealed class Versuch {
+		public void X() {
+			bool b;
+			b = true;
+			X(b == false);
+		}
+
+		private void Y(bool boolean) {
+			while (boolean == true) {
+				boolean = false;
+			}
+
+			int x = 4;
+			bool k = x < 12;
+		}
+	}
+}
