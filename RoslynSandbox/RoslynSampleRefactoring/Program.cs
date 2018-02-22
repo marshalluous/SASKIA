@@ -14,26 +14,38 @@ namespace RoslynSampleRefactoring
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return $"{assemblyPath}\\..\\..\\source.txt";
         }
-        
-        private static void FindBooleanComparePattern(SyntaxNode syntaxNode, int level)
-        {
-            //Console.Write(new string(' ', level));
-            //Console.WriteLine(syntaxNode.GetType().Name);
 
+        private static bool IsBooleanTree(SyntaxNode syntaxNode, Compilation compilation)
+        {
+            var semanticModel = compilation.GetSemanticModel(syntaxNode.SyntaxTree);
+            var treeType = semanticModel.GetTypeInfo(syntaxNode).Type;
+            return treeType.IsValueType && treeType.Name == "Boolean";
+        }
+        
+        private static void FindBooleanComparePattern(SyntaxNode syntaxNode, int level,
+            Compilation compilation)
+        {
+            
             if (syntaxNode is BinaryExpressionSyntax)
             {
                 var binaryExpressionSyntax = (BinaryExpressionSyntax)syntaxNode;
 
                 if( binaryExpressionSyntax.OperatorToken.ValueText == "==")
                 {
-                    Console.WriteLine(binaryExpressionSyntax.Left.GetType());
-                    Console.WriteLine(binaryExpressionSyntax.Right.GetType());
+                    var left = binaryExpressionSyntax.Left;
+                    var right = binaryExpressionSyntax.Right;
+                    
+                    if (IsBooleanTree(left, compilation) && IsBooleanTree(right, compilation) &&
+                        (right.ToString() == "true" || right.ToString() == "false"))
+                    {
+                        Console.WriteLine("b == True, b == False detected");
+                    }
                 }
             }
 
             foreach (var child in syntaxNode.ChildNodes())
             {
-                FindBooleanComparePattern(child, level + 1);
+                FindBooleanComparePattern(child, level + 1, compilation);
             }
         }
 
@@ -48,7 +60,7 @@ namespace RoslynSampleRefactoring
         
             var root = (CompilationUnitSyntax)tree.GetRoot();
 
-            FindBooleanComparePattern(root, 0);
+            FindBooleanComparePattern(root, 0, compilation);
             
             Console.ReadKey(true);
         }
