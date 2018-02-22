@@ -14,14 +14,7 @@ namespace RoslynSampleRefactoring
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return $"{assemblyPath}\\..\\..\\source.txt";
         }
-
-<<<<<<< HEAD
-        private static void FindBooleanComparePattern(SyntaxNode syntaxNode, int level)
-        {
-            //Console.Write(new string(' ', level));
-            //Console.WriteLine(syntaxNode.GetType().Name);
-
-=======
+        
         private static bool IsBooleanTree(SyntaxNode syntaxNode, Compilation compilation)
         {
             var semanticModel = compilation.GetSemanticModel(syntaxNode.SyntaxTree);
