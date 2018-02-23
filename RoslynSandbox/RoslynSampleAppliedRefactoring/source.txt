@@ -1,0 +1,12 @@
+﻿namespace Test {
+	public sealed class Versuch {
+		public void X() {
+			bool b;
+			b = true;
+			X(false==b);
+		}
+
+		private void X(bool boolean) {
+		}
+	}
+}

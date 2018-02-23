@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynSandbox", "RoslynSand
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynSampleRefactoring", "RoslynSampleRefactoring\RoslynSampleRefactoring.csproj", "{28170C67-2917-45DD-B04C-041773C0DC6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynSampleAppliedRefactoring", "RoslynSampleAppliedRefactoring\RoslynSampleAppliedRefactoring.csproj", "{77C5DF14-6815-4786-BEF8-5D42AC2C49BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{28170C67-2917-45DD-B04C-041773C0DC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28170C67-2917-45DD-B04C-041773C0DC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28170C67-2917-45DD-B04C-041773C0DC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77C5DF14-6815-4786-BEF8-5D42AC2C49BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77C5DF14-6815-4786-BEF8-5D42AC2C49BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77C5DF14-6815-4786-BEF8-5D42AC2C49BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77C5DF14-6815-4786-BEF8-5D42AC2C49BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
