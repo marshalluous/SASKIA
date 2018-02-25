@@ -3,10 +3,17 @@
 		public void X() {
 			bool b;
 			b = true;
-			X(false==b);
+			X(false == b);
+			b = b == false;
+			bool x = true == b;
 		}
 
-		private void X(bool boolean) {
-		}
+		private bool X(bool boolean) {
+			if (false == X(boolean)) {
+				return true;
+			} else {
+				return false == true;
+			}
+		} 
 	}
 }

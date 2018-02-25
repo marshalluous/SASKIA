@@ -22,36 +22,43 @@ namespace RoslynSampleAppliedRefactoring
             return treeType.IsValueType && treeType.Name == "Boolean";
         }
 
+        private static bool IsEqualsTree(SyntaxNode syntaxNode)
+        {
+            return syntaxNode is BinaryExpressionSyntax &&
+                ((BinaryExpressionSyntax)syntaxNode).OperatorToken.ValueText == "==";
+        }
+        
+        private static SyntaxNode NotNode(ExpressionSyntax syntaxNode)
+        {
+            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, syntaxNode);
+        }
+
         private static SyntaxNode FindBooleanComparePattern(SyntaxNode syntaxNode, int level,
             Compilation compilation)
         {
-            if (syntaxNode is BinaryExpressionSyntax)
+            if (IsEqualsTree(syntaxNode))
             {
-                var binaryExpressionSyntax = (BinaryExpressionSyntax)syntaxNode;
-
-                if (binaryExpressionSyntax.OperatorToken.ValueText == "==")
-                {
-                    var left = binaryExpressionSyntax.Left;
-                    var right = binaryExpressionSyntax.Right;
+                var binaryExpressionSyntax = (BinaryExpressionSyntax) syntaxNode;
+                var left = binaryExpressionSyntax.Left;
+                var right = binaryExpressionSyntax.Right;
                     
-                    if (IsBooleanTree(left, compilation) && IsBooleanTree(right, compilation))
+                if (IsBooleanTree(left, compilation) && IsBooleanTree(right, compilation))
+                {
+                    if (left.ToString() == "true")
                     {
-                        if (left.ToString() == "true")
-                        {
-                            return right;
-                        }
-                        else if (right.ToString() == "true")
-                        {
-                            return left;
-                        }
-                        else if (left.ToString() == "false")
-                        {
-                            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, right);
-                        }
-                        else if (right.ToString() == "false")
-                        {
-                            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, left);
-                        }
+                        return right;
+                    }
+                    else if (right.ToString() == "true")
+                    {
+                        return left;
+                    } 
+                    else if (left.ToString() == "false")
+                    {
+                        return NotNode(right);
+                    }
+                    else if (right.ToString() == "false")
+                    {
+                        return NotNode(left);
                     }
                 }
             }
@@ -64,22 +71,26 @@ namespace RoslynSampleAppliedRefactoring
             
             return syntaxNode;
         }
-
+        
         public static void Main()
         {
             var source = File.ReadAllText(GetSourceFilePath());
-            var tree = CSharpSyntaxTree.ParseText(source);
 
-            var compilation = CSharpCompilation.Create("Test")
-                 .AddReferences(references: new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) })
-                .AddSyntaxTrees(tree);
+            for (var i = 0; i < 15; ++i)
+            {
+                var tree = CSharpSyntaxTree.ParseText(source);
 
-            var root = (CompilationUnitSyntax)tree.GetRoot();
+                var compilation = CSharpCompilation.Create("Test")
+                     .AddReferences(references: new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) })
+                    .AddSyntaxTrees(tree);
 
-            var newTree = FindBooleanComparePattern(root, 0, compilation);
-            var newSource = newTree.ToString();
+                var root = (CompilationUnitSyntax)tree.GetRoot();
 
-            Console.WriteLine(newSource);
+                var newTree = FindBooleanComparePattern(root, 0, compilation);
+                source = newTree.ToString();
+            }
+
+            Console.WriteLine(source);
             Console.ReadKey(true);
         }
     }
