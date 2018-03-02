@@ -1,5 +1,9 @@
 ﻿using NHunspell;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace NHanspellSandbox
 {
@@ -7,55 +11,99 @@ namespace NHanspellSandbox
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("NHunspell functions demonstration");
-            Console.WriteLine("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-            Console.WriteLine();
-
             using (Hunspell hunspell = new Hunspell("en_us.aff", "en_us.dic"))
             {
-                Console.WriteLine("Hunspell - Spell Checking Functions");
-                Console.WriteLine("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-
-                Console.WriteLine("Check if the word 'Recommendation' is spelled correct");
-                bool correct = hunspell.Spell("Recommendatio");
-                Console.WriteLine("Recommendation is spelled " + (correct ? "correct" : "wrong"));
-                Console.ReadKey();
-
-                //Console.WriteLine("");
-                //Console.WriteLine("Make suggestions for the misspelled word 'Recommendatio'");
-                //List<string> suggestions = hunspell.Suggest("Recommendatio");
-                //Console.WriteLine("There are " + suggestions.Count.ToString() + " suggestions");
-                //foreach (string suggestion in suggestions)
+                //string input = "Recommendation";
+                //Console.WriteLine("Check if the word '" + input + "' is spelled correct");
+                //bool correct = IsSpelledCorrect(hunspell, input);
+                //Console.WriteLine(input + " is spelled " + (correct ? "correct" : "wrong"));
+                //if (!correct)
                 //{
-                //    Console.WriteLine("Suggestion is: " + suggestion);
+                //    MakeSuggestions(hunspell, input);
                 //}
+                //Console.ReadKey();
 
+                //input = "Recommendatio";
+                //Console.WriteLine("Check if the word '" + input + "' is spelled correct");
+                //correct = IsSpelledCorrect(hunspell, input);
+                //Console.WriteLine(input + " is spelled " + (correct ? "correct" : "wrong"));
+                //if (!correct)
+                //{
+                //    MakeSuggestions(hunspell, input);
+                //}
+                //Console.ReadKey();
 
-                //Console.WriteLine("");
-                //Console.WriteLine("Find the word stem of the word 'decompressed'");
-                //List<string> stems = hunspell.Stem("decompressed");
+                //input = "decompressed";
+                //Console.WriteLine("Find the word stem of the word '" + input + "'");
+                //List<string> stems = hunspell.Stem(input);
                 //foreach (string stem in stems)
                 //{
                 //    Console.WriteLine("Word Stem is: " + stem);
                 //}
+                //Console.ReadKey();
 
-                //Console.WriteLine("");
-                //Console.WriteLine("Generate the plural of 'girl' by providing sample 'boys'");
-                //List<string> generated = hunspell.Generate("girl", "boys");
-                //foreach (string stem in generated)
-                //{
-                //    Console.WriteLine("Generated word is: " + stem);
-                //}
 
-                //Console.WriteLine("");
-                //Console.WriteLine("Analyze the word 'decompressed'");
-                //List<string> morphs = hunspell.Analyze("decompressed");
-                //foreach (string morph in morphs)
-                //{
-                //    Console.WriteLine("Morph is: " + morph);
-                //}
+                //input = "girl";
+                //string input2 = "boys";
+                //Console.WriteLine("Generate the plural of '" + input + "' by providing sample '" + input2 + "'");
+                //GetStem(hunspell, input, input2);
+                //Console.ReadKey();
 
+                //input = "decompressed";
+                //Console.WriteLine("Analyze the word '" + input + "'");
+                //Analyze(hunspell, input);
+                //Console.ReadKey();
+
+
+                var source = File.ReadAllText(GetSourceFilePath());
+                Console.WriteLine(SplitCamelCase("PascalCase"));
+                Console.WriteLine(SplitCamelCase("camelCase"));
+                Console.ReadKey();
             }
+        }
+
+        private static string SplitCamelCase(string input)
+        {
+            return Regex.Replace(input, @"(\p{Ll})(\P{Ll})", "$1 $2");
+        }
+
+        private static string GetSourceFilePath()
+        {
+            var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return $"{assemblyPath}\\..\\..\\source.txt";
+        }
+
+        private static void Analyze(Hunspell hunspell, string input)
+        {
+            List<string> morphs = hunspell.Analyze(input);
+            foreach (string morph in morphs)
+            {
+                Console.WriteLine("Morph is: " + morph);
+            }
+        }
+
+        private static void GetStem(Hunspell hunspell, string input, string input2)
+        {
+            List<string> generated = hunspell.Generate(input, input2);
+            foreach (string stem in generated)
+            {
+                Console.WriteLine("Generated word is: " + stem);
+            }
+        }
+
+        private static void MakeSuggestions(Hunspell hunspell, string input)
+        {
+            List<string> suggestions = hunspell.Suggest(input);
+            Console.WriteLine("There are " + suggestions.Count + " suggestions");
+            foreach (string suggestion in suggestions)
+            {
+                Console.WriteLine("Suggestion is: " + suggestion);
+            }
+        }
+
+        private static bool IsSpelledCorrect(Hunspell hunspell, string input)
+        {
+            return hunspell.Spell(input);
         }
     }
 }

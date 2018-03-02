@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynSampleAppliedRefactor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHanspellSandbox", "NHanspellSandbox\NHanspellSandbox.csproj", "{8615A63A-E581-4EE9-8C2F-4CA1364F5AAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHunspellApplied", "..\NHunspellSandbox\NHunspellApplied\NHunspellApplied.csproj", "{96B730E3-9DF9-45D5-A367-34C4BBA53C6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8615A63A-E581-4EE9-8C2F-4CA1364F5AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8615A63A-E581-4EE9-8C2F-4CA1364F5AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8615A63A-E581-4EE9-8C2F-4CA1364F5AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96B730E3-9DF9-45D5-A367-34C4BBA53C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B730E3-9DF9-45D5-A367-34C4BBA53C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B730E3-9DF9-45D5-A367-34C4BBA53C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B730E3-9DF9-45D5-A367-34C4BBA53C6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
