@@ -1,4 +1,5 @@
 ﻿using NHunspell;
+using Syn.WordNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +12,13 @@ namespace NHanspellSandbox
     {
         static void Main(string[] args)
         {
-            using (Hunspell hunspell = new Hunspell("en_us.aff", "en_us.dic"))
+            using (var hunspell = new Hunspell(GetFileInProjectFolder("en_us.aff"), GetFileInProjectFolder("en_us.dic")))
             {
+                WordNetEngine engine = new WordNetEngine();
+                var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                engine.LoadFromDirectory($"{assemblyPath}\\..\\..\\dict\\"); // extremely slow
+
+
                 //string input = "Recommendation";
                 //Console.WriteLine("Check if the word '" + input + "' is spelled correct");
                 //bool correct = IsSpelledCorrect(hunspell, input);
@@ -49,33 +55,53 @@ namespace NHanspellSandbox
                 //GetStem(hunspell, input, input2);
                 //Console.ReadKey();
 
-                //input = "decompressed";
+                //string input = "decompressed";
                 //Console.WriteLine("Analyze the word '" + input + "'");
                 //Analyze(hunspell, input);
                 //Console.ReadKey();
 
 
-                var source = File.ReadAllText(GetSourceFilePath());
-                Console.WriteLine(SplitCamelCase("PascalCase"));
-                Console.WriteLine(SplitCamelCase("camelCase"));
+                //var source = File.ReadAllText(GetFileInProjectFolder("source.txt"));
+
+                var words = SplitCamelCase("WordAnalyzeTool");
+                var word = words[words.Capacity - 1];
+                Console.WriteLine(word);
+                Console.WriteLine(GetWordType(engine.GetSynSets(word)));
                 Console.ReadKey();
             }
+
         }
 
-        private static string SplitCamelCase(string input)
+        private static string GetWordType(List<SynSet> set)
         {
-            return Regex.Replace(input, @"(\p{Ll})(\P{Ll})", "$1 $2");
+            return set[0].PartOfSpeech.ToString();
         }
 
-        private static string GetSourceFilePath()
+        private static List<string> SplitCamelCase(string input)
+        {
+            List<string> words = new List<string>();
+            string value = string.Empty;
+            for (var index = 0; index < input.Length; ++index)
+            {
+                if (char.IsUpper(input[index]))
+                {
+                    yield return value;
+                    value = string.Empty;
+                }
+
+                value += input[index];
+            }
+        }
+        
+        private static string GetFileInProjectFolder(string fileName)
         {
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return $"{assemblyPath}\\..\\..\\source.txt";
+            return $"{assemblyPath}\\..\\..\\{fileName}";
         }
 
         private static void Analyze(Hunspell hunspell, string input)
         {
-            List<string> morphs = hunspell.Analyze(input);
+            var morphs = hunspell.Analyze(input);
             foreach (string morph in morphs)
             {
                 Console.WriteLine("Morph is: " + morph);
@@ -84,7 +110,7 @@ namespace NHanspellSandbox
 
         private static void GetStem(Hunspell hunspell, string input, string input2)
         {
-            List<string> generated = hunspell.Generate(input, input2);
+            var generated = hunspell.Generate(input, input2);
             foreach (string stem in generated)
             {
                 Console.WriteLine("Generated word is: " + stem);
@@ -93,7 +119,7 @@ namespace NHanspellSandbox
 
         private static void MakeSuggestions(Hunspell hunspell, string input)
         {
-            List<string> suggestions = hunspell.Suggest(input);
+            var suggestions = hunspell.Suggest(input);
             Console.WriteLine("There are " + suggestions.Count + " suggestions");
             foreach (string suggestion in suggestions)
             {
