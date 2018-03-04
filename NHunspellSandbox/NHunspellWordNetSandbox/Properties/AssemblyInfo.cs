@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NHunspellSandbox")]
+[assembly: AssemblyTitle("NHunspellWordNetSandbox")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NHunspellSandbox")]
+[assembly: AssemblyProduct("NHunspellWordNetSandbox")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f4947624-e085-46c6-aac9-da1ced0eaf71")]
+[assembly: Guid("d0ab0326-9ba1-40e5-8a57-115a67dd63ab")]
 
 // Version information for an assembly consists of the following four values:
 //

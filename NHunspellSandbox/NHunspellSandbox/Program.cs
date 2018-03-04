@@ -15,73 +15,48 @@ namespace NHunspellSandbox
         {
             using (var hunspell = new Hunspell(GetFileInProjectFolder("en_us.aff"), GetFileInProjectFolder("en_us.dic")))
             {
-                WordNetEngine engine = new WordNetEngine();
-                var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                engine.LoadFromDirectory($"{assemblyPath}\\..\\..\\dict\\"); // extremely slow
+                string input = "Recommendation";
+                Console.WriteLine("Check if the word '" + input + "' is spelled correct");
+                bool correct = IsSpelledCorrect(hunspell, input);
+                Console.WriteLine(input + " is spelled " + (correct ? "correct" : "wrong"));
+                if (!correct)
+                {
+                    MakeSuggestions(hunspell, input);
+                }
+                Console.ReadKey();
+
+                input = "Recommendatio";
+                Console.WriteLine("Check if the word '" + input + "' is spelled correct");
+                correct = IsSpelledCorrect(hunspell, input);
+                Console.WriteLine(input + " is spelled " + (correct ? "correct" : "wrong"));
+                if (!correct)
+                {
+                    MakeSuggestions(hunspell, input);
+                }
+                Console.ReadKey();
+
+                input = "decompressed";
+                Console.WriteLine("Find the word stem of the word '" + input + "'");
+                List<string> stems = hunspell.Stem(input);
+                foreach (string stem in stems)
+                {
+                    Console.WriteLine("Word Stem is: " + stem);
+                }
+                Console.ReadKey();
 
 
-                //string input = "Recommendation";
-                //Console.WriteLine("Check if the word '" + input + "' is spelled correct");
-                //bool correct = IsSpelledCorrect(hunspell, input);
-                //Console.WriteLine(input + " is spelled " + (correct ? "correct" : "wrong"));
-                //if (!correct)
-                //{
-                //    MakeSuggestions(hunspell, input);
-                //}
-                //Console.ReadKey();
+                input = "girl";
+                string input2 = "boys";
+                Console.WriteLine("Generate the plural of '" + input + "' by providing sample '" + input2 + "'");
+                GetStem(hunspell, input, input2);
+                Console.ReadKey();
 
-                //input = "Recommendatio";
-                //Console.WriteLine("Check if the word '" + input + "' is spelled correct");
-                //correct = IsSpelledCorrect(hunspell, input);
-                //Console.WriteLine(input + " is spelled " + (correct ? "correct" : "wrong"));
-                //if (!correct)
-                //{
-                //    MakeSuggestions(hunspell, input);
-                //}
-                //Console.ReadKey();
-
-                //input = "decompressed";
-                //Console.WriteLine("Find the word stem of the word '" + input + "'");
-                //List<string> stems = hunspell.Stem(input);
-                //foreach (string stem in stems)
-                //{
-                //    Console.WriteLine("Word Stem is: " + stem);
-                //}
-                //Console.ReadKey();
-
-
-                //input = "girl";
-                //string input2 = "boys";
-                //Console.WriteLine("Generate the plural of '" + input + "' by providing sample '" + input2 + "'");
-                //GetStem(hunspell, input, input2);
-                //Console.ReadKey();
-
-                //string input = "decompressed";
-                //Console.WriteLine("Analyze the word '" + input + "'");
-                //Analyze(hunspell, input);
-                //Console.ReadKey();
-
-
-                //var source = File.ReadAllText(GetFileInProjectFolder("source.txt"));
-
-                var words = SplitCamelCase("WordAnalyzeTool");
-                var word = words[words.Capacity - 1];
-                Console.WriteLine(word);
-                Console.WriteLine(GetWordType(engine.GetSynSets(word)));
+                input = "decompressed";
+                Console.WriteLine("Analyze the word '" + input + "'");
+                Analyze(hunspell, input);
                 Console.ReadKey();
             }
 
-        }
-
-        private static string GetWordType(List<SynSet> set)
-        {
-            return set[0].PartOfSpeech.ToString();
-        }
-
-        private static List<string> SplitCamelCase(string input)
-        {
-            string words = Regex.Replace(input, @"(\p{Ll})(\P{Ll})", "$1 $2");
-            return words.Split(' ').ToList();
         }
 
         private static string GetFileInProjectFolder(string fileName)
