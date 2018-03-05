@@ -1,9 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace RHW
 {
@@ -14,7 +9,10 @@ namespace RHW
             var roslyn = new RoslynEngine();
             var tree = roslyn.GetSyntaxTree("source.txt");
             var compilation = roslyn.GetCompilation(tree);
-            List<string> classNames = roslyn.GetClassNames(tree);
+            var classNames = roslyn.GetClassNames(tree);
+            var hunspell = new HunspellEngine();
+            hunspell.CheckClassNames(classNames);
+            Console.ReadKey();
         }
     }
 }
