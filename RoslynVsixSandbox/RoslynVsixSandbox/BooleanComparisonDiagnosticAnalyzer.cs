@@ -10,7 +10,7 @@ namespace RoslynVsixSandbox
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class BooleanComparisonDiagnosticAnalyzer : DiagnosticAnalyzer
     {
-        private const string DiagnosticId = "CS_001";
+        public const string DiagnosticId = "SASKIACS001"; 
         private const string Title = "Nasty boolean comparison";
         private const string Message = "'Nasty boolean comparison' pattern detected";
         private const string Categoty = "CodeSmell";

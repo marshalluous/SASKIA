@@ -12,7 +12,7 @@ namespace RoslynVsixSandbox
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class IfReturnDiagnosticAnalyzer : DiagnosticAnalyzer
     {
-        private const string DiagnosticId = "CS_002";
+        private const string DiagnosticId = "SASKIACS002";
         private const string Title = "Nasty If";
         private const string Message = "'Nasty if pattern detected";
         private const string Categoty = "CodeSmell";
@@ -69,13 +69,13 @@ namespace RoslynVsixSandbox
             if (thenStatements.Count != elseStatements.Count)
                 return false;
 
-            bool r = true;
+            var treeNotEquals = true;
 
             int index;
 
             for (index = 0; index < thenStatements.Count - 1; ++index)
             {
-                r = r && !CompareSyntaxNode(thenStatements[index], elseStatements[index]);
+                treeNotEquals = treeNotEquals && !CompareSyntaxNode(thenStatements[index], elseStatements[index]);
             }
 
             if (IsReturnBoolLiteralNode(thenStatements[index], "true") &&
@@ -90,10 +90,10 @@ namespace RoslynVsixSandbox
             }
             else
             {
-                r = r && !CompareSyntaxNode(thenStatements[index], elseStatements[index]);
+                treeNotEquals = treeNotEquals && !CompareSyntaxNode(thenStatements[index], elseStatements[index]);
             }
 
-            return r;
+            return treeNotEquals;
         }
 
         private void CreateDiagnostic(DiagnosticDescriptor rule, SyntaxNodeAnalysisContext context)
