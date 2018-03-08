@@ -1,8 +1,11 @@
-﻿using System;
+﻿using NHunspell;
+using Syn.WordNet;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace NHunspellSandbox
 {
@@ -10,10 +13,8 @@ namespace NHunspellSandbox
     {
         static void Main(string[] args)
         {
-            using (Hunspell hunspell = new Hunspell("en_us.aff", "en_us.dic"))
+            using (var hunspell = new Hunspell(GetFileInProjectFolder("en_us.aff"), GetFileInProjectFolder("en_us.dic")))
             {
-                var source = File.ReadAllText(GetSourceFilePath());
-                // split a single word on each capital letter
                 string input = "Recommendation";
                 Console.WriteLine("Check if the word '" + input + "' is spelled correct");
                 bool correct = IsSpelledCorrect(hunspell, input);
@@ -55,17 +56,18 @@ namespace NHunspellSandbox
                 Analyze(hunspell, input);
                 Console.ReadKey();
             }
+
         }
 
-        private static string GetSourceFilePath()
+        private static string GetFileInProjectFolder(string fileName)
         {
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return $"{assemblyPath}\\..\\..\\source.txt";
+            return $"{assemblyPath}\\..\\..\\{fileName}";
         }
 
         private static void Analyze(Hunspell hunspell, string input)
         {
-            List<string> morphs = hunspell.Analyze(input);
+            var morphs = hunspell.Analyze(input);
             foreach (string morph in morphs)
             {
                 Console.WriteLine("Morph is: " + morph);
@@ -74,7 +76,7 @@ namespace NHunspellSandbox
 
         private static void GetStem(Hunspell hunspell, string input, string input2)
         {
-            List<string> generated = hunspell.Generate(input, input2);
+            var generated = hunspell.Generate(input, input2);
             foreach (string stem in generated)
             {
                 Console.WriteLine("Generated word is: " + stem);
@@ -83,7 +85,7 @@ namespace NHunspellSandbox
 
         private static void MakeSuggestions(Hunspell hunspell, string input)
         {
-            List<string> suggestions = hunspell.Suggest(input);
+            var suggestions = hunspell.Suggest(input);
             Console.WriteLine("There are " + suggestions.Count + " suggestions");
             foreach (string suggestion in suggestions)
             {
