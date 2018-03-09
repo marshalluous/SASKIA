@@ -20,7 +20,7 @@ namespace RoslynVsixSandbox
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             context.RegisterCodeFix(
-                CodeAction.Create("test", ct => ApplyFix(context, ct)),
+                CodeAction.Create("test", token => ApplyFix(context, token)),
                 context.Diagnostics);
 
             return Task.Delay(0);
@@ -46,7 +46,9 @@ namespace RoslynVsixSandbox
         private static async Task<Document> ApplyFix(CodeFixContext context, CancellationToken cancellationToken)
         {
             var document = context.Document;
-            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            var root = await document.GetSyntaxRootAsync(cancellationToken)
+                .ConfigureAwait(false);
+
             var diagnostic = context.Diagnostics.First();
             var position = diagnostic.Location.SourceSpan.Start;
 
@@ -54,22 +56,37 @@ namespace RoslynVsixSandbox
                 GetParentBinaryExpressionNode(root.FindToken(position).Parent.Parent);
 
             ExpressionSyntax replaceNode = null;
+            bool isNot;
 
             if (IsBooleanLiteralNode(equalsEqualsNode.Left, "true"))
             {
                 replaceNode = equalsEqualsNode.Right;
+                isNot = false;
             }
             else if (IsBooleanLiteralNode(equalsEqualsNode.Left, "false"))
             {
-                replaceNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, equalsEqualsNode.Right);
+                replaceNode = equalsEqualsNode.Right;
+                isNot = true;
             }
             else if (IsBooleanLiteralNode(equalsEqualsNode.Right, "true"))
             {
                 replaceNode = equalsEqualsNode.Left;
+                isNot = false;
             }
             else
             {
-                replaceNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, equalsEqualsNode.Left);
+                replaceNode = equalsEqualsNode.Left;
+                isNot = true;
+            }
+
+            if (equalsEqualsNode.OperatorToken.Text.Trim() == "!=")
+            {
+                isNot = !isNot;
+            }
+
+            if (isNot)
+            {
+                replaceNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, replaceNode);
             }
 
             replaceNode = replaceNode.NormalizeWhitespace();
