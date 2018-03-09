@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="SASKIA.5a41fee4-ec5b-429a-8662-223f79b92654" Version="1.0" Language="en-US" Publisher="Company" />
+    <Identity Id="SASKIA.73b965d2-9934-4f9f-957e-9badb48b5975" Version="1.0" Language="en-US" Publisher="Company" />
     <DisplayName>SASKIA</DisplayName>
     <Description>Empty VSIX Project.</Description>
   </Metadata>
