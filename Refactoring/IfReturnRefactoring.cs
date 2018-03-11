@@ -23,14 +23,13 @@ namespace Refactoring
                 return new[] { node };
 
             var elseBlockNode = ifNode.Else.Statement;
-            var conditionText = ifNode.Condition.GetText().ToString();
 
-            if (thenBlockNode is BlockSyntax thenBlock && elseBlockNode is BlockSyntax elseBlock)
+            if (!(thenBlockNode is BlockSyntax thenBlock) || !(elseBlockNode is BlockSyntax elseBlock))
+                return new[] {node};
+
+            if (!CompareTrees(thenBlock.Statements, elseBlock.Statements))
             {
-                if (!CompareTrees(thenBlock.Statements, elseBlock.Statements))
-                {
-                    return thenBlock.Statements;
-                }
+                return thenBlock.Statements;
             }
 
             return new[] { node };
@@ -45,17 +44,14 @@ namespace Refactoring
                 return DiagnosticInfo.CreateSuccessfulResult();
 
             var elseBlockNode = ifNode.Else.Statement;
-            var conditionText = ifNode.Condition.GetText().ToString();
 
-            if (thenBlockNode is BlockSyntax thenBlock && elseBlockNode is BlockSyntax elseBlock)
-            {
-                if (!CompareTrees(thenBlock.Statements, elseBlock.Statements))
-                {
-                    return DiagnosticInfo.CreateFailedResult("Unnecessary If statement detected");
-                }
-            }
+            if (!(thenBlockNode is BlockSyntax thenBlock) ||
+                !(elseBlockNode is BlockSyntax elseBlock))
+                return DiagnosticInfo.CreateSuccessfulResult();
 
-            return DiagnosticInfo.CreateSuccessfulResult();
+            return !CompareTrees(thenBlock.Statements, elseBlock.Statements) ?
+                DiagnosticInfo.CreateFailedResult("Unnecessary If statement detected") :
+                DiagnosticInfo.CreateSuccessfulResult();
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
@@ -87,14 +83,14 @@ namespace Refactoring
             return false;
         }
         
-        private bool CompareSyntaxNodeLists(List<SyntaxNode> nodeList1, List<SyntaxNode> nodeList2)
+        private bool CompareSyntaxNodeLists(IReadOnlyList<SyntaxNode> nodeList1, IReadOnlyList<SyntaxNode> nodeList2)
         {
-            if (nodeList1.Count() != nodeList2.Count())
+            if (nodeList1.Count != nodeList2.Count)
                 return false;
 
             var equals = true;
 
-            for (var index = 0; index < nodeList1.Count(); ++index)
+            for (var index = 0; index < nodeList1.Count; ++index)
             {
                 equals = equals && CompareSyntaxNode(nodeList1[index], nodeList2[index]);
             }

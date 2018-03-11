@@ -23,7 +23,7 @@ namespace Refactoring
 
             if (IsBooleanLiteralNode(equalsEqualsNode.Left) || IsBooleanLiteralNode(equalsEqualsNode.Right))
             {
-                return DiagnosticInfo.CreateFailedResult($"Comparison with boolean constant");
+                return DiagnosticInfo.CreateFailedResult("Comparison with boolean constant");
             }
 
             return DiagnosticInfo.CreateSuccessfulResult();
@@ -51,19 +51,14 @@ namespace Refactoring
             return result;
         }
 
-        private void ApplyRefactoringToOneOperatorSide(ExpressionSyntax checkLiteralNode, ExpressionSyntax otherNode,
-            bool isEqualsOperator, List<SyntaxNode> result)
+        private static void ApplyRefactoringToOneOperatorSide(ExpressionSyntax checkLiteralNode, ExpressionSyntax otherNode,
+            bool isEqualsOperator, ICollection<SyntaxNode> result)
         {
             if (IsBooleanLiteralNode(checkLiteralNode))
             {
-                if (IsTrueNode(checkLiteralNode) == isEqualsOperator)
-                {
-                    result.Add(otherNode);
-                }
-                else
-                {
-                    result.Add(SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, AddParentheses(otherNode)));
-                }
+                result.Add(IsTrueNode(checkLiteralNode) == isEqualsOperator
+                    ? otherNode
+                    : SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, AddParentheses(otherNode)));
             }
         }
         

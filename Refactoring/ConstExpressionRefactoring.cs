@@ -19,27 +19,24 @@ namespace Refactoring
         
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
         {
-            object value = VisitExpressionSyntaxNodes(node).Item2;
-            return new SyntaxNode[] { CreateLiteralNode(value) };   
+            var value = VisitExpressionSyntaxNodes(node).Item2;
+            return new[] { CreateLiteralNode(value) };   
         }
 
         private static SyntaxNode CreateLiteralNode(object value)
         {
-            var map = new Dictionary<Type, SyntaxKind>();
             var type = typeof(SyntaxFactory);
 
-            if (value is bool)
+            if (value is bool booleanValue)
             {
-                return SyntaxFactory.LiteralExpression((bool)value ?
+                return SyntaxFactory.LiteralExpression(booleanValue ?
                     SyntaxKind.TrueLiteralExpression :
                     SyntaxKind.FalseLiteralExpression);
             }
-            else
-            {
-                var method = type.GetMethod("Literal", new[] { value.GetType() });
-                var token = (SyntaxToken)method.Invoke(null, new object[] { value });
-                return SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, token);
-            }
+
+            var method = type.GetMethod("Literal", new[] { value.GetType() });
+            var token = (SyntaxToken) method.Invoke(null, new[] { value });
+            return SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, token);
         }
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
@@ -136,8 +133,8 @@ namespace Refactoring
 
             var assembly = compilerResult.CompiledAssembly;
             var instance = assembly.CreateInstance("A.B");
-            var method = instance.GetType().GetMethod("C");
-            return method.Invoke(instance, null);
+            var method = instance?.GetType().GetMethod("C");
+            return method?.Invoke(instance, null);
         }
     }
 }
