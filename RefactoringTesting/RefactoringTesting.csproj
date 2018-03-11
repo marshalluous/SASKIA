@@ -123,6 +123,7 @@
   <ItemGroup>
     <Compile Include="BooleanComparisonRefactoringTesting.cs" />
     <Compile Include="ConstExpressionRefactoringTesting.cs" />
+    <Compile Include="ExpressionEvaluatorTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -141,9 +141,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="BooleanComparisonRefactoring.cs" />
     <Compile Include="ConstExpressionRefactoring.cs" />
     <Compile Include="DiagnosticInfo.cs" />
+    <Compile Include="Helper\ExpressionEvaluator.cs" />
+    <Compile Include="Helper\ExpressionEvaluatorException.cs" />
     <Compile Include="IfReturnRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

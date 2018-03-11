@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CSharp;
+using Refactoring.Helper;
 
 namespace Refactoring
 {
@@ -68,7 +69,7 @@ namespace Refactoring
             if (node is ExpressionSyntax expression)
             {
                 var previousExpression = expression.GetText().ToString();
-                var simplifiedExpression = Evaluate(previousExpression);
+                var simplifiedExpression = ExpressionEvaluator.Evaluate(previousExpression);
 
                 if (simplifiedExpression != null && previousExpression != simplifiedExpression.ToString())
                 {
@@ -89,41 +90,5 @@ namespace Refactoring
             return Tuple.Create(DiagnosticInfo.CreateSuccessfulResult(), (object) null);
         }
         
-        private static string CreateCodeTemplate(string code)
-        {
-            var codeTemplate = new StringBuilder("namespace A{");
-            codeTemplate.Append("public class B{");
-            codeTemplate.Append("public object C(){");
-            codeTemplate.Append("return " + code + ";");
-            codeTemplate.Append("}}}");
-            return codeTemplate.ToString();
-        }
-
-        private static CompilerResults Compile(string code)
-        {
-            var codeProvider = new CSharpCodeProvider();
-            var compilerParameters = new CompilerParameters
-            {
-                CompilerOptions = "/t:library",
-                GenerateInMemory = true
-            };
-
-            return codeProvider.CompileAssemblyFromSource(compilerParameters, CreateCodeTemplate(code));
-        }
-        
-        private static object Evaluate(string code)
-        {
-            var compilerResult = Compile(code);
-
-            if (compilerResult.Errors.Count > 0)
-            {
-                return null;
-            }
-
-            var assembly = compilerResult.CompiledAssembly;
-            var instance = assembly.CreateInstance("A.B");
-            var method = instance?.GetType().GetMethod("C");
-            return method?.Invoke(instance, null);
-        }
     }
 }
