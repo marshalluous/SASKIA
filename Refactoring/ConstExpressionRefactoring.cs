@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -48,42 +49,30 @@ namespace Refactoring
         {
             var node = token.Parent;
 
-            while (!(node is ExpressionStatementSyntax))
+            while (node is ExpressionSyntax && node.Parent is ExpressionSyntax)
             {
                 node = node.Parent;
             }
-            
-            return FindBExpression(node);
+
+            return node;
         }
-
-        private SyntaxNode FindBExpression(SyntaxNode n)
-        {
-            if (n is BinaryExpressionSyntax)
-                return n;
-
-            foreach (var x in n.ChildNodes())
-            {
-                var l = FindBExpression(x);
-
-                if (l != null)
-                    return l;
-            }
-
-            return null;
-        }
-
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            new[] { SyntaxKind.ExpressionStatement };
         
-        private Tuple<DiagnosticInfo, object> VisitExpressionSyntaxNodes(SyntaxNode node)
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            typeof(SyntaxKind)
+                .GetEnumNames()
+                .Where(name => name.EndsWith("Expression"))
+                .Select(name => (SyntaxKind)Enum.Parse(typeof(SyntaxKind), name));
+
+        private static Tuple<DiagnosticInfo, object> VisitExpressionSyntaxNodes(SyntaxNode node)
         {
-            if (node is ExpressionSyntax e)
+            if (node is ExpressionSyntax expression)
             {
-                object val = Evaluate(e.GetText().ToString());
-                
-                if (val != null)
+                var previousExpression = expression.GetText().ToString();
+                var simplifiedExpression = Evaluate(previousExpression);
+
+                if (simplifiedExpression != null && previousExpression != simplifiedExpression.ToString())
                 {
-                    return Tuple.Create(DiagnosticInfo.CreateFailedResult("const expr found"), val);
+                    return Tuple.Create(DiagnosticInfo.CreateFailedResult("const expr found"), simplifiedExpression);
                 }
             }
             
