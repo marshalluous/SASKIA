@@ -29,18 +29,6 @@ namespace Refactoring
             return DiagnosticInfo.CreateSuccessfulResult();
         }
         
-        private static bool IsBooleanLiteralNode(ExpressionSyntax expressionSyntax) =>
-            IsTrueNode(expressionSyntax) || CheckNodeForBooleanLiteral(expressionSyntax, "false");
-
-        private static bool IsTrueNode(ExpressionSyntax expressionSyntax) =>
-            CheckNodeForBooleanLiteral(expressionSyntax, "true");
-    
-        private static bool CheckNodeForBooleanLiteral(ExpressionSyntax expressionSyntax, string expectedLiteralText)
-        {
-            var literalText = expressionSyntax.GetText().ToString().Trim();
-            return expressionSyntax is LiteralExpressionSyntax && literalText == expectedLiteralText;
-        }
-
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
             => GetParentBinaryExpressionNode(token.Parent.Parent);
         
@@ -50,8 +38,20 @@ namespace Refactoring
             InternApplyFix(node, result);
             return result;
         }
+        
+        private static bool IsBooleanLiteralNode(SyntaxNode expressionSyntax) =>
+            IsTrueNode(expressionSyntax) || CheckNodeForBooleanLiteral(expressionSyntax, "false");
 
-        private static void ApplyRefactoringToOneOperatorSide(ExpressionSyntax checkLiteralNode, ExpressionSyntax otherNode,
+        private static bool IsTrueNode(SyntaxNode expressionSyntax) =>
+            CheckNodeForBooleanLiteral(expressionSyntax, "true");
+
+        private static bool CheckNodeForBooleanLiteral(SyntaxNode expressionSyntax, string expectedLiteralText)
+        {
+            var literalText = expressionSyntax.GetText().ToString().Trim();
+            return expressionSyntax is LiteralExpressionSyntax && literalText == expectedLiteralText;
+        }
+
+        private static void ApplyRefactoringToOneOperatorSide(SyntaxNode checkLiteralNode, ExpressionSyntax otherNode,
             bool isEqualsOperator, ICollection<SyntaxNode> result)
         {
             if (IsBooleanLiteralNode(checkLiteralNode))
@@ -72,7 +72,7 @@ namespace Refactoring
             return (BinaryExpressionSyntax)syntaxNode;
         }
 
-        private void InternApplyFix(SyntaxNode node, List<SyntaxNode> replaceNodes)
+        private static void InternApplyFix(SyntaxNode node, ICollection<SyntaxNode> replaceNodes)
         {
             var operatorNode = (BinaryExpressionSyntax) node;
             var isEqualsOperator = operatorNode.OperatorToken.Text.Trim() == "==";

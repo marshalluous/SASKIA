@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.MSBuild;
 
 namespace SASKIA
@@ -54,19 +53,23 @@ namespace SASKIA
             var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
             var replaceableNode = refactoring.GetReplaceableNode(token);
 
+            if (replaceableNode == null)
+                return document.WithSyntaxRoot(root);
+
             var replaceNodes = refactoring
                 .ApplyFix(replaceableNode)
                 .ToArray();
 
+            if (replaceNodes.Length <= 0)
+                return document.WithSyntaxRoot(root);
+
             replaceNodes = replaceNodes
-                .Select(node => node
-                    .NormalizeWhitespace()
-                    .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed))
-                    .ToArray();
-            
-            root = FormatRoot(replaceNodes.Length == 1 ?
-                root.ReplaceNode(replaceableNode, replaceNodes.First()) : 
-                root.ReplaceNode(replaceableNode, replaceNodes));
+                .Select(node => node.NormalizeWhitespace())
+                .ToArray();
+
+            root = FormatRoot(replaceNodes.Length == 1
+                ? root.ReplaceNode(replaceableNode, replaceNodes.First())
+                : root.ReplaceNode(replaceableNode, replaceNodes));
 
             return document.WithSyntaxRoot(root);
         }

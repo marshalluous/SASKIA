@@ -23,6 +23,12 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void EqualsEqualsNestedInEqualsEqualsTest()
+        {
+            TestCodeFix<BinaryExpressionSyntax>("var x = 4 == 12 == true;", "4 == 12");
+        }
+
+        [TestMethod]
         public void CompareWithTrueLiteralOnLeftHandSide()
         {
             TestCodeFix<BinaryExpressionSyntax>("var b = true == x", "x");
