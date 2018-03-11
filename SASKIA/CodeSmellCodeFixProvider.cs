@@ -40,7 +40,7 @@ namespace SASKIA
             return WellKnownFixAllProviders.BatchFixer;
         }
 
-        private SyntaxNode FormatRoot(SyntaxNode root)
+        private static SyntaxNode FormatRoot(SyntaxNode root)
         {
             return Formatter.Format(root, MSBuildWorkspace.Create());
         }
@@ -51,23 +51,22 @@ namespace SASKIA
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             
             var diagnostic = context.Diagnostics.First();
-            var position = diagnostic.Location.SourceSpan.Start;
-            var token = root.FindToken(position);
+            var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
             var replaceableNode = refactoring.GetReplaceableNode(token);
-            var replaceNodes = refactoring.ApplyFix(replaceableNode);
+
+            var replaceNodes = refactoring
+                .ApplyFix(replaceableNode)
+                .ToArray();
 
             replaceNodes = replaceNodes
                 .Select(node => node
                     .NormalizeWhitespace()
-                    .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed));
-
-            if (replaceNodes.Count() == 1)
-            {
-                root = FormatRoot(root.ReplaceNode(replaceableNode, replaceNodes.First()));
-            } else
-            {
-                root = FormatRoot(root.ReplaceNode(replaceableNode, replaceNodes));
-            }
+                    .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed))
+                    .ToArray();
+            
+            root = FormatRoot(replaceNodes.Length == 1 ?
+                root.ReplaceNode(replaceableNode, replaceNodes.First()) : 
+                root.ReplaceNode(replaceableNode, replaceNodes));
 
             return document.WithSyntaxRoot(root);
         }

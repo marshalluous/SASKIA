@@ -1,9 +1,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Refactoring;
-using SASKIA;
 
-namespace RoslynVsixSandbox
+namespace SASKIA
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class IfReturnDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
