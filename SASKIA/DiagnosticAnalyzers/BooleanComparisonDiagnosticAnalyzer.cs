@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.Diagnostics;
 using Refactoring;
 
-namespace SASKIA
+namespace SASKIA.DiagnosticAnalyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class BooleanComparisonDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
