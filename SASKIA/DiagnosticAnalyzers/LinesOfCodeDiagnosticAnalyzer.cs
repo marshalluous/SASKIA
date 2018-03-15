@@ -5,10 +5,10 @@ using Refactoring;
 namespace SASKIA.DiagnosticAnalyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class ConstExpressionDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
+    public sealed class LinesOfCodeDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
     {
-        public ConstExpressionDiagnosticAnalyzer()
-            : base(new ConstExpressionRefactoring())
+        public LinesOfCodeDiagnosticAnalyzer()
+            : base(new LinesOfCodeRefactoring())
         {
         }
     }

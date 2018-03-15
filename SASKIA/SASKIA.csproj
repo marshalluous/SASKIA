@@ -46,14 +46,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CodeFixProviders\ConstExpressionCodeFixProvider.cs" />
-    <Compile Include="CodeFixProviders\BooleanComparisonCodeFixProvider.cs" />
-    <Compile Include="DiagnosticAnalyzers\ConstExpressionDiagnosticAnalyzer.cs" />
-    <Compile Include="DiagnosticAnalyzers\BooleanComparisonDiagnosticAnalyzer.cs" />
+    <Compile Include="CodeFixProviders\BooleanConstantComparisonCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\BooleanConstantSimplifierCodeFixProvider.cs" />
+    <Compile Include="DiagnosticAnalyzers\BooleanConstantSimplifierDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="CodeFixProviders\IfReturnCodeFixProvider.cs" />
+    <Compile Include="DiagnosticAnalyzers\ConditionalComplexityDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\IfReturnDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\LinesOfCodeDiagnosticAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

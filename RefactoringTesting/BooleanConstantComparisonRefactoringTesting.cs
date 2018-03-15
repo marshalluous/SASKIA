@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refactoring;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
+using Refactoring.BooleanConstantComparison;
 
 namespace RefactoringTesting
 {
     [TestClass]
-    public sealed class BooleanComparisonRefactoringTesting
+    public sealed class BooleanConstantComparisonRefactoringTesting
     {
         [TestMethod]
         public void CompareWithTrueLiteralOnRightHandSideTest()
@@ -90,11 +90,11 @@ namespace RefactoringTesting
         {
             TestCodeFix<BinaryExpressionSyntax>("var k = 4 < 12 == false;", "!(4 < 12)");
         }
-
+        
         private static void TestCodeFix<T>(string inputCode, string expectedNodeText)
         {
             var node = Compile(inputCode);
-            var refactoring = new BooleanComparisonRefactoring();
+            var refactoring = new BooleanConstantComparisonRefactoring();
             node = FindNodeOfType<T>(node);
             Assert.IsNotNull(node);
             var resultNode = refactoring.ApplyFix(node).First();
@@ -107,18 +107,9 @@ namespace RefactoringTesting
             {
                 return node;
             }
-            
-            foreach (var childNode in node.ChildNodes())
-            {
-                var foundNode = FindNodeOfType<T>(childNode);
 
-                if (foundNode != null)
-                {
-                    return foundNode;
-                }
-            }
-            
-            return null;
+            return node.ChildNodes().Select(FindNodeOfType<T>)
+                .FirstOrDefault(foundNode => foundNode != null);
         }
         
         private static SyntaxNode Compile(string source)

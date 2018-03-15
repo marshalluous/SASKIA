@@ -5,10 +5,10 @@ using Refactoring;
 namespace SASKIA.DiagnosticAnalyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class BooleanComparisonDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
+    public sealed class ConditionalComplexityDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
     {
-        public BooleanComparisonDiagnosticAnalyzer()
-            : base(new BooleanComparisonRefactoring())
+        public ConditionalComplexityDiagnosticAnalyzer()
+            : base(new ConditionalComplexityRefactoring())
         {
         }
     }

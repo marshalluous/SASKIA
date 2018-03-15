@@ -6,6 +6,9 @@
         {
         }
 
+        public bool DiagnosticFound { get; private set; }
+        public string Message { get; private set; }
+
         public static DiagnosticInfo CreateSuccessfulResult()
         {
             return new DiagnosticInfo();
@@ -19,8 +22,5 @@
                 Message = message
             };
         }
-
-        public bool DiagnosticFound { get; private set; }
-        public string Message { get; private set; }
     }
 }

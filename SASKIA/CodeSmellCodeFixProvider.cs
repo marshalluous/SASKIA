@@ -20,6 +20,11 @@ namespace SASKIA
             this.refactoring = refactoring;
         }
 
+        protected CodeSmellCodeFixProvider()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             const string refactoringMessage = "Apply refactoring";

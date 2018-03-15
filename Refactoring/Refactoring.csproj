@@ -142,13 +142,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="BooleanComparisonRefactoring.cs" />
-    <Compile Include="ConstExpressionRefactoring.cs" />
+    <Compile Include="BooleanConstantComparison\BooleanConstantComparisonRefactoring.cs" />
+    <Compile Include="BooleanConstantSimplifier\BooleanConstantSimplifierRefactoring.cs" />
+    <Compile Include="BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
+    <Compile Include="ConditionalComplexity\ConditionalComplexityRefactoring.cs" />
+    <Compile Include="ConditionalComplexity\ConditionalComplexityVisitor.cs" />
     <Compile Include="DiagnosticInfo.cs" />
-    <Compile Include="Helper\ExpressionEvaluator.cs" />
-    <Compile Include="Helper\ExpressionEvaluatorException.cs" />
+    <Compile Include="Helper\SyntaxNodeHelper.cs" />
     <Compile Include="IfReturnRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
+    <Compile Include="LinesOfCode\LinesOfCodeRefactoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
