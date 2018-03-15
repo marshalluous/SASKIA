@@ -53,6 +53,7 @@
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="CodeFixProviders\IfReturnCodeFixProvider.cs" />
+    <Compile Include="DiagnosticAnalyzers\ClassNameDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\ConditionalComplexityDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\IfReturnDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\LinesOfCodeDiagnosticAnalyzer.cs" />
