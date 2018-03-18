@@ -8,6 +8,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Refactoring", "Refactoring\Refactoring.csproj", "{2B09319D-1AD6-4B48-BBE7-D2EC446A9AE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefactoringTesting", "RefactoringTesting\RefactoringTesting.csproj", "{7A73CBA9-32D2-4BD7-B46B-D47B7E8319CE}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbLibrary", "DbLibrary\DbLibrary.csproj", "{725834E1-5C11-4C46-8924-71CC12A48F26}"
 EndProject
 Global

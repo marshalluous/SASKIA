@@ -90,7 +90,7 @@ namespace RefactoringTesting
         {
             TestCodeFix<BinaryExpressionSyntax>("var k = 4 < 12 == false;", "!(4 < 12)");
         }
-        
+
         private static void TestCodeFix<T>(string inputCode, string expectedNodeText)
         {
             var node = Compile(inputCode);

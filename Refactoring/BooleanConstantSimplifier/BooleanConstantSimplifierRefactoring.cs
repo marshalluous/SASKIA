@@ -28,7 +28,7 @@ namespace Refactoring.BooleanConstantSimplifier
             var booleanVisitor = new BooleanConstantSimplifierVisitor();
             var value = booleanVisitor.Visit(node);
 
-            return value != null
+            return value != null && !(node is LiteralExpressionSyntax)
                 ? DiagnosticInfo.CreateFailedResult("Constant boolean expression can be simplified")
                 : DiagnosticInfo.CreateSuccessfulResult();
         }
@@ -50,9 +50,18 @@ namespace Refactoring.BooleanConstantSimplifier
         {
             var node = token.Parent;
 
-            while (node is ExpressionSyntax && node.Parent is ExpressionSyntax) node = node.Parent;
+            while (IsBooleanExpression(node) && IsBooleanExpression(node.Parent))
+                node = node.Parent;
 
             return node;
+        }
+
+        private static bool IsBooleanExpression(SyntaxNode node)
+        {
+            return node is PrefixUnaryExpressionSyntax ||
+                   node is BinaryExpressionSyntax ||
+                   node is ParenthesizedExpressionSyntax ||
+                   node is LiteralExpressionSyntax;
         }
     }
 }

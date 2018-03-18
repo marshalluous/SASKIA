@@ -1,4 +1,6 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
+using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Refactoring;
@@ -23,8 +25,8 @@ namespace SASKIA
                 message,
                 Category,
                 DiagnosticSeverity.Warning,
-                isEnabledByDefault: true,
-                description: refactoring.Description);
+                true,
+                refactoring.Description);
         }
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => 
@@ -40,12 +42,19 @@ namespace SASKIA
 
         private void OnDetect(SyntaxNodeAnalysisContext context)
         {
-            var diagnosticInfo = refactoring.DoDiagnosis(context.Node);
-
-            if (diagnosticInfo.DiagnosticFound)
+            try
             {
+                var diagnosticInfo = refactoring.DoDiagnosis(context.Node);
+
+                if (!diagnosticInfo.DiagnosticFound)
+                    return;
+
                 var diagnostic = Diagnostic.Create(CreateRule(diagnosticInfo.Message), context.Node.GetLocation());
                 context.ReportDiagnostic(diagnostic);
+            }
+            catch (Exception exception)
+            {
+                File.WriteAllText("log.txt", exception.Message);
             }
         }
     }

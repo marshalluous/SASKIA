@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 
-namespace Refactoring
+namespace Refactoring.LinesOfCode
 {
     public sealed class LinesOfCodeRefactoring : IRefactoring
     {
+        private const int ClassLinesOfCodeThreshold = 100;
+        private const int MethodLinesOfCodeThreshold = 15;
+
         public string DiagnosticId => "SASKIA100";
         public string Title => DiagnosticId;
         public string Description => Title;
@@ -21,12 +23,12 @@ namespace Refactoring
         {
             if (node is ClassDeclarationSyntax classNode)
             {
-                if (CountLines(node) > 100)
+                if (CountLines(node) > ClassLinesOfCodeThreshold)
                     return DiagnosticInfo.CreateFailedResult($"Class {classNode.Identifier.Text} is too long");
             }
             else if (node is MethodDeclarationSyntax methodNode)
             {
-                if (CountLines(node) > 15)
+                if (CountLines(node) > MethodLinesOfCodeThreshold)
                     return DiagnosticInfo.CreateFailedResult($"Method {methodNode.Identifier.Text} is too long");
             }
 
@@ -35,12 +37,12 @@ namespace Refactoring
 
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
         {
-            throw new NotImplementedException();
+            yield return node;
         }
-
+    
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
-            throw new NotImplementedException();
+            return token.Parent; 
         }
 
         private static int CountLines(SyntaxNode syntaxNode)

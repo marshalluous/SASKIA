@@ -122,6 +122,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BooleanConstantComparisonRefactoringTesting.cs" />
+    <Compile Include="BooleanConstantSimplifierRefactoringTesting.cs" />
+    <Compile Include="ConditionalComplexityRefactoringTesting.cs" />
+    <Compile Include="DepthOfInheritanceRefactoringTesting.cs" />
+    <Compile Include="IfAndElseBlockEqualsRefactoringTesting.cs" />
+    <Compile Include="LinesOfCodeRefactoringTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,38 +1,37 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.ConditionalComplexity
 {
     internal sealed class ConditionalComplexityVisitor : CSharpSyntaxVisitor<int>
     {
+        public override int DefaultVisit(SyntaxNode node)
+        {
+            return node.ChildNodes().Sum(Visit);
+        }
+
         public override int VisitBinaryExpression(BinaryExpressionSyntax node)
         {
             var kind = node.OperatorToken.Kind();
-            var previousValue = base.VisitBinaryExpression(node);
+            var leftValue = node.Left.Accept(this);
+            var rightValue = node.Right.Accept(this);
+            var previousValue = leftValue + rightValue;
 
-            if (kind == SyntaxKind.LogicalAndExpression || kind == SyntaxKind.LogicalOrExpression)
+            if (kind == SyntaxKind.AmpersandAmpersandToken || kind == SyntaxKind.BarBarToken)
             {
                 return 1 + previousValue;
             }
 
-            return 0 + previousValue;
+            return previousValue;
         }
 
         public override int VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
             return 1 + base.VisitMethodDeclaration(node);
         }
-
-        public override int VisitBreakStatement(BreakStatementSyntax node)
-        {
-            return 1 + base.VisitBreakStatement(node);
-        }
-
-        public override int VisitCasePatternSwitchLabel(CasePatternSwitchLabelSyntax node)
-        {
-            return 1 + base.VisitCasePatternSwitchLabel(node);
-        }
-
+        
         public override int VisitCaseSwitchLabel(CaseSwitchLabelSyntax node)
         {
             return 1 + base.VisitCaseSwitchLabel(node);
@@ -76,11 +75,6 @@ namespace Refactoring.ConditionalComplexity
         public override int VisitIfStatement(IfStatementSyntax node)
         {
             return 1 + base.VisitIfStatement(node);
-        }
-        
-        public override int VisitThrowStatement(ThrowStatementSyntax node)
-        {
-            return 1 + base.VisitThrowStatement(node);
         }
         
         public override int VisitWhileStatement(WhileStatementSyntax node)

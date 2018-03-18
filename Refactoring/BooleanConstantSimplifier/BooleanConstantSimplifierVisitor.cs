@@ -23,6 +23,11 @@ namespace Refactoring.BooleanConstantSimplifier
             return null;
         }
 
+        public override bool? VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
+        {
+            return node.Expression.Accept(this);
+        }
+
         public override bool? VisitBinaryExpression(BinaryExpressionSyntax node)
         {
             var leftValue = node.Left.Accept(this);
@@ -33,13 +38,13 @@ namespace Refactoring.BooleanConstantSimplifier
 
             switch (node.OperatorToken.Kind())
             {
-                case SyntaxKind.LogicalAndExpression:
+                case SyntaxKind.AmpersandAmpersandToken:
                     return leftValue.Value && rightValue.Value;
-                case SyntaxKind.LogicalOrExpression:
+                case SyntaxKind.BarBarToken:
                     return leftValue.Value || rightValue.Value;
+                default:
+                    return null;
             }
-
-            return null;
         }
     }
 }

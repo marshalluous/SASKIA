@@ -7,6 +7,8 @@ namespace Refactoring.ConditionalComplexity
 {
     public sealed class ConditionalComplexityRefactoring : IRefactoring
     {
+        private const int ConditionalComplexityThreshold = 10;
+
         public string DiagnosticId => "SASKIA200";
         public string Title => DiagnosticId;
         public string Description => Title;
@@ -18,11 +20,11 @@ namespace Refactoring.ConditionalComplexity
         {
             var methodNode = (MethodDeclarationSyntax) node;
             var visitor = new ConditionalComplexityVisitor();
-            var complexity = visitor.VisitMethodDeclaration(methodNode);
+            var complexity = visitor.Visit(methodNode);
 
-            return complexity > 10 ?
-                DiagnosticInfo.CreateFailedResult($"Method is too complex (McCabe = {complexity})") :
-                DiagnosticInfo.CreateSuccessfulResult();
+            return complexity > ConditionalComplexityThreshold ?
+                DiagnosticInfo.CreateFailedResult($"Method is too complex (McCabe = {complexity})", complexity) :
+                DiagnosticInfo.CreateSuccessfulResult(complexity);
         }
 
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)

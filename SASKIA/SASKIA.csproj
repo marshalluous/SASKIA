@@ -48,12 +48,15 @@
   <ItemGroup>
     <Compile Include="CodeFixProviders\BooleanConstantComparisonCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\BooleanConstantSimplifierCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\IfAndElseBlockEqualsCodeFixProvider.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantSimplifierDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="CodeFixProviders\IfReturnCodeFixProvider.cs" />
     <Compile Include="DiagnosticAnalyzers\ConditionalComplexityDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\DepthOfInheritanceDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\IfAndElseBlockEqualsDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\IfReturnDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\LinesOfCodeDiagnosticAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

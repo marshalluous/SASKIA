@@ -147,8 +147,10 @@
     <Compile Include="BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
     <Compile Include="ConditionalComplexity\ConditionalComplexityRefactoring.cs" />
     <Compile Include="ConditionalComplexity\ConditionalComplexityVisitor.cs" />
+    <Compile Include="DepthOfInheritance\DepthOfInheritanceRefactoring.cs" />
     <Compile Include="DiagnosticInfo.cs" />
     <Compile Include="Helper\SyntaxNodeHelper.cs" />
+    <Compile Include="IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
     <Compile Include="IfReturnRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
     <Compile Include="LinesOfCode\LinesOfCodeRefactoring.cs" />
