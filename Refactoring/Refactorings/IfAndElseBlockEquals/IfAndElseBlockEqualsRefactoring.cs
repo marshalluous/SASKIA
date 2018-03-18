@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 
-namespace Refactoring.IfAndElseBlockEquals
+namespace Refactoring.Refactorings.IfAndElseBlockEquals
 {
     public sealed class IfAndElseBlockEqualsRefactoring : IRefactoring
     {

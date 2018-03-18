@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Refactoring.IfReturnBoolean
+namespace Refactoring.Refactorings.IfReturnBoolean
 {
     public sealed class IfReturnBooleanRefactoring : IRefactoring
     {

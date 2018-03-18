@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Refactoring.BooleanConstantSimplifier
+namespace Refactoring.Refactorings.BooleanConstantSimplifier
 {
     public sealed class BooleanConstantSimplifierRefactoring : IRefactoring
     {

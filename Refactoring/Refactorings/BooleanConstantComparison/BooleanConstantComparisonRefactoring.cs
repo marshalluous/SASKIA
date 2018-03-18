@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Simplification;
 using Refactoring.Helper;
 
-namespace Refactoring.BooleanConstantComparison
+namespace Refactoring.Refactorings.BooleanConstantComparison
 {
     public sealed class BooleanConstantComparisonRefactoring : IRefactoring
     {

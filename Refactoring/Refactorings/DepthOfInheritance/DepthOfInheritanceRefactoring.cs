@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Refactoring.DepthOfInheritance
+namespace Refactoring.Refactorings.DepthOfInheritance
 {
     public sealed class DepthOfInheritanceRefactoring : IRefactoring
     {

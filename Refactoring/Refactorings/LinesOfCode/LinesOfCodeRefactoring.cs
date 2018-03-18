@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 
-namespace Refactoring.LinesOfCode
+namespace Refactoring.Refactorings.LinesOfCode
 {
     public sealed class LinesOfCodeRefactoring : IRefactoring
     {

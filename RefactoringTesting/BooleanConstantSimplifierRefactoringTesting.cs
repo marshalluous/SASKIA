@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refactoring.BooleanConstantSimplifier;
+using Refactoring.Refactorings.BooleanConstantSimplifier;
 
 namespace RefactoringTesting
 {
