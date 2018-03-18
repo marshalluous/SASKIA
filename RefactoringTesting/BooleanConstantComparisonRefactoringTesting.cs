@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
-using Refactoring.BooleanConstantComparison;
+using Refactoring.Refactorings.BooleanConstantComparison;
 
 namespace RefactoringTesting
 {

@@ -22,14 +22,8 @@ namespace Refactoring.Refactorings.DepthOfInheritance
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var classNode = (ClassDeclarationSyntax) node;
-            var compilation = CSharpCompilation.Create("MyCompilation", new[] { node.SyntaxTree });
-            var model = compilation.GetSemanticModel(node.SyntaxTree);
-
-            var classSema = node.SyntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>()
-                .FirstOrDefault(c => c.Identifier == classNode.Identifier);
-            var sym = model.GetDeclaredSymbol(classSema);
-
-            var depthOfInheritance = CalculateDepthOfInheritance(sym);
+            var classSymbol = GetTypeSymbol(classNode);
+            var depthOfInheritance = CalculateDepthOfInheritance(classSymbol);
 
             return depthOfInheritance > ThresholdDepthOfInheritance
                 ? DiagnosticInfo.CreateFailedResult("DIT alarm", depthOfInheritance)
@@ -40,12 +34,24 @@ namespace Refactoring.Refactorings.DepthOfInheritance
             new[] {node};
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) => token.Parent;
-        
+
+        private static ITypeSymbol GetTypeSymbol(BaseTypeDeclarationSyntax classNode)
+        {
+            var classSyntaxTree = classNode.SyntaxTree;
+            var compilation = CSharpCompilation.Create("CompilationUnit", new[] { classSyntaxTree });
+            var model = compilation.GetSemanticModel(classNode.SyntaxTree);
+
+            var classSemanticNode = classNode.SyntaxTree.GetRoot().DescendantNodes()
+                .OfType<ClassDeclarationSyntax>()
+                .FirstOrDefault(n => n.Identifier == classNode.Identifier);
+            return model.GetDeclaredSymbol(classSemanticNode);
+        }
+
         private static int CalculateDepthOfInheritance(ITypeSymbol typeSymbol)
         {
-            if (typeSymbol.Name == "Object")
+            if (typeSymbol == null || typeSymbol.Name == "Object")
                 return 0;
-            
+
             return 1 + CalculateDepthOfInheritance(typeSymbol.BaseType);
         }
     }

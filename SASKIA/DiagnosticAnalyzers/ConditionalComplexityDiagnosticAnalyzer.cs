@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Refactoring.ConditionalComplexity;
+using Refactoring.Refactorings.ConditionalComplexity;
 
 namespace SASKIA.DiagnosticAnalyzers
 {

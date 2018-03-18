@@ -142,18 +142,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="BooleanConstantComparison\BooleanConstantComparisonRefactoring.cs" />
-    <Compile Include="BooleanConstantSimplifier\BooleanConstantSimplifierRefactoring.cs" />
-    <Compile Include="BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
-    <Compile Include="ConditionalComplexity\ConditionalComplexityRefactoring.cs" />
-    <Compile Include="ConditionalComplexity\ConditionalComplexityVisitor.cs" />
-    <Compile Include="DepthOfInheritance\DepthOfInheritanceRefactoring.cs" />
+    <Compile Include="Refactorings\BooleanConstantComparison\BooleanConstantComparisonRefactoring.cs" />
+    <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierRefactoring.cs" />
+    <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
+    <Compile Include="Refactorings\ConditionalComplexity\ConditionalComplexityRefactoring.cs" />
+    <Compile Include="Refactorings\ConditionalComplexity\ConditionalComplexityVisitor.cs" />
+    <Compile Include="Refactorings\DepthOfInheritance\DepthOfInheritanceRefactoring.cs" />
     <Compile Include="DiagnosticInfo.cs" />
     <Compile Include="Helper\SyntaxNodeHelper.cs" />
-    <Compile Include="IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
-    <Compile Include="IfReturnRefactoring.cs" />
+    <Compile Include="Refactorings\IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
+    <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
-    <Compile Include="LinesOfCode\LinesOfCodeRefactoring.cs" />
+    <Compile Include="Refactorings\LinesOfCode\LinesOfCodeRefactoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

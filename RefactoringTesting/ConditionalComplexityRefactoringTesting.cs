@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refactoring.ConditionalComplexity;
+using Refactoring.Refactorings.ConditionalComplexity;
 
 namespace RefactoringTesting
 {

@@ -1,7 +1,7 @@
 ﻿using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Refactoring.BooleanConstantSimplifier;
+using Refactoring.Refactorings.BooleanConstantSimplifier;
 
 namespace SASKIA.CodeFixProviders
 {

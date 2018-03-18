@@ -58,10 +58,17 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
 
         private static bool IsBooleanExpression(SyntaxNode node)
         {
-            return node is PrefixUnaryExpressionSyntax ||
-                   node is BinaryExpressionSyntax ||
-                   node is ParenthesizedExpressionSyntax ||
-                   node is LiteralExpressionSyntax;
+            switch (node)
+            {
+                case PrefixUnaryExpressionSyntax prefixNode:
+                    return prefixNode.OperatorToken.Text == "!";
+
+                case BinaryExpressionSyntax binaryNode:
+                    return binaryNode.OperatorToken.Kind() == SyntaxKind.AmpersandAmpersandToken ||
+                           binaryNode.OperatorToken.Kind() == SyntaxKind.BarBarToken;
+            }
+
+            return node is ParenthesizedExpressionSyntax || node is LiteralExpressionSyntax;
         }
     }
 }

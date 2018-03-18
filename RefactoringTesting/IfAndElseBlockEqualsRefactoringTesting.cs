@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refactoring.IfAndElseBlockEquals;
+using Refactoring.Refactorings.IfAndElseBlockEquals;
 
 namespace RefactoringTesting
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis;
-using Refactoring.BooleanConstantComparison;
+using Refactoring.Refactorings.BooleanConstantComparison;
 
 namespace SASKIA.DiagnosticAnalyzers
 {

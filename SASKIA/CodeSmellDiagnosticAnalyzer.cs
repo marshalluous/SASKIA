@@ -54,7 +54,7 @@ namespace SASKIA
             }
             catch (Exception exception)
             {
-                File.WriteAllText("log.txt", exception.Message);
+                File.AppendAllText("log.txt", exception.Message + "\r\n");
             }
         }
     }

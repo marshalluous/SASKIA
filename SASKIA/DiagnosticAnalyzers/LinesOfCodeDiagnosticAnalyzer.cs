@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Refactoring.LinesOfCode;
+using Refactoring.Refactorings.LinesOfCode;
 
 namespace SASKIA.DiagnosticAnalyzers
 {

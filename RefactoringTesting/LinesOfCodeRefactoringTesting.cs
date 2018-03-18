@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refactoring.LinesOfCode;
+using Refactoring.Refactorings.LinesOfCode;
 
 namespace RefactoringTesting
 {

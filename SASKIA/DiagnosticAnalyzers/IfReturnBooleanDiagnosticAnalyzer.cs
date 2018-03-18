@@ -1,14 +1,14 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Refactoring;
+using Refactoring.Refactorings.IfReturnBoolean;
 
 namespace SASKIA.DiagnosticAnalyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class IfReturnDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
+    public sealed class IfReturnBooleanDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
     {
-        public IfReturnDiagnosticAnalyzer()
-            : base(new IfReturnRefactoring())
+        public IfReturnBooleanDiagnosticAnalyzer()
+            : base(new IfReturnBooleanRefactoring())
         {
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Refactoring.IfAndElseBlockEquals;
+using Refactoring.Refactorings.IfAndElseBlockEquals;
 
 namespace SASKIA.DiagnosticAnalyzers
 {
