@@ -4,9 +4,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Refactoring
+namespace Refactoring.IfReturnBoolean
 {
-    public sealed class IfReturnRefactoring : IRefactoring
+    public sealed class IfReturnBooleanRefactoring : IRefactoring
     {
         public string DiagnosticId => "SASKIA002";
 
