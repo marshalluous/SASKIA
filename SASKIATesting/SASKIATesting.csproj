@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E435BBA3-EF8D-404A-9099-32E608B9A7A0}</ProjectGuid>
+    <ProjectGuid>{2D81289B-0C1B-43BA-A2FE-ACDA07125FA2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SASKIATesting</RootNamespace>

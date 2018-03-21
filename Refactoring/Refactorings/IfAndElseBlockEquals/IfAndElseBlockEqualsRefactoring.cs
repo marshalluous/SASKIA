@@ -40,9 +40,9 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
                 return new[] {node};
 
             var elseBlock = ifNode.Else.ChildNodes().First();
-
-            return CompareSyntaxNodes(thenBlock, elseBlock) ? 
-                ifNode.Statement.ChildNodes() : 
+            
+            return CompareSyntaxNodes(thenBlock, elseBlock) ?
+                ifNode.Statement.ChildNodes() :
                 new[] { node };
         }
 

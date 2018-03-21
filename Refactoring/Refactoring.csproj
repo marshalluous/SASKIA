@@ -141,7 +141,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
     <Compile Include="Refactorings\BooleanConstantComparison\BooleanConstantComparisonRefactoring.cs" />
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierRefactoring.cs" />
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
@@ -153,6 +153,8 @@
     <Compile Include="Refactorings\IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
     <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
+    <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantSimplifierRefactoring.cs" />
+    <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantSimplifierVisitor.cs" />
     <Compile Include="Refactorings\LinesOfCode\LinesOfCodeRefactoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
