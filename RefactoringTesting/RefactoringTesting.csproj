@@ -128,6 +128,7 @@
     <Compile Include="IfAndElseBlockEqualsRefactoringTesting.cs" />
     <Compile Include="IfReturnBooleanRefactoringTesting.cs" />
     <Compile Include="IntegerConstantSimplifierRefactoringTesting.cs" />
+    <Compile Include="LackOfCohesionRefactoringTesting.cs" />
     <Compile Include="LinesOfCodeRefactoringTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PureExpressionCheckerTesting.cs" />

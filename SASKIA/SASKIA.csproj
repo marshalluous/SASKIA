@@ -58,6 +58,7 @@
     <Compile Include="DiagnosticAnalyzers\IfAndElseBlockEqualsDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\IfReturnBooleanDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\IntegerConstantSimplifierDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\LackOfCohesionDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\LinesOfCodeDiagnosticAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
