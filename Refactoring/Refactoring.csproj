@@ -153,6 +153,7 @@
     <Compile Include="Refactorings\IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
     <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
+    <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantOperatorSimplifier.cs" />
     <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantSimplifierRefactoring.cs" />
     <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantSimplifierVisitor.cs" />
     <Compile Include="Refactorings\LackOfCohesion\LackOfCohesionRefactoring.cs" />

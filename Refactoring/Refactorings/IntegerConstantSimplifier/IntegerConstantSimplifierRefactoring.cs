@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.IntegerConstantSimplifier
 {
@@ -32,20 +35,34 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
             var visitor = new IntegerConstantSimplifierVisitor();
             var value = visitor.Visit(node);
 
-            if (value == null)
-                return DiagnosticInfo.CreateSuccessfulResult();
-            else
-                return DiagnosticInfo.CreateFailedResult("hallo");
+            return value == null && !(node is LiteralExpressionSyntax) ? 
+                DiagnosticInfo.CreateSuccessfulResult() :
+                DiagnosticInfo.CreateFailedResult("Integer constant can be simplified");
         }
+        
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            typeof(SyntaxKind)
+                .GetEnumNames()
+                .Where(name => name.EndsWith("Expression"))
+                .Select(name => (SyntaxKind)Enum.Parse(typeof(SyntaxKind), name));
+
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
-            return null;
+            var node = token.Parent;
+
+            while (IsIntegerNode(node) && IsIntegerNode(node.Parent))
+                node = node.Parent;
+
+            return node;
         }
 
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize()
+        private static bool IsIntegerNode(SyntaxNode node)
         {
-            yield return SyntaxKind.ClassDeclaration;
+            return node is BinaryExpressionSyntax ||
+                   node is ParenthesizedExpressionSyntax ||
+                   node is PrefixUnaryExpressionSyntax ||
+                   node is LiteralExpressionSyntax;
         }
     }
 }

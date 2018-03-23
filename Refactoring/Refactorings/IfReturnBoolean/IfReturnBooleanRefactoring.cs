@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Simplification;
 using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.IfReturnBoolean
@@ -20,68 +21,77 @@ namespace Refactoring.Refactorings.IfReturnBoolean
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var ifNode = (IfStatementSyntax) node;
-            var thenNode = ifNode.Statement;
+            var result = ApplyFix(node);
 
-            if (ifNode.Else == null)
+            if (result == null)
                 return DiagnosticInfo.CreateSuccessfulResult();
-
-            var elseNode = ifNode.Else.Statement;
-
-            if (thenNode is BlockSyntax thenBlock && thenBlock.ChildNodes().Count() == 1)
-            {
-                thenNode = thenBlock.Statements.First();
-            }
-
-            if (elseNode is BlockSyntax elseBlock && elseBlock.ChildNodes().Count() == 1)
-            {
-                elseNode = elseBlock.Statements.First();
-            }
-
-            if ((IsReturnBooleanStatement(thenNode, "true") && IsReturnBooleanStatement(elseNode, "false")) ||
-                IsReturnBooleanStatement(thenNode, "false") && IsReturnBooleanStatement(elseNode, "true"))
-            {
-                return DiagnosticInfo.CreateFailedResult("Unnecessary If-statement");
-            }
-
-            return DiagnosticInfo.CreateSuccessfulResult();
+            else
+                return DiagnosticInfo.CreateFailedResult("Return Anti-Pattern");
         }
 
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
         {
-            var ifNode = (IfStatementSyntax) node;
-            var thenNode = ifNode.Statement;
+            var ifNode = (IfStatementSyntax)node;
 
-            if (ifNode.Else == null)
-                return new [] { node };
-            
-            var elseNode = ifNode.Else.Statement;
-            
-            if (thenNode is BlockSyntax thenBlock && thenBlock.ChildNodes().Count() == 1)
-            {
-                thenNode = thenBlock.Statements.First();
-            }
+            var thenNode = GetThenBlock(ifNode);
+            var elseNode = GetElseBlock(ifNode);
 
-            if (elseNode is BlockSyntax elseBlock && elseBlock.ChildNodes().Count() == 1)
-            {
-                elseNode = elseBlock.Statements.First();
-            }
+            if (elseNode == null)
+                return new[] {node};
 
             if (IsReturnBooleanStatement(thenNode, "true") && IsReturnBooleanStatement(elseNode, "false"))
             {
-                return new[] {SyntaxFactory.ReturnStatement(ifNode.Condition)};
+                return new[] { SyntaxFactory.ReturnStatement(ifNode.Condition).NormalizeWhitespace() };
             }
 
             if (!IsReturnBooleanStatement(thenNode, "false") || !IsReturnBooleanStatement(elseNode, "true"))
-                return new[] {node};
+                return new[] { node };
 
-            var notNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, ifNode.Condition);
-            return new[] { SyntaxFactory.ReturnStatement(notNode)};
+            var condition = AddParentheses(ifNode.Condition).NormalizeWhitespace();
+            var notNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, condition);
+            return new[] { SyntaxFactory.ReturnStatement(notNode).NormalizeWhitespace() };
+        }
+
+        private static StatementSyntax GetElseBlock(IfStatementSyntax ifNode)
+        {
+            if (ifNode.Else == null)
+                return null;
+
+            var elseNode = ifNode.Else.Statement;
+
+            if (elseNode is BlockSyntax elseBlock && elseBlock.ChildNodes().Count() == 1)
+            {
+                return elseBlock.Statements.First();
+            }
+
+            return elseNode;
+        }
+
+        private static StatementSyntax GetThenBlock(IfStatementSyntax ifNode)
+        {
+            var thenNode = ifNode.Statement;
+
+            if (thenNode is BlockSyntax thenBlock && thenBlock.ChildNodes().Count() == 1)
+            {
+                return thenBlock.Statements.First();
+            }
+
+            return thenNode;
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
             return SyntaxNodeHelper.FindAncestorOfType<IfStatementSyntax>(token);
+        }
+        
+        private static ExpressionSyntax AddParentheses(ExpressionSyntax expression)
+        {
+            if (expression is BinaryExpressionSyntax)
+                return SyntaxFactory
+                    .ParenthesizedExpression(expression.NormalizeWhitespace())
+                    .WithAdditionalAnnotations(Simplifier.Annotation);
+
+            return expression;
         }
 
         private static bool IsReturnBooleanStatement(SyntaxNode statementNode, string booleanLiteral)

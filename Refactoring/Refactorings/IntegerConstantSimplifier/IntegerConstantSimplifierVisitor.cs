@@ -24,23 +24,14 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
         {
             var value = node.Operand?.Accept(this);
 
-            if (value == null)
-                return null;
+            return value == null ? 
+                null : 
+                IntegerConstantOperatorSimplifier.ReducePrefixUnaryOperation(node.OperatorToken.Kind(), value.Value);
+        }
 
-            switch (node.OperatorToken.Kind())
-            {
-                case SyntaxKind.PlusToken:
-                    return value;
-
-                case SyntaxKind.MinusToken:
-                    return -value;
-
-                case SyntaxKind.TildeToken:
-                    return ~value;
-
-                default:
-                    return null;
-            }
+        public override int? VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
+        {
+            return null;
         }
 
         public override int? VisitBinaryExpression(BinaryExpressionSyntax node)
@@ -51,26 +42,8 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
             if (leftValue == null || rightValue == null)
                 return null;
 
-            switch (node.OperatorToken.Kind())
-            {
-                case SyntaxKind.PlusToken:
-                    return leftValue.Value + rightValue.Value;
-
-                case SyntaxKind.MinusToken:
-                    return leftValue.Value - rightValue.Value;
-
-                case SyntaxKind.PercentToken:
-                    return leftValue.Value % rightValue.Value;
-
-                case SyntaxKind.SlashToken:
-                    return leftValue.Value / rightValue.Value;
-
-                case SyntaxKind.AsteriskToken:
-                    return leftValue.Value * rightValue.Value;
-                    
-                default:
-                    return null;
-            }
+            return IntegerConstantOperatorSimplifier.ReduceBinaryOperation(node.OperatorToken.Kind(), leftValue.Value,
+                rightValue.Value);
         }
     }
 }

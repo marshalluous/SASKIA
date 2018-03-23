@@ -32,10 +32,67 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void ModuloTest()
+        {
+            var source = MethodSource("var x = 334 % 12;");
+            TestCodeFix(source, "10");
+        }
+
+        [TestMethod]
+        public void ModuloByZeroTest()
+        {
+            var source = MethodSource("var x = 34 % 0;");
+            TestCodeFix(source, "34 % 0");
+        }
+
+        [TestMethod]
+        public void BitShiftOperationTest()
+        {
+            var source = MethodSource("var x = 4 << 3;");
+            TestCodeFix(source, "32");
+            source = MethodSource("var x = 12 >> 3;");
+            TestCodeFix(source, "1");
+        }
+      
+        [TestMethod]
         public void DivisionTest()
         {
             var source = MethodSource(" var x = 40 / 12;");
             TestCodeFix(source, "3");
+        }
+
+        [TestMethod]
+        public void DivisionByZeroTest()
+        {
+            var source = MethodSource(" var x = 40 / 0;");
+            TestCodeFix(source, "40 / 0");
+        }
+
+        [TestMethod]
+        public void IncrementDecrementTest()
+        {
+            TestCodeFix(MethodSource("var x = 4; y = ++x;"), "++x");
+            TestCodeFix(MethodSource("var x = 12; y = --x;"), "--x");
+            TestCodeFix(MethodSource("var x = 3; y = x--;"), "x--");
+            TestCodeFix(MethodSource("var x = 8; y = x++;"), "x++");
+        }
+
+        [TestMethod]
+        public void UnaryPlusTest()
+        {
+            TestCodeFix("var x = +12;", "12");
+        }
+
+        [TestMethod]
+        public void UnaryMinusTest()
+        {
+            TestCodeFix("var x = -12;", "-12");
+        }
+
+        [TestMethod]
+        public void BitInversionTest()
+        {
+            TestCodeFix("var x = ~34;", (~34).ToString());
         }
 
         private static void TestCodeFix(string inputCode, string expectedNodeText)
@@ -50,7 +107,7 @@ namespace RefactoringTesting
 
         private static SyntaxNode FindNode(SyntaxNode node)
         {
-            if (node is PrefixUnaryExpressionSyntax || node is BinaryExpressionSyntax)
+            if (node is PostfixUnaryExpressionSyntax || node is PrefixUnaryExpressionSyntax || node is BinaryExpressionSyntax)
             {
                 return node;
             }
