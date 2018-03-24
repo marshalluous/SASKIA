@@ -91,6 +91,12 @@ namespace RefactoringTesting
             TestCodeFix<BinaryExpressionSyntax>("var k = 4 < 12 == false;", "!(4 < 12)");
         }
 
+        [TestMethod]
+        public void TestSpecialNameofComparison()
+        {
+            TestCodeFix<BinaryExpressionSyntax>("var x = ((nameof(x) == \"x\") == false);", "!(nameof(x) == \"x\")");
+        }
+
         private static void TestCodeFix<T>(string inputCode, string expectedNodeText)
         {
             var node = Compile(inputCode);

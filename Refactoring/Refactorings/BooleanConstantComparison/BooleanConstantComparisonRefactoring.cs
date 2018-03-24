@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Simplification;
 using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.BooleanConstantComparison
@@ -70,7 +69,8 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
             var not = IsTrueNode(literalNode) != (compareOperator == "==");
 
             replaceNodes.Add(not
-                ? SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, AddParentheses(otherNode))
+                ? SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, 
+                    SyntaxNodeHelper.AddParentheses(otherNode))
                 : otherNode);
         }
 
@@ -85,16 +85,6 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
         {
             literalText = syntaxNode.GetText().ToString().Trim();
             return IsTrueNode(syntaxNode) || IsFalseNode(syntaxNode);
-        }
-
-        private static ExpressionSyntax AddParentheses(ExpressionSyntax expression)
-        {
-            if (expression is BinaryExpressionSyntax)
-                return SyntaxFactory
-                    .ParenthesizedExpression(expression.NormalizeWhitespace())
-                    .WithAdditionalAnnotations(Simplifier.Annotation);
-
-            return expression;
         }
 
         private static bool IsFalseNode(SyntaxNode syntaxNode)

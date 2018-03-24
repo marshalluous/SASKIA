@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.IntegerConstantSimplifier
 {

@@ -159,6 +159,7 @@
     <Compile Include="Refactorings\LackOfCohesion\LackOfCohesionRefactoring.cs" />
     <Compile Include="Refactorings\LinesOfCode\LinesOfCodeRefactoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Refactorings\NotOperatorInversion\NotOperatorInversionRefactoring.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

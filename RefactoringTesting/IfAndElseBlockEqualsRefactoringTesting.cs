@@ -15,14 +15,14 @@ namespace RefactoringTesting
         public void IfAndElseBlockDifferentTest()
         {
             const string source = "if (true) { int a = 12; } else { int b = 13; }";
-            TestCodeFix(source, source);
+            TestCodeFix(source, string.Empty, true);
         }
 
         [TestMethod]
         public void NoElseBlockTest()
         {
             const string source = "if (true) { int a = 32; }";
-            TestCodeFix(source, source);
+            TestCodeFix(source, string.Empty, true);
         }
 
         [TestMethod]
@@ -36,28 +36,28 @@ namespace RefactoringTesting
         public void IfAndElseBlockSameCodeTest()
         {
             const string source = "if (true) { int x = 12; } else { int x = 12; }";
-            TestCodeFix(source, "int x = 12;");
+            TestCodeFix(source, new [] { "int x = 12;" });
         }
 
         [TestMethod]
         public void IfAndElseBlockSameCodeButIfBlockWithCurlyBrackets()
         {
             const string source = "if (true) { int x = 12; } else int x = 12;";
-            TestCodeFix(source, "int x = 12;");
+            TestCodeFix(source, new [] { "int x = 12;" });
         }
 
         [TestMethod]
         public void IgnoreElseIfBlocksTest()
         {
             const string source = "if (true) { int x = 12; } else if (4 == 12) { int x = 12; }";
-            TestCodeFix(source, source);
+            TestCodeFix(source, string.Empty, true);
         }
 
         [TestMethod]
         public void IgnoreElseIfBlocksWithElseTest()
         {
             const string source = "if (true) { int x = 12; } else if (4 == 12) { int x = 12; } else { int x = 12; }";
-            TestCodeFix(source, source);
+            TestCodeFix(source, string.Empty, true);
         }
 
         [TestMethod]
@@ -68,15 +68,22 @@ namespace RefactoringTesting
             TestCodeFix(source, new [] { "int x = 12;", "int y = 14;" });
         }
 
-        private static void TestCodeFix(string inputCode, string expectedOutputCode)
+        private static void TestCodeFix(string inputCode, string expectedOutputCode, bool expectNoRefactoring = false)
         {
             inputCode = "void A() { " + inputCode + " }";
             var node = Compile(inputCode);
             var refactoring = new IfAndElseBlockEqualsRefactoring();
             node = FindNode(node);
             Assert.IsNotNull(node);
-            var resultNode = refactoring.ApplyFix(node).First();
-            Assert.AreEqual(expectedOutputCode, resultNode.GetText().ToString().Trim());
+            var resultNodes = refactoring.ApplyFix(node);
+
+            if (expectNoRefactoring)
+            {
+                Assert.IsNull(resultNodes);
+                return;
+            }
+
+            Assert.AreEqual(expectedOutputCode, resultNodes.First().GetText().ToString().Trim());
         }
 
         private static void TestCodeFix(string inputCode, IEnumerable<string> expectedStatements)

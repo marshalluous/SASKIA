@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.BooleanConstantSimplifier
 {
@@ -44,15 +45,10 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
                     : SyntaxKind.FalseLiteralExpression);
         }
 
-        public SyntaxNode GetReplaceableNode(SyntaxToken token)
-        {
-            var node = token.Parent;
-
-            while (IsBooleanExpression(node) && IsBooleanExpression(node.Parent))
-                node = node.Parent;
-
-            return node;
-        }
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorWithPredicate(token,
+                node => !(IsBooleanExpression(node) && IsBooleanExpression(node.Parent)));
+        
 
         private static bool IsBooleanExpression(SyntaxNode node)
         {

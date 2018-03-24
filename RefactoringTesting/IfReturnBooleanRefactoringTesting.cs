@@ -24,6 +24,23 @@ namespace RefactoringTesting
             TestCodeFix(source, "return !(true == false);");
         }
 
+        [TestMethod]
+        public void TestMethodCallCondition()
+        {
+            var source = GetCodeTemplate("if (A()) { return false; } else { return true; }");
+            TestCodeFix(source, "return !A();");
+
+            source = GetCodeTemplate("int x = 4; if (nameof(x) == \"x\") { return false; } else {return true; }");
+            TestCodeFix(source, "return !(nameof(x) == \"x\");");
+        }
+
+        [TestMethod]
+        public void TestIntegerComparisonCondition()
+        {
+            var source = GetCodeTemplate("if (4 < 12) { return false; } else return true;");
+            TestCodeFix(source, "return !(4 < 12);");
+        }
+        
         private static string GetCodeTemplate(string code)
         {
             return "class X { public bool Y() {" + code + "}}";
