@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -59,6 +61,14 @@ namespace Refactoring.Helper
                     .WithAdditionalAnnotations(Simplifier.Annotation);
 
             return expression;
+        }
+
+        public static IEnumerable<SyntaxKind> GetExpressionSyntaxKinds()
+        {
+            return typeof(SyntaxKind)
+                .GetEnumNames()
+                .Where(name => name.EndsWith("Expression"))
+                .Select(name => (SyntaxKind) Enum.Parse(typeof(SyntaxKind), name));
         }
     }
 }

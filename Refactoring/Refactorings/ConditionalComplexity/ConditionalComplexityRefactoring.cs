@@ -21,9 +21,10 @@ namespace Refactoring.Refactorings.ConditionalComplexity
             var methodNode = (MethodDeclarationSyntax) node;
             var visitor = new ConditionalComplexityVisitor();
             var complexity = visitor.Visit(methodNode);
-
-            return complexity > ConditionalComplexityThreshold ?
-                DiagnosticInfo.CreateFailedResult($"Method is too complex (McCabe = {complexity})", complexity) :
+            
+             return complexity > ConditionalComplexityThreshold ?
+                DiagnosticInfo.CreateFailedResult($"Method is too complex (McCabe = {complexity})", complexity,
+                    methodNode.Identifier.GetLocation()) :
                 DiagnosticInfo.CreateSuccessfulResult(complexity);
         }
 

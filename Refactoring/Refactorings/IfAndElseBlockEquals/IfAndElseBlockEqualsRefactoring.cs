@@ -57,12 +57,10 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
                     ? new[] {localDeclarationStatement.NormalizeWhitespace()}.Union(ifNode.Statement.ChildNodes())
                     : null;
             }
-            else
-            {
-                return CompareSyntaxNodes(thenBlock, elseBlock)
-                    ? ifNode.Statement.ChildNodes()
-                    : null;
-            }
+
+            return CompareSyntaxNodes(thenBlock, elseBlock)
+                ? ifNode.Statement.ChildNodes()
+                : null;
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>

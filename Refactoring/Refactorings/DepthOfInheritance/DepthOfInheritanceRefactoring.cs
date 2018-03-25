@@ -26,7 +26,7 @@ namespace Refactoring.Refactorings.DepthOfInheritance
             var depthOfInheritance = CalculateDepthOfInheritance(classSymbol);
 
             return depthOfInheritance > ThresholdDepthOfInheritance
-                ? DiagnosticInfo.CreateFailedResult("DIT alarm", depthOfInheritance)
+                ? DiagnosticInfo.CreateFailedResult("To many DIT levels", depthOfInheritance, classNode.Identifier.GetLocation())
                 : DiagnosticInfo.CreateSuccessfulResult(depthOfInheritance);
         }
 
@@ -43,7 +43,8 @@ namespace Refactoring.Refactorings.DepthOfInheritance
 
             var classSemanticNode = classNode.SyntaxTree.GetRoot().DescendantNodes()
                 .OfType<ClassDeclarationSyntax>()
-                .FirstOrDefault(n => n.Identifier == classNode.Identifier);
+                .FirstOrDefault(node => node.Identifier == classNode.Identifier);
+
             return model.GetDeclaredSymbol(classSemanticNode);
         }
 

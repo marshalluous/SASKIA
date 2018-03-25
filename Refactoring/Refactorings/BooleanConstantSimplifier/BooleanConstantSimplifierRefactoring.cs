@@ -13,10 +13,7 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
         public string DiagnosticId => "SASKIA010";
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            typeof(SyntaxKind)
-                .GetEnumNames()
-                .Where(name => name.EndsWith("Expression"))
-                .Select(name => (SyntaxKind) Enum.Parse(typeof(SyntaxKind), name));
+            SyntaxNodeHelper.GetExpressionSyntaxKinds();
 
         public string Title => "YXYX";
 
