@@ -42,7 +42,8 @@ namespace Refactoring.Helper
         {
             var node = syntaxToken.Parent;
 
-            while (!predicate(node)) node = node.Parent;
+            while (!predicate(node))
+                node = node.Parent;
 
             return node;
         }

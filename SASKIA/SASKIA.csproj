@@ -3,8 +3,6 @@
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -12,7 +10,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{8B55C69C-FBA0-4231-8595-33EA4F583693}</ProjectGuid>
+    <ProjectGuid>{EB44DCD3-17F1-4070-B153-28B57027DBF8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SASKIA</RootNamespace>
@@ -50,14 +48,21 @@
   <ItemGroup>
     <Compile Include="CodeFixProviders\BooleanConstantComparisonCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\BooleanConstantSimplifierCodeFixProvider.cs" />
-    <Compile Include="DiagnosticAnalyzers\BooleanConstantSimplifierDiagnosticAnalyzer.cs" />
-    <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
+    <Compile Include="CodeFixProviders\ClassNameCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\IfAndElseBlockEqualsCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\IfReturnBooleanCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\IntegerConstantSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
-    <Compile Include="CodeFixProviders\IfReturnCodeFixProvider.cs" />
     <Compile Include="DiagnosticAnalyzers\ClassNameDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\BooleanConstantSimplifierDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\ConditionalComplexityDiagnosticAnalyzer.cs" />
-    <Compile Include="DiagnosticAnalyzers\IfReturnDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\DepthOfInheritanceDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\IfAndElseBlockEqualsDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\IfReturnBooleanDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\IntegerConstantSimplifierDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\LackOfCohesionDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\LinesOfCodeDiagnosticAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,12 +74,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Hunspellx64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Hunspellx86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Content Include="index.html" />
+    <Content Include="stylesheet.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Refactoring\Refactoring.csproj">
+      <Project>{2b09319d-1ad6-4b48-bbe7-d2ec446a9ae1}</Project>
+      <Name>Refactoring</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=2.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -186,41 +193,8 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Refactoring\Refactoring.csproj">
-      <Project>{2b09319d-1ad6-4b48-bbe7-d2ec446a9ae1}</Project>
-      <Name>Refactoring</Name>
-    </ProjectReference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
-      <HintPath>..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data.SQLite, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.108.0\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.108.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.108.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

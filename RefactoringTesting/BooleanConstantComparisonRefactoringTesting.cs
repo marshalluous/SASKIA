@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
-using Refactoring.BooleanConstantComparison;
+using Refactoring.Refactorings.BooleanConstantComparison;
 
 namespace RefactoringTesting
 {
@@ -90,7 +90,7 @@ namespace RefactoringTesting
         {
             TestCodeFix<BinaryExpressionSyntax>("var k = 4 < 12 == false;", "!(4 < 12)");
         }
-        
+
         private static void TestCodeFix<T>(string inputCode, string expectedNodeText)
         {
             var node = Compile(inputCode);
