@@ -15,7 +15,7 @@ namespace Refactoring.Refactorings.LackOfCohesion
 
         public string Description => Title;
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node) =>
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
             new [] { node };
     
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)

@@ -18,12 +18,12 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            return ApplyFix(node) == null
+            return GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
                 : DiagnosticInfo.CreateFailedResult("Then block and else block contains the same code");
         }
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var ifNode = (IfStatementSyntax) node;
             var thenBlock = ifNode.Statement;

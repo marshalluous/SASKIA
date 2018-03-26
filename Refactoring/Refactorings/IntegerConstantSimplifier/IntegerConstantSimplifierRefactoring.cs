@@ -19,13 +19,13 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var result = ApplyFix(node);
+            var result = GetFixableNodes(node);
             return result == null && !(node is LiteralExpressionSyntax) ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
                 DiagnosticInfo.CreateFailedResult("Integer constant can be simplified");
         }
         
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var visitor = new IntegerConstantSimplifierVisitor();
             var value = visitor.Visit(node);
