@@ -60,7 +60,7 @@ namespace SASKIA
                     return document.WithSyntaxRoot(root);
 
                 var replaceNodes = refactoring
-                    .ApplyFix(replaceableNode)
+                    .GetFixableNodes(replaceableNode)
                     .ToArray();
 
                 if (replaceNodes.Length <= 0)

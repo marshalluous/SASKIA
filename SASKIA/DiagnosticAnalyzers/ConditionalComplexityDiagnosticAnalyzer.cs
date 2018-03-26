@@ -4,7 +4,7 @@ using Refactoring.Refactorings.ConditionalComplexity;
 
 namespace SASKIA.DiagnosticAnalyzers
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ConditionalComplexityDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
     {
         public ConditionalComplexityDiagnosticAnalyzer()

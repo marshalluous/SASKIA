@@ -58,7 +58,7 @@ namespace RefactoringTesting
             node = FindNode(node);
             Assert.IsNotNull(node);
             var refactoring = new NotOperatorInversionRefactoring();
-            var resultNode = refactoring.ApplyFix(node).First();
+            var resultNode = refactoring.GetFixableNodes(node).First();
             Assert.AreEqual(expectedOutput, resultNode.ToString());
         }
 

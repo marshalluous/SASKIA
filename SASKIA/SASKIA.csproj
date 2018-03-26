@@ -34,6 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,16 +43,19 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CodeFixProviders\BooleanConstantComparisonCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\BooleanConstantSimplifierCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\ClassNameCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfAndElseBlockEqualsCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfReturnBooleanCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IntegerConstantSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\NotOperationInversionCodeFixProvider.cs" />
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\ClassNameDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantSimplifierDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\ConditionalComplexityDiagnosticAnalyzer.cs" />

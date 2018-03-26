@@ -20,13 +20,13 @@ namespace Refactoring.Refactorings.IfReturnBoolean
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var result = ApplyFix(node);
+            var result = GetFixableNodes(node);
             return result == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
                 DiagnosticInfo.CreateFailedResult("Return Anti-Pattern");
         }
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var ifNode = (IfStatementSyntax)node;
 

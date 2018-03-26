@@ -103,7 +103,7 @@ namespace RefactoringTesting
             var refactoring = new BooleanConstantComparisonRefactoring();
             node = FindNodeOfType<T>(node);
             Assert.IsNotNull(node);
-            var resultNode = refactoring.ApplyFix(node).First();
+            var resultNode = refactoring.GetFixableNodes(node).First();
             Assert.AreEqual(expectedNodeText, resultNode.ToString());
         }
 

@@ -29,7 +29,7 @@ namespace Refactoring.Refactorings.ConditionalComplexity
                 DiagnosticInfo.CreateSuccessfulResult(complexity);
         }
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             yield return node;
         }

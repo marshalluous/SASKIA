@@ -15,7 +15,7 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
 
         public string Description => Title;
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var replaceNodes = new List<SyntaxNode>();
             InternApplyFix(node, replaceNodes);

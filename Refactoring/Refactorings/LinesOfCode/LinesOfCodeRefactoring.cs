@@ -35,7 +35,7 @@ namespace Refactoring.Refactorings.LinesOfCode
             return DiagnosticInfo.CreateSuccessfulResult();
         }
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             yield return node;
         }
