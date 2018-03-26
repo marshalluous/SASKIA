@@ -9,7 +9,7 @@ namespace Refactoring.Refactorings.IfReturnBoolean
 {
     public sealed class IfReturnBooleanRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA111";
+        public string DiagnosticId => RefactoringId.IfReturnBoolean.GetDiagnosticId();
 
         public string Title => DiagnosticId;
 

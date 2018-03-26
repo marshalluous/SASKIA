@@ -8,7 +8,7 @@ namespace Refactoring.Refactorings.NotOperatorInversion
 {
     public sealed class NotOperatorInversionRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA911";
+        public string DiagnosticId => RefactoringId.NotOperatorInversion.GetDiagnosticId();
 
         public string Title => DiagnosticId;
 
@@ -17,12 +17,11 @@ namespace Refactoring.Refactorings.NotOperatorInversion
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] {SyntaxKind.LogicalNotExpression};
             
-
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var c = ApplyFix(node);
+            var resultNode = ApplyFix(node);
 
-            return c == null ? 
+            return resultNode == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() : 
                 DiagnosticInfo.CreateFailedResult("failed result");
         }
@@ -38,30 +37,22 @@ namespace Refactoring.Refactorings.NotOperatorInversion
                 return null;
 
             var expression = operandExpression.Expression;
-
-            if (!(expression is BinaryExpressionSyntax binaryExpression))
-                return null;
-
-            var notMap = new Dictionary<SyntaxKind, SyntaxKind>
+            
+            if (expression is BinaryExpressionSyntax binaryExpression)
             {
-                [SyntaxKind.LessThanToken] = SyntaxKind.GreaterThanOrEqualExpression,
-                [SyntaxKind.GreaterThanToken] = SyntaxKind.LessThanOrEqualExpression,
-                [SyntaxKind.LessThanEqualsToken] = SyntaxKind.GreaterThanExpression,
-                [SyntaxKind.GreaterThanEqualsToken] = SyntaxKind.LessThanExpression,
-                [SyntaxKind.EqualsEqualsToken] = SyntaxKind.NotEqualsExpression,
-                [SyntaxKind.ExclamationEqualsToken] = SyntaxKind.EqualsExpression
-            };
-
-            var kind = binaryExpression.OperatorToken.Kind();
-
-            if (notMap.ContainsKey(kind))
-            {
-                return new[] { SyntaxFactory.BinaryExpression(notMap[kind], binaryExpression.Left, binaryExpression.Right) };
+                return new [] { ExpressionNotInverter.InvertBinaryExpression(binaryExpression) };
             }
 
+            if (expression is PrefixUnaryExpressionSyntax unaryExpression &&
+                unaryExpression.OperatorToken.Kind() == SyntaxKind.ExclamationToken &&
+                unaryExpression.Operand is ParenthesizedExpressionSyntax nestedExpression)
+            {
+                return new[] { nestedExpression.Expression.NormalizeWhitespace() };
+            }
+            
             return null;
         }
-
+        
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
     }

@@ -9,7 +9,7 @@ namespace Refactoring.Refactorings.LackOfCohesion
 {
     public sealed class LackOfCohesionRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA112";
+        public string DiagnosticId => RefactoringId.LackOfCohesion.GetDiagnosticId();
 
         public string Title => DiagnosticId;
 

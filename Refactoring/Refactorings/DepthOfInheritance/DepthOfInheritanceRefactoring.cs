@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.DepthOfInheritance
 {
@@ -10,7 +11,7 @@ namespace Refactoring.Refactorings.DepthOfInheritance
     {
         private const int ThresholdDepthOfInheritance = 4;
 
-        public string DiagnosticId => "SASKIA500";
+        public string DiagnosticId => RefactoringId.DepthOfInheritance.GetDiagnosticId();
 
         public string Title => DiagnosticId;
 

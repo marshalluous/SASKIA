@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -9,7 +8,7 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
 {
     public sealed class IllegalFieldAccessRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA777";
+        public string DiagnosticId => RefactoringId.IllegalFieldAccess.GetDiagnosticId();
 
         public string Title => DiagnosticId;
 

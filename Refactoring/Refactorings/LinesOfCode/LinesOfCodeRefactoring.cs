@@ -12,7 +12,7 @@ namespace Refactoring.Refactorings.LinesOfCode
         private const int ClassLinesOfCodeThreshold = 100;
         private const int MethodLinesOfCodeThreshold = 15;
 
-        public string DiagnosticId => "SASKIA100";
+        public string DiagnosticId => RefactoringId.LinesOfCode.GetDiagnosticId();
         public string Title => DiagnosticId;
         public string Description => Title;
 

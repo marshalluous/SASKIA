@@ -8,7 +8,7 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
 {
     public sealed class IntegerConstantSimplifierRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA700";
+        public string DiagnosticId => RefactoringId.IntegerConstantSimplifier.GetDiagnosticId();
 
         public string Title => DiagnosticId;
 
@@ -20,7 +20,8 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var result = ApplyFix(node);
-            return result == null && !(node is LiteralExpressionSyntax) ? 
+
+            return result == null || node is LiteralExpressionSyntax ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
                 DiagnosticInfo.CreateFailedResult("Integer constant can be simplified");
         }

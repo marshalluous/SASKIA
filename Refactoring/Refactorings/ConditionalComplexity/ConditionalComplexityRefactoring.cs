@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.ConditionalComplexity
 {
@@ -9,7 +10,7 @@ namespace Refactoring.Refactorings.ConditionalComplexity
     {
         private const int ConditionalComplexityThreshold = 10;
 
-        public string DiagnosticId => "SASKIA200";
+        public string DiagnosticId => RefactoringId.ConditionalComplexity.GetDiagnosticId();
         public string Title => DiagnosticId;
         public string Description => Title;
 

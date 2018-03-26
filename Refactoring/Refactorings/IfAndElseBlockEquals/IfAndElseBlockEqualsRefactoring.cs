@@ -9,8 +9,10 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
 {
     public sealed class IfAndElseBlockEqualsRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA500";
+        public string DiagnosticId => RefactoringId.IfAndElseBlockEquals.GetDiagnosticId();
+
         public string Title => "If and else block are the same";
+
         public string Description => Title;
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>

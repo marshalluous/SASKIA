@@ -27,7 +27,7 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
                 [SyntaxKind.PlusToken] = (x, y) => x + y,
                 [SyntaxKind.MinusToken] = (x, y) => x - y,
                 [SyntaxKind.AsteriskToken] = (x, y) => x * y,
-                [SyntaxKind.PercentToken] = (x, y) => y == 0 ? null : ((int?)x % y),
+                [SyntaxKind.PercentToken] = (x, y) => y == 0 ? null : (int?)x % y,
                 [SyntaxKind.SlashToken] = (x, y) => y == 0 ? null : (int?)(x / y),
                 [SyntaxKind.LessThanLessThanToken] = (x, y) => x << y,
                 [SyntaxKind.GreaterThanGreaterThanToken] = (x, y) => x >> y,

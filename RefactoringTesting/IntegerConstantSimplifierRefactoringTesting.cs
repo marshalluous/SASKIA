@@ -42,7 +42,7 @@ namespace RefactoringTesting
         public void ModuloByZeroTest()
         {
             var source = MethodSource("var x = 34 % 0;");
-            TestCodeFix(source, "34 % 0");
+            TestCodeFix(source, string.Empty);
         }
 
         [TestMethod]
@@ -65,16 +65,16 @@ namespace RefactoringTesting
         public void DivisionByZeroTest()
         {
             var source = MethodSource(" var x = 40 / 0;");
-            TestCodeFix(source, "40 / 0");
+            TestCodeFix(source, string.Empty);
         }
 
         [TestMethod]
         public void IncrementDecrementTest()
         {
-            TestCodeFix(MethodSource("var x = 4; y = ++x;"), "++x");
-            TestCodeFix(MethodSource("var x = 12; y = --x;"), "--x");
-            TestCodeFix(MethodSource("var x = 3; y = x--;"), "x--");
-            TestCodeFix(MethodSource("var x = 8; y = x++;"), "x++");
+            TestCodeFix(MethodSource("var x = 4; y = ++x;"), string.Empty);
+            TestCodeFix(MethodSource("var x = 12; y = --x;"), string.Empty);
+            TestCodeFix(MethodSource("var x = 3; y = x--;"), string.Empty);
+            TestCodeFix(MethodSource("var x = 8; y = x++;"), string.Empty);
         }
 
         [TestMethod]
@@ -101,8 +101,17 @@ namespace RefactoringTesting
             var refactoring = new IntegerConstantSimplifierRefactoring();
             node = FindNode(node);
             Assert.IsNotNull(node);
-            var resultNode = refactoring.ApplyFix(node).First();
-            Assert.AreEqual(expectedNodeText, resultNode.ToString());
+            var resultNodes = refactoring.ApplyFix(node);
+
+            if (resultNodes != null)
+            {
+                var resultNode = resultNodes.First();
+                Assert.AreEqual(expectedNodeText, resultNode.ToString());
+            }
+            else
+            {
+                Assert.AreEqual(string.Empty, expectedNodeText);
+            }
         }
 
         private static SyntaxNode FindNode(SyntaxNode node)

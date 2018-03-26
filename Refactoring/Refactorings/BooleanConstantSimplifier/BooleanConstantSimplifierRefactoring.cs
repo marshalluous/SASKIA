@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -10,7 +8,7 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
 {
     public sealed class BooleanConstantSimplifierRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA010";
+        public string DiagnosticId => RefactoringId.BooleanConstantSimplifier.GetDiagnosticId();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             SyntaxNodeHelper.GetExpressionSyntaxKinds();

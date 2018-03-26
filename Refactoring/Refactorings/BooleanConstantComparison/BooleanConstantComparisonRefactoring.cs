@@ -9,7 +9,7 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
 {
     public sealed class BooleanConstantComparisonRefactoring : IRefactoring
     {
-        public string DiagnosticId => "SASKIA001";
+        public string DiagnosticId => RefactoringId.BooleanConstantComparison.GetDiagnosticId();
 
         public string Title => "Comparison with boolean constant";
 
