@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Simplification;
 using Refactoring.Helper;
 
 namespace Refactoring.Refactorings.IfReturnBoolean
@@ -22,11 +21,9 @@ namespace Refactoring.Refactorings.IfReturnBoolean
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var result = ApplyFix(node);
-
-            if (result == null)
-                return DiagnosticInfo.CreateSuccessfulResult();
-            else
-                return DiagnosticInfo.CreateFailedResult("Return Anti-Pattern");
+            return result == null ? 
+                DiagnosticInfo.CreateSuccessfulResult() :
+                DiagnosticInfo.CreateFailedResult("Return Anti-Pattern");
         }
 
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
@@ -37,17 +34,18 @@ namespace Refactoring.Refactorings.IfReturnBoolean
             var elseNode = GetElseBlock(ifNode);
 
             if (elseNode == null)
-                return new[] {node};
+                return new[] { node };
 
             if (IsReturnBooleanStatement(thenNode, "true") && IsReturnBooleanStatement(elseNode, "false"))
             {
-                return new[] { SyntaxFactory.ReturnStatement(ifNode.Condition).NormalizeWhitespace() };
+                return new[] { SyntaxFactory.ReturnStatement(ifNode.Condition)
+                    .NormalizeWhitespace() };
             }
 
             if (!IsReturnBooleanStatement(thenNode, "false") || !IsReturnBooleanStatement(elseNode, "true"))
                 return new[] { node };
 
-            var condition = AddParentheses(ifNode.Condition).NormalizeWhitespace();
+            var condition = SyntaxNodeHelper.AddParentheses(ifNode.Condition);
             var notNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, condition);
             return new[] { SyntaxFactory.ReturnStatement(notNode).NormalizeWhitespace() };
         }
@@ -84,16 +82,6 @@ namespace Refactoring.Refactorings.IfReturnBoolean
             return SyntaxNodeHelper.FindAncestorOfType<IfStatementSyntax>(token);
         }
         
-        private static ExpressionSyntax AddParentheses(ExpressionSyntax expression)
-        {
-            if (expression is BinaryExpressionSyntax)
-                return SyntaxFactory
-                    .ParenthesizedExpression(expression.NormalizeWhitespace())
-                    .WithAdditionalAnnotations(Simplifier.Annotation);
-
-            return expression;
-        }
-
         private static bool IsReturnBooleanStatement(SyntaxNode statementNode, string booleanLiteral)
         {
             return statementNode is ReturnStatementSyntax returnNode &&

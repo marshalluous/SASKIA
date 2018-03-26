@@ -49,7 +49,9 @@ namespace SASKIA
                 if (!diagnosticInfo.DiagnosticFound)
                     return;
 
-                var diagnostic = Diagnostic.Create(CreateRule(diagnosticInfo.Message), context.Node.GetLocation());
+                var markableLocation = diagnosticInfo.MarkableLocation ?? context.Node.GetLocation();
+                
+                var diagnostic = Diagnostic.Create(CreateRule(diagnosticInfo.Message), markableLocation);
                 context.ReportDiagnostic(diagnostic);
             }
             catch (Exception exception)

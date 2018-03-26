@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Refactoring;
@@ -46,31 +47,40 @@ namespace SASKIA
         private async Task<Document> ApplyFix(CodeFixContext context, CancellationToken cancellationToken)
         {
             var document = context.Document;
-            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            
-            var diagnostic = context.Diagnostics.First();
-            var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
-            var replaceableNode = refactoring.GetReplaceableNode(token);
 
-            if (replaceableNode == null)
+            try
+            {
+                var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+
+                var diagnostic = context.Diagnostics.First();
+                var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
+                var replaceableNode = refactoring.GetReplaceableNode(token);
+
+                if (replaceableNode == null)
+                    return document.WithSyntaxRoot(root);
+
+                var replaceNodes = refactoring
+                    .ApplyFix(replaceableNode)
+                    .ToArray();
+
+                if (replaceNodes.Length <= 0)
+                    return document.WithSyntaxRoot(root);
+
+                replaceNodes = replaceNodes
+                    .Select(node => node.NormalizeWhitespace())
+                    .ToArray();
+
+                root = FormatRoot(replaceNodes.Length == 1
+                    ? root.ReplaceNode(replaceableNode, replaceNodes.First())
+                    : root.ReplaceNode(replaceableNode, replaceNodes));
+
                 return document.WithSyntaxRoot(root);
-
-            var replaceNodes = refactoring
-                .ApplyFix(replaceableNode)
-                .ToArray();
-
-            if (replaceNodes.Length <= 0)
-                return document.WithSyntaxRoot(root);
-
-            replaceNodes = replaceNodes
-                .Select(node => node.NormalizeWhitespace())
-                .ToArray();
-
-            root = FormatRoot(replaceNodes.Length == 1
-                ? root.ReplaceNode(replaceableNode, replaceNodes.First())
-                : root.ReplaceNode(replaceableNode, replaceNodes));
-
-            return document.WithSyntaxRoot(root);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                return document;
+            }
         }
     }
 }

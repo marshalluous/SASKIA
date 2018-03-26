@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace Refactoring.Helper
 {
@@ -46,6 +51,24 @@ namespace Refactoring.Helper
                 node = node.Parent;
 
             return node;
+        }
+        
+        public static ExpressionSyntax AddParentheses(ExpressionSyntax expression)
+        {
+            if (expression is BinaryExpressionSyntax)
+                return SyntaxFactory
+                    .ParenthesizedExpression(expression.NormalizeWhitespace())
+                    .WithAdditionalAnnotations(Simplifier.Annotation);
+
+            return expression;
+        }
+
+        public static IEnumerable<SyntaxKind> GetExpressionSyntaxKinds()
+        {
+            return typeof(SyntaxKind)
+                .GetEnumNames()
+                .Where(name => name.EndsWith("Expression"))
+                .Select(name => (SyntaxKind) Enum.Parse(typeof(SyntaxKind), name));
         }
     }
 }

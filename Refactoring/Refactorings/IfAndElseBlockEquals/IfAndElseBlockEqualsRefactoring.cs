@@ -18,17 +18,9 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var ifNode = (IfStatementSyntax)node;
-            var thenBlock = ifNode.Statement;
-
-            if (ifNode.Else == null)
-                return DiagnosticInfo.CreateSuccessfulResult();
-
-            var elseBlock = ifNode.Else.ChildNodes().First();
-
-            return !ContainsElseIfStatement(ifNode) && CompareSyntaxNodes(thenBlock, elseBlock) ?
-                DiagnosticInfo.CreateFailedResult("Then block and else block contains the same code") :
-                DiagnosticInfo.CreateSuccessfulResult();
+            return ApplyFix(node) == null
+                ? DiagnosticInfo.CreateSuccessfulResult()
+                : DiagnosticInfo.CreateFailedResult("Then block and else block contains the same code");
         }
 
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
@@ -37,13 +29,38 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
             var thenBlock = ifNode.Statement;
 
             if (ifNode.Else == null)
-                return new[] {node};
+                return null;
+
+            if (ContainsElseIfStatement(ifNode))
+                return null;
 
             var elseBlock = ifNode.Else.ChildNodes().First();
             
-            return CompareSyntaxNodes(thenBlock, elseBlock) ?
-                ifNode.Statement.ChildNodes() :
-                new[] { node };
+            var equalsValueClause = SyntaxFactory.EqualsValueClause(ifNode.Condition);
+            
+            var boolType = SyntaxFactory.ParseTypeName("bool");
+
+            var compilationUnit = SyntaxNodeHelper.FindAncestorOfType<CompilationUnitSyntax>(node.GetFirstToken());
+
+            var visitor = new PureExpressionCheckerVisitor(compilationUnit);
+            var isPure = visitor.Visit(ifNode.Condition);
+
+            var localDeclarationStatement = SyntaxFactory
+                .LocalDeclarationStatement(SyntaxFactory.VariableDeclaration(boolType, 
+                    SyntaxFactory.SeparatedList(
+                        new [] { SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("condition"), null, equalsValueClause) }                        
+                        )).NormalizeWhitespace());
+
+            if (!isPure)
+            {
+                return CompareSyntaxNodes(thenBlock, elseBlock)
+                    ? new[] {localDeclarationStatement.NormalizeWhitespace()}.Union(ifNode.Statement.ChildNodes())
+                    : null;
+            }
+
+            return CompareSyntaxNodes(thenBlock, elseBlock)
+                ? ifNode.Statement.ChildNodes()
+                : null;
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -16,37 +14,29 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
 
         public string Description => Title;
 
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            SyntaxNodeHelper.GetExpressionSyntaxKinds();
+
+        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
+        {
+            var result = ApplyFix(node);
+            return result == null && !(node is LiteralExpressionSyntax) ? 
+                DiagnosticInfo.CreateSuccessfulResult() :
+                DiagnosticInfo.CreateFailedResult("Integer constant can be simplified");
+        }
+        
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
         {
             var visitor = new IntegerConstantSimplifierVisitor();
             var value = visitor.Visit(node);
 
             if (value == null)
-                yield return node;
-            else
-            {
-                var literal = SyntaxFactory.Literal(value.Value);
-                yield return SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, literal);
-            }
-        }
+                return null;
 
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
-        {
-            var visitor = new IntegerConstantSimplifierVisitor();
-            var value = visitor.Visit(node);
-
-            return value == null && !(node is LiteralExpressionSyntax) ? 
-                DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("Integer constant can be simplified");
+            var literal = SyntaxFactory.Literal(value.Value);
+            return new [] { SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, literal) };
         }
         
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            typeof(SyntaxKind)
-                .GetEnumNames()
-                .Where(name => name.EndsWith("Expression"))
-                .Select(name => (SyntaxKind)Enum.Parse(typeof(SyntaxKind), name));
-
-
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
             var node = token.Parent;

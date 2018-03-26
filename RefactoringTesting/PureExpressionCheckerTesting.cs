@@ -43,11 +43,11 @@ namespace RefactoringTesting
             CheckPureness("x = ++x;", false);
             CheckPureness("x = x--;", false);
         }
-
+        
         private static void CheckPureness(string source, bool expectIsPure)
         {
-            var visitor = new PureExpressionCheckerVisitor();
             var node = FindNode(Compile("var x = (" + source + ");"));
+            var visitor = new PureExpressionCheckerVisitor(SyntaxNodeHelper.FindAncestorOfType<CompilationUnitSyntax>(node.GetFirstToken()));
             Assert.IsNotNull(node);
             var actualIsPure = visitor.Visit(node);
             Assert.AreEqual(expectIsPure, actualIsPure);
