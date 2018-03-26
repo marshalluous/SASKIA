@@ -164,7 +164,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\HunspellEngine.cs" />
     <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
+    <Compile Include="Helper\WordSplitter.cs" />
+    <Compile Include="Helper\WordTypeChecker.cs" />
     <Compile Include="Refactorings\BooleanConstantComparison\BooleanConstantComparisonRefactoring.cs" />
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierRefactoring.cs" />
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
