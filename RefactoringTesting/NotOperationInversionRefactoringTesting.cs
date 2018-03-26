@@ -45,6 +45,12 @@ namespace RefactoringTesting
         {
             TestCodeFix("var x = !(4 >= 12)", "4 < 12");
         }
+
+        [TestMethod]
+        public void NestedNotLessThanExpression()
+        {
+            TestCodeFix("var x = !(!(4 < 10))", "4 < 10");
+        }
         
         private static void TestCodeFix(string input, string expectedOutput)
         {
