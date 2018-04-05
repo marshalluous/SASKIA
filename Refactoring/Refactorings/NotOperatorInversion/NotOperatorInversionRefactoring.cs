@@ -19,14 +19,13 @@ namespace Refactoring.Refactorings.NotOperatorInversion
             
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var resultNode = ApplyFix(node);
-
+            var resultNode = GetFixableNodes(node);
             return resultNode == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() : 
                 DiagnosticInfo.CreateFailedResult("failed result");
         }
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var logicalNotExpression = (PrefixUnaryExpressionSyntax) node;
 

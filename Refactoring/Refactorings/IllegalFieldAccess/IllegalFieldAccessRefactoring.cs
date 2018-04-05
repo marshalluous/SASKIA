@@ -23,7 +23,12 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
             return DiagnosticInfo.CreateSuccessfulResult();
         }
 
-        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
+		{
+			return null;
+		}
+
+		public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<FieldDeclarationSyntax>(token);
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>

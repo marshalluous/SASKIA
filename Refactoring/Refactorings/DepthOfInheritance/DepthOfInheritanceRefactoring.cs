@@ -31,7 +31,7 @@ namespace Refactoring.Refactorings.DepthOfInheritance
                 : DiagnosticInfo.CreateSuccessfulResult(depthOfInheritance);
         }
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node) =>
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
             new[] {node};
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) => token.Parent;

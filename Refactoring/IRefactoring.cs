@@ -11,7 +11,7 @@ namespace Refactoring
         string Description { get; }
         IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize();
         DiagnosticInfo DoDiagnosis(SyntaxNode node);
-        IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node);
+        IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node);
         SyntaxNode GetReplaceableNode(SyntaxToken token);
     }
 }

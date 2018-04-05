@@ -17,7 +17,7 @@ namespace Refactoring.Refactorings.LongParameterList
 
         public string Description => Title;
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             return null;
         }

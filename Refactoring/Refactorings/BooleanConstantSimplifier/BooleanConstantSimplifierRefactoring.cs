@@ -27,7 +27,7 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
                 : DiagnosticInfo.CreateSuccessfulResult();
         }
 
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var booleanVisitor = new BooleanConstantSimplifierVisitor();
             var value = booleanVisitor.Visit(node);

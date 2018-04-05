@@ -74,7 +74,7 @@ namespace RefactoringTesting
             var refactoring = new IfAndElseBlockEqualsRefactoring();
             node = TestHelper.FindNodeOfType<IfStatementSyntax>(node);
             Assert.IsNotNull(node);
-            var resultNodes = refactoring.ApplyFix(node);
+            var resultNodes = refactoring.GetFixableNodes(node);
 
             if (expectNoRefactoring)
             {
@@ -92,7 +92,7 @@ namespace RefactoringTesting
             var refactoring = new IfAndElseBlockEqualsRefactoring();
             node = TestHelper.FindNodeOfType<IfStatementSyntax>(node);
             Assert.IsNotNull(node);
-            var resultNodes = refactoring.ApplyFix(node);
+            var resultNodes = refactoring.GetFixableNodes(node);
             CompareStringLists(expectedStatements.ToList(), resultNodes.Select(resultNode => resultNode.GetText().ToString().Trim()).ToList());
         }
 

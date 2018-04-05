@@ -19,7 +19,7 @@ namespace RefactoringTesting.Helper
             var node = Compile(inputCode);
             node = findNodeFunc(node);
             Assert.IsNotNull(node);
-            var resultNodes = refactoring.ApplyFix(node);
+            var resultNodes = refactoring.GetFixableNodes(node);
 
             if (resultNodes == null)
             {
@@ -27,7 +27,7 @@ namespace RefactoringTesting.Helper
                 return;
             }
 
-            var resultNode = refactoring.ApplyFix(node).First();
+            var resultNode = refactoring.GetFixableNodes(node).First();
             Assert.AreEqual(expectedNodeText, resultNode.ToString());
         }
         

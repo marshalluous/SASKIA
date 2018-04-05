@@ -14,16 +14,16 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
         public string Title => DiagnosticId;
 
         public string Description => Title;
-
-        public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node)
+        
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var methodNode = (MethodDeclarationSyntax) node;
-            var classNode = (ClassDeclarationSyntax) node.Parent;
+            var methodNode = (MethodDeclarationSyntax)node;
+            var classNode = (ClassDeclarationSyntax)node.Parent;
             var semanticModel = GetSemanticModel(classNode);
-            
+
             if (MethodIsStatic(methodNode) || !MethodIsPrivate(methodNode))
                 return null;
-            
+
             var classSymbol = semanticModel.GetDeclaredSymbol(classNode);
             var isPotentialStaticMethod = IsPotentialStaticMethod(methodNode.Body, semanticModel, classSymbol);
 
@@ -35,11 +35,11 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
 
             return null;
         }
-
+        
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var methodNode = (MethodDeclarationSyntax)node;
-            var fixedNode = ApplyFix(node);
+            var fixedNode = GetFixableNodes(node);
 
             return fixedNode == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :

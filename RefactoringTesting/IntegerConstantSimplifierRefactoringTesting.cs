@@ -97,21 +97,7 @@ namespace RefactoringTesting
 
         private static void TestCodeFix(string inputCode, string expectedNodeText)
         {
-            var node = TestHelper.Compile(inputCode);
-            var refactoring = new IntegerConstantSimplifierRefactoring();
-            node = FindNode(node);
-            Assert.IsNotNull(node);
-            var resultNodes = refactoring.ApplyFix(node);
-
-            if (resultNodes != null)
-            {
-                var resultNode = resultNodes.First();
-                Assert.AreEqual(expectedNodeText, resultNode.ToString());
-            }
-            else
-            {
-                Assert.AreEqual(string.Empty, expectedNodeText);
-            }
+            TestHelper.TestCodeFix<BinaryExpressionSyntax>(new IntegerConstantSimplifierRefactoring(), inputCode, expectedNodeText, FindNode);
         }
 
         private static SyntaxNode FindNode(SyntaxNode node)
