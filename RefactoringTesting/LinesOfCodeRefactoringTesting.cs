@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using System.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Refactorings.LinesOfCode;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -43,16 +41,8 @@ namespace RefactoringTesting
 
         private static void MethodDiagnosticTest(int linesOfCode, bool methodToLong)
         {
-            var node = Compile(GenerateMethodCode(linesOfCode));
-            var refactoring = new LinesOfCodeRefactoring();
-            var diagnosticResult = refactoring.DoDiagnosis((MethodDeclarationSyntax) node.ChildNodes().First());
-            Assert.AreEqual(methodToLong, diagnosticResult.DiagnosticFound);
-        }
-        
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
+            var inputCode = GenerateMethodCode(linesOfCode);
+            TestHelper.TestMetric<MethodDeclarationSyntax>(new LinesOfCodeRefactoring(), inputCode, methodToLong, null);
         }
     }
 }

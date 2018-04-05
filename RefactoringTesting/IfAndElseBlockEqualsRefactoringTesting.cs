@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Refactorings.IfAndElseBlockEquals;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -71,9 +70,9 @@ namespace RefactoringTesting
         private static void TestCodeFix(string inputCode, string expectedOutputCode, bool expectNoRefactoring = false)
         {
             inputCode = "void A() { " + inputCode + " }";
-            var node = Compile(inputCode);
+            var node = TestHelper.Compile(inputCode);
             var refactoring = new IfAndElseBlockEqualsRefactoring();
-            node = FindNode(node);
+            node = TestHelper.FindNodeOfType<IfStatementSyntax>(node);
             Assert.IsNotNull(node);
             var resultNodes = refactoring.ApplyFix(node);
 
@@ -89,9 +88,9 @@ namespace RefactoringTesting
         private static void TestCodeFix(string inputCode, IEnumerable<string> expectedStatements)
         {
             inputCode = "void A() { " + inputCode + " }";
-            var node = Compile(inputCode);
+            var node = TestHelper.Compile(inputCode);
             var refactoring = new IfAndElseBlockEqualsRefactoring();
-            node = FindNode(node);
+            node = TestHelper.FindNodeOfType<IfStatementSyntax>(node);
             Assert.IsNotNull(node);
             var resultNodes = refactoring.ApplyFix(node);
             CompareStringLists(expectedStatements.ToList(), resultNodes.Select(resultNode => resultNode.GetText().ToString().Trim()).ToList());
@@ -105,23 +104,6 @@ namespace RefactoringTesting
             {
                 Assert.AreEqual(first[index], second[index]);
             }
-        }
-
-        private static SyntaxNode FindNode(SyntaxNode node)
-        {
-            if (node is IfStatementSyntax)
-            {
-                return node;
-            }
-
-            return node.ChildNodes().Select(FindNode)
-                .FirstOrDefault(foundNode => foundNode != null);
-        }
-
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
         }
     }
 }

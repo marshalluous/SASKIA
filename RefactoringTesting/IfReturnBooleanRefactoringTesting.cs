@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Refactorings.IfReturnBoolean;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -45,32 +43,10 @@ namespace RefactoringTesting
         {
             return "class X { public bool Y() {" + code + "}}";
         }
-        
+
         private static void TestCodeFix(string inputCode, string expectedNodeText)
         {
-            var node = Compile(inputCode);
-            var refactoring = new IfReturnBooleanRefactoring();
-            node = FindNode(node);
-            Assert.IsNotNull(node);
-            var resultNode = refactoring.ApplyFix(node).First();
-            Assert.AreEqual(expectedNodeText, resultNode.ToString());
-        }
-
-        private static SyntaxNode FindNode(SyntaxNode node)
-        {
-            if (node is IfStatementSyntax)
-            {
-                return node;
-            }
-
-            return node.ChildNodes().Select(FindNode)
-                .FirstOrDefault(foundNode => foundNode != null);
-        }
-
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
+            TestHelper.TestCodeFix<IfStatementSyntax>(new IfReturnBooleanRefactoring(), inputCode, expectedNodeText);
         }
     }
 }

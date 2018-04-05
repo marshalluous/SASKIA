@@ -12,7 +12,9 @@
         IntegerConstantSimplifier,
         LackOfCohesion,
         LinesOfCode,
-        NotOperatorInversion
+        NotOperatorInversion,
+        LongParameterList,
+        PotentialStaticMethod
     }
 
     internal static class RefactoringIdsMethods

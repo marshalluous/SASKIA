@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Helper;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -46,28 +44,11 @@ namespace RefactoringTesting
         
         private static void CheckPureness(string source, bool expectIsPure)
         {
-            var node = FindNode(Compile("var x = (" + source + ");"));
+            var node = TestHelper.FindNodeOfType<ParenthesizedExpressionSyntax>(TestHelper.Compile("var x = (" + source + ");"));
             var visitor = new PureExpressionCheckerVisitor(SyntaxNodeHelper.FindAncestorOfType<CompilationUnitSyntax>(node.GetFirstToken()));
             Assert.IsNotNull(node);
             var actualIsPure = visitor.Visit(node);
             Assert.AreEqual(expectIsPure, actualIsPure);
-        }
-        
-        private static SyntaxNode FindNode(SyntaxNode node)
-        {
-            if (node is ParenthesizedExpressionSyntax)
-            {
-                return node;
-            }
-
-            return node.ChildNodes().Select(FindNode)
-                .FirstOrDefault(foundNode => foundNode != null);
-        }
-
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
         }
     }
 }

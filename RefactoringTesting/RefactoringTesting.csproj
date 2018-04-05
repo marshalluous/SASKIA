@@ -125,12 +125,15 @@
     <Compile Include="BooleanConstantSimplifierRefactoringTesting.cs" />
     <Compile Include="ConditionalComplexityRefactoringTesting.cs" />
     <Compile Include="DepthOfInheritanceRefactoringTesting.cs" />
+    <Compile Include="Helper\TestHelper.cs" />
     <Compile Include="IfAndElseBlockEqualsRefactoringTesting.cs" />
     <Compile Include="IfReturnBooleanRefactoringTesting.cs" />
     <Compile Include="IntegerConstantSimplifierRefactoringTesting.cs" />
     <Compile Include="LackOfCohesionRefactoringTesting.cs" />
     <Compile Include="LinesOfCodeRefactoringTesting.cs" />
+    <Compile Include="LongParameterListRefactoringTesting.cs" />
     <Compile Include="NotOperationInversionRefactoringTesting.cs" />
+    <Compile Include="PotentialStaticMethodRefactoringTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PureExpressionCheckerTesting.cs" />
   </ItemGroup>

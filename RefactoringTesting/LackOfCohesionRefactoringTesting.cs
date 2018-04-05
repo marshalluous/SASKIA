@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Refactorings.LackOfCohesion;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -35,7 +32,7 @@ namespace RefactoringTesting
         public void NoLackOfCohesionTest()
         {
             CheckLackOfCohesion("class A { int x; int y; int z; public void X() { x = 12; y = 12; }" +
-                                "public void Y() { y = 12; z = 4; } }", true, 2d / 3d);
+                                "public void Y() { y = 12; z = 4; } }", true, 0.66666666666666674d);
         }
 
         [TestMethod]
@@ -66,29 +63,10 @@ namespace RefactoringTesting
                 }", false, 0d);
         }
 
-        private static void CheckLackOfCohesion(string source, bool diagnosticFound, double lackOfCohesionValue)
-        {
-            var refactoring = new LackOfCohesionRefactoring();
-            var classNode = GetClassNode(Compile(source));
-            var result = refactoring.DoDiagnosis(classNode);
-            Assert.AreEqual(diagnosticFound, result.DiagnosticFound);
-            Assert.IsTrue(Math.Abs(lackOfCohesionValue - (double) result.AdditionalInformation) < 0.01f);
-        }
 
-        private static SyntaxNode GetClassNode(SyntaxNode node)
+        private static void CheckLackOfCohesion(string inputCode, bool diagnosticFound, double metricValue)
         {
-            if (node is ClassDeclarationSyntax)
-                return node;
-
-            return node.ChildNodes()
-                .Select(GetClassNode)
-                .FirstOrDefault(classNode => classNode != null);
-        }
-
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
+            TestHelper.TestMetric<ClassDeclarationSyntax>(new LackOfCohesionRefactoring(), inputCode, diagnosticFound, metricValue);
         }
     }
 }

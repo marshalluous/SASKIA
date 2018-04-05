@@ -50,6 +50,7 @@
     <Compile Include="CodeFixProviders\IfReturnBooleanCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IntegerConstantSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\NotOperationInversionCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\PotentialStaticMethodCodeFixProvider.cs" />
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
@@ -62,7 +63,9 @@
     <Compile Include="DiagnosticAnalyzers\IntegerConstantSimplifierDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\LackOfCohesionDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\LinesOfCodeDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\LongParameterListDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\NotOperatorInversionDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\PotentialStaticMethodDiagnosticAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

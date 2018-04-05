@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Refactorings.NotOperatorInversion;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -52,27 +50,9 @@ namespace RefactoringTesting
             TestCodeFix("var x = !(!(4 < 10))", "4 < 10");
         }
         
-        private static void TestCodeFix(string input, string expectedOutput)
+        private static void TestCodeFix(string inputCode, string expectedOutput)
         {
-            var node = Compile(input);
-            node = FindNode(node);
-            Assert.IsNotNull(node);
-            var refactoring = new NotOperatorInversionRefactoring();
-            var resultNode = refactoring.ApplyFix(node).First();
-            Assert.AreEqual(expectedOutput, resultNode.ToString());
-        }
-
-        private static SyntaxNode FindNode(SyntaxNode node)
-        {
-            return node is PrefixUnaryExpressionSyntax ?
-                node :
-                node.ChildNodes().Select(FindNode).FirstOrDefault(foundNode => foundNode != null);
-        }
-
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
+            TestHelper.TestCodeFix<PrefixUnaryExpressionSyntax>(new NotOperatorInversionRefactoring(), inputCode, expectedOutput);
         }
     }
 }

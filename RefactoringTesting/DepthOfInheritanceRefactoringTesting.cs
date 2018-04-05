@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Refactorings.DepthOfInheritance;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -42,28 +40,9 @@ namespace RefactoringTesting
             TestDepthOfInheritance(source, true, 5);
         }
 
-        private static void TestDepthOfInheritance(string source, bool toHighDepthOfInheritance, int depthOfInheritance)
+        private static void TestDepthOfInheritance(string inputCode, bool diagnosticFound, int metricValue)
         {
-            var node = Compile(source);
-            node = FindNode(node);
-            Assert.IsNotNull(node);
-            var refactoring = new DepthOfInheritanceRefactoring();
-            var diagnosticInfo = refactoring.DoDiagnosis(node);
-            Assert.AreEqual(toHighDepthOfInheritance, diagnosticInfo.DiagnosticFound);
-            Assert.AreEqual(depthOfInheritance, diagnosticInfo.AdditionalInformation);
-        }
-
-        private static SyntaxNode FindNode(SyntaxNode node)
-        {
-            return node is ClassDeclarationSyntax ?
-                node : 
-                node.ChildNodes().Select(FindNode).FirstOrDefault(foundNode => foundNode != null);
-        }
-
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
+            TestHelper.TestMetric<ClassDeclarationSyntax>(new DepthOfInheritanceRefactoring(), inputCode, diagnosticFound, metricValue);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.Refactorings.IntegerConstantSimplifier;
+using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
 {
@@ -97,7 +97,7 @@ namespace RefactoringTesting
 
         private static void TestCodeFix(string inputCode, string expectedNodeText)
         {
-            var node = Compile(inputCode);
+            var node = TestHelper.Compile(inputCode);
             var refactoring = new IntegerConstantSimplifierRefactoring();
             node = FindNode(node);
             Assert.IsNotNull(node);
@@ -123,12 +123,6 @@ namespace RefactoringTesting
 
             return node.ChildNodes().Select(FindNode)
                 .FirstOrDefault(foundNode => foundNode != null);
-        }
-
-        private static SyntaxNode Compile(string source)
-        {
-            return CSharpSyntaxTree.ParseText(source)
-                .GetRoot();
         }
         
         private static string MethodSource(string code)

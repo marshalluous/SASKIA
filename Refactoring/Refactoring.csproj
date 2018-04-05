@@ -161,8 +161,10 @@
     <Compile Include="Refactorings\LackOfCohesion\LackOfCohesionRefactoring.cs" />
     <Compile Include="Refactorings\LinesOfCode\LinesOfCodeRefactoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Refactorings\LongParameterList\LongParameterListRefactoring.cs" />
     <Compile Include="Refactorings\NotOperatorInversion\ExpressionNotInverter.cs" />
     <Compile Include="Refactorings\NotOperatorInversion\NotOperatorInversionRefactoring.cs" />
+    <Compile Include="Refactorings\PotentialStaticMethod\PotentialStaticMethodRefactoring.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
