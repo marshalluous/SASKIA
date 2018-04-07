@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
 
 namespace Refactoring.DictionaryRefactorings
 {
@@ -22,8 +21,7 @@ namespace Refactoring.DictionaryRefactorings
 			var classNode = (ClassDeclarationSyntax)node;
 			var identifierText = classNode.Identifier.Text;
 			var lastWord = WordSplitter.GetLastWord(identifierText);
-
-            if (!IsNoun(Database, lastWord))
+            if (!new WordTypeChecker(Database).IsNoun(lastWord))
             {
 				return DiagnosticInfo.CreateFailedResult($"{Description}: {lastWord}.", markableLocation: classNode.Identifier.GetLocation());
 			}
@@ -32,13 +30,14 @@ namespace Refactoring.DictionaryRefactorings
 
         private bool IsNoun(SQLiteConnection dbConnection, string word)
         {
-            using (SQLiteCommand getword = new SQLiteCommand(dbConnection))
+            const int WordTypeLocation = 1;
+            using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(dbConnection))
             {
-                getword.CommandText = $"select * from entries where word = '{word}'";
-                var reader = getword.ExecuteReader();
+                getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+                var reader = getWordFromDatabase.ExecuteReader();
                 while (reader.Read())
                 {
-                    if (reader.GetString(1).StartsWith("n")) return true;
+                    if (reader.GetString(WordTypeLocation).StartsWith("n")) return true;
                 }
                 return false;
             }
@@ -46,28 +45,7 @@ namespace Refactoring.DictionaryRefactorings
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
 		{
-			var classNode = (ClassDeclarationSyntax)node;
-			var identifierText = classNode.Identifier.Text;
-			var hunspell = new HunspellEngine();
-			var suggestion = GetSuggestionList(identifierText, hunspell).First();
-
-			if (suggestion == null)
-				return null;
-
-			return new[] { classNode.ReplaceToken(classNode.Identifier, SyntaxFactory.Identifier(suggestion)) };
-		}
-
-		private IEnumerable<string> GetSuggestionList(string word, HunspellEngine hunspell)
-		{
-			const int displayWordLimit = 5;
-			return hunspell.GetSuggestions(word).Take(displayWordLimit);
-		}
-
-		private string GetSuggestions(string word, HunspellEngine hunspell)
-		{
-			var suggestionsRefactored = GetSuggestionList(word, hunspell).Aggregate((x, y) => $"{x}\r\n{y}");
-			if (!string.IsNullOrEmpty(suggestionsRefactored)) suggestionsRefactored = "Suggestions:\n" + suggestionsRefactored;
-			return suggestionsRefactored;
+            return new[] { node };
 		}
 
 		public SyntaxNode GetReplaceableNode(SyntaxToken token)
