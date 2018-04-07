@@ -40,7 +40,7 @@ namespace Refactoring.Helper
 
 		private string GetFileInProjectFolder(string fileName)
 		{
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + $"\\..\\..\\..\\{fileName}";
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + $"\\{fileName}";
 		}
 	}
 }

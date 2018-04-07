@@ -74,12 +74,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="en_US.aff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="en_US.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <VSTemplate Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </VSTemplate>
     <Content Include="index.html" />
     <Content Include="stylesheet.css" />
   </ItemGroup>
