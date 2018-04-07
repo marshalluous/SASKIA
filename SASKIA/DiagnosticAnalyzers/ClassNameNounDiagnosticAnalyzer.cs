@@ -5,10 +5,10 @@ using Refactoring.DictionaryRefactorings;
 namespace SASKIA.DiagnosticAnalyzers
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public sealed class ClassNameDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
+	public sealed class ClassNameNounDiagnosticAnalyzer : CodeSmellDiagnosticAnalyzer
 	{
-		public ClassNameDiagnosticAnalyzer() 
-			: base(new ClassNameRefactoring())
+		public ClassNameNounDiagnosticAnalyzer() 
+			: base(new ClassNameNounRefactoring())
 		{
 		}
 	}

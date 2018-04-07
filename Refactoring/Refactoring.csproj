@@ -164,6 +164,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DictionaryClass.cs" />
     <Compile Include="Helper\RefactoringId.cs" />
     <Compile Include="Helper\HunspellEngine.cs" />
     <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
@@ -172,11 +173,12 @@
     <Compile Include="Refactorings\BooleanConstantComparison\BooleanConstantComparisonRefactoring.cs" />
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierRefactoring.cs" />
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
+    <Compile Include="Refactorings\ClassNameRefactoring\ClassNameNounRefactoring.cs" />
     <Compile Include="Refactorings\ConditionalComplexity\ConditionalComplexityRefactoring.cs" />
     <Compile Include="Refactorings\ConditionalComplexity\ConditionalComplexityVisitor.cs" />
     <Compile Include="Refactorings\DepthOfInheritance\DepthOfInheritanceRefactoring.cs" />
     <Compile Include="DiagnosticInfo.cs" />
-    <Compile Include="Refactorings\ClassNameRefactoring\ClassNameRefactoring.cs" />
+    <Compile Include="Refactorings\ClassNameRefactoring\ClassNameTypoRefactoring.cs" />
     <Compile Include="Helper\SyntaxNodeHelper.cs" />
     <Compile Include="Refactorings\IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
     <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />

@@ -4,15 +4,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Refactoring.DictionaryRefactorings
 {
-	public sealed class ClassNameRefactoring : IRefactoring
+    public sealed class ClassNameTypoRefactoring : IRefactoring
 	{
 		public string DiagnosticId => "SASKIA200";
 		public string Title => DiagnosticId;
-		public string Description => Title;
+		public string Description => "Typo in class name";
 
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
 			new[] { SyntaxKind.ClassDeclaration };
@@ -27,9 +26,8 @@ namespace Refactoring.DictionaryRefactorings
 			foreach (var word in wordList.Where(w => hunspell.HasTypo(w)))
 			{
 				string suggestions = GetSuggestions(word, hunspell);
-				return DiagnosticInfo.CreateFailedResult($"Typo in class name. Word: {word}. {suggestions}", markableLocation: classNode.Identifier.GetLocation());
+				return DiagnosticInfo.CreateFailedResult($"{Description}: {word}.\n{suggestions}", markableLocation: classNode.Identifier.GetLocation());
 			}
-
 			return DiagnosticInfo.CreateSuccessfulResult();
 		}
 
@@ -45,13 +43,6 @@ namespace Refactoring.DictionaryRefactorings
 
 			return new[] { classNode.ReplaceToken(classNode.Identifier, SyntaxFactory.Identifier(suggestion)) };
 		}
-
-
-		/*
-			if (!new WordTypeChecker().IsNoun(identifierText))
-{
-	return DiagnosticInfo.CreateFailedResult("Class name must end with a noun");
-}*/
 
 		private IEnumerable<string> GetSuggestionList(string word, HunspellEngine hunspell)
 		{
