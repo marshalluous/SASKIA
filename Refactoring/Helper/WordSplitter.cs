@@ -10,12 +10,6 @@ namespace Refactoring.Helper
 		{
 			var wordList = GetSplittedWordList(input);
 			return wordList[wordList.Count - 1];
-		}
-
-		public static List<string> GetSplittedWordList(string input)
-		{
-			string words = Regex.Replace(input, @"(\p{Ll})(\P{Ll})", "$1 $2");
-			return words.Split(' ').ToList();
-		}
+		}  		public static List<string> GetSplittedWordList(string input) 		{ 			string words = Regex 				.Replace(input, @"(\p{Ll})(\P{Ll})", "$1 $2") 				.Replace("_","_ "); 			return words.Split(' ').ToList(); 		}
 	}
 }
