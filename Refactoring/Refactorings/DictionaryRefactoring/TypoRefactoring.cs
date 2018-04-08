@@ -11,17 +11,22 @@ namespace Refactoring.DictionaryRefactorings
 	{
 		public string DiagnosticId => "SASKIA200";
 		public string Title => DiagnosticId;
-		public string Description => "Typo in class name";
+		public string Description => "Typo";
 
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-			new[] { SyntaxKind.ClassDeclaration, SyntaxKind.MethodDeclaration };
+			new[] { SyntaxKind.ClassDeclaration, SyntaxKind.MethodDeclaration, SyntaxKind.VariableDeclarator, SyntaxKind.PropertyDeclaration };
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{
             if (node is ClassDeclarationSyntax)
                 return Diagnose(((ClassDeclarationSyntax)node).Identifier);
-            else
-                return Diagnose(((MethodDeclarationSyntax)node).Identifier);
+            else if (node is MethodDeclarationSyntax)
+				return Diagnose(((MethodDeclarationSyntax)node).Identifier);
+			else if(node is VariableDeclaratorSyntax)
+				return Diagnose(((VariableDeclaratorSyntax)node).Identifier);
+			else
+				return Diagnose(((PropertyDeclarationSyntax)node).Identifier);
+
 		}
 
         private DiagnosticInfo Diagnose(SyntaxToken syntaxToken)
@@ -39,22 +44,23 @@ namespace Refactoring.DictionaryRefactorings
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var hunspell = new HunspellEngine();
             if (node is ClassDeclarationSyntax)
-            {
-                var suggestion = hunspell.GetSuggestions(((ClassDeclarationSyntax)node).Identifier.Text).First();
-                if (suggestion == null)
-                    return null;
-                return new[] { node.ReplaceToken(((ClassDeclarationSyntax)node).Identifier, SyntaxFactory.Identifier(suggestion)) };
-            }
-            else
-            {
-                var suggestion = hunspell.GetSuggestions(((MethodDeclarationSyntax)node).Identifier.Text).First();
-                if (suggestion == null)
-                    return null;
-                return new[] { node.ReplaceToken(((MethodDeclarationSyntax)node).Identifier, SyntaxFactory.Identifier(suggestion)) };
-            }
-        }
+				return EvaluateNodes((ClassDeclarationSyntax)node, ((ClassDeclarationSyntax)node).Identifier);
+            else if (node is MethodDeclarationSyntax)
+				return EvaluateNodes((MethodDeclarationSyntax)node, ((MethodDeclarationSyntax)node).Identifier);
+			else if (node is VariableDeclaratorSyntax)
+				return EvaluateNodes((VariableDeclaratorSyntax)node, ((VariableDeclaratorSyntax)node).Identifier);
+			else
+				return EvaluateNodes((PropertyDeclarationSyntax)node, ((PropertyDeclarationSyntax)node).Identifier);
+		}
+
+		private IEnumerable<SyntaxNode> EvaluateNodes(SyntaxNode node, SyntaxToken identifier)
+		{
+			var suggestion = new HunspellEngine().GetSuggestions(identifier.Text).First();
+			if (suggestion == null)
+				return null;
+			return new[] { node.ReplaceToken(identifier, SyntaxFactory.Identifier(suggestion)) };
+		}
 
 		private string GetSuggestions(string word, HunspellEngine hunspell)
 		{
