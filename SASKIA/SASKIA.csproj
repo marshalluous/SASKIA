@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CodeFixProviders\BooleanConstantComparisonCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\BooleanConstantSimplifierCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\MethodPropertyIdentifierConventionCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\TypoCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfAndElseBlockEqualsCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfReturnBooleanCodeFixProvider.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\MethodNameVerbDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\ClassNameNounDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\MethodPropertyIdentifierConventionDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\TypoDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantSimplifierDiagnosticAnalyzer.cs" />

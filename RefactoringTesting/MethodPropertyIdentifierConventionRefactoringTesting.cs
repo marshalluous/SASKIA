@@ -35,7 +35,7 @@ namespace RefactoringTesting
             TestMethodNaming("fishHans", "FishHans");
             TestMethodNaming("ageOfFish", "AgeOfFish");
         }
-
+        
         [TestMethod]
         public void MethodUnderlineNameTest()
         {
