@@ -16,7 +16,7 @@ namespace Refactoring.Helper
 				if (wordString == "_") return false;
 				var capitalWord = MorphWord(wordString, char.ToUpper);
 				var smallWord = MorphWord(wordString, char.ToLower);
-				return (!hunspell.Spell(capitalWord) || !hunspell.Spell(smallWord));
+				return !(hunspell.Spell(capitalWord) || hunspell.Spell(smallWord));
 			});
 		}
 

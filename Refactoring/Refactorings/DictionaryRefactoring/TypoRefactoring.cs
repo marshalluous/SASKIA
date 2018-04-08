@@ -31,16 +31,35 @@ namespace Refactoring.DictionaryRefactorings
 
         private DiagnosticInfo Diagnose(SyntaxToken syntaxToken)
         {
-            var hunspell = new HunspellEngine();
-            var wordList = WordSplitter.GetSplittedWordList(syntaxToken.Text);
-
-            foreach (var word in wordList.Where(w => hunspell.HasTypo(w)))
-            {
-                string suggestions = GetSuggestions(word, hunspell);
-                return DiagnosticInfo.CreateFailedResult($"{Description}: {word}.\n{suggestions}", markableLocation: syntaxToken.GetLocation());
-            }
-            return DiagnosticInfo.CreateSuccessfulResult();
+			bool hasTypo;
+			string affectedWord;
+			List<string> suggestions;
+			EvaluateTypo(WordSplitter.GetSplittedWordList(syntaxToken.Text), out affectedWord, out hasTypo, out suggestions);
+			if (hasTypo)
+			{
+				var suggestionsAsString = "";
+				if (suggestions != null) 
+					suggestionsAsString = "Suggestions:\n" + suggestions.Aggregate((x, y) => $"{x}\r\n{y}");
+				return DiagnosticInfo.CreateFailedResult($"{Description}: {affectedWord}.\n{suggestionsAsString}", markableLocation: syntaxToken.GetLocation());
+			}
+			else
+				return DiagnosticInfo.CreateSuccessfulResult();
         }
+
+		private void EvaluateTypo(List<string> wordList, out string affectedWord, out bool hasTypo, out List<string> suggestions)
+		{
+			suggestions = null;
+			hasTypo = false;
+			affectedWord = "";
+			var hunspell = new HunspellEngine();
+			foreach (var word in wordList.Where(w => hunspell.HasTypo(w)))
+			{
+				hasTypo = true;
+				affectedWord = word;
+				suggestions = hunspell.GetSuggestions(word);
+				return;
+			}
+		}
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
@@ -56,17 +75,26 @@ namespace Refactoring.DictionaryRefactorings
 
 		private IEnumerable<SyntaxNode> EvaluateNodes(SyntaxNode node, SyntaxToken identifier)
 		{
-			var suggestion = new HunspellEngine().GetSuggestions(identifier.Text).First();
-			if (suggestion == null)
+			bool hasTypo;
+			string affectedWord = "";
+			List<string> suggestions;
+			var allWords = WordSplitter.GetSplittedWordList(identifier.Text);
+			EvaluateTypo(allWords, out affectedWord, out hasTypo, out suggestions);
+			if (suggestions == null)
 				return null;
-			return new[] { node.ReplaceToken(identifier, SyntaxFactory.Identifier(suggestion)) };
-		}
-
-		private string GetSuggestions(string word, HunspellEngine hunspell)
-		{
-			var suggestionsRefactored = hunspell.GetSuggestions(word).Aggregate((x, y) => $"{x}\r\n{y}");
-			if (!string.IsNullOrEmpty(suggestionsRefactored)) suggestionsRefactored = "Suggestions:\n" + suggestionsRefactored;
-			return suggestionsRefactored;
+			int affectedIndex = allWords.FindIndex(w => w == affectedWord);
+			var suggestion = suggestions.First();
+			var newIdentifier = "";
+			foreach (var word in allWords)
+			{
+				var temp = word;
+				if (allWords.FindIndex(w => w == temp) == affectedIndex)
+				{
+					temp = suggestion;
+				}
+				newIdentifier += temp;
+			}
+			return new[] { node.ReplaceToken(identifier, SyntaxFactory.Identifier(newIdentifier)) };
 		}
 
 		public SyntaxNode GetReplaceableNode(SyntaxToken token)
