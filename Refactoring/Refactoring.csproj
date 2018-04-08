@@ -164,6 +164,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Refactorings\TypeIdentifierConvention\TypeIdentifierChecker.cs" />
     <Compile Include="Helper\RefactoringId.cs" />
     <Compile Include="Helper\HunspellEngine.cs" />
     <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="DiagnosticInfo.cs" />
     <Compile Include="Refactorings\ClassNameRefactoring\ClassNameRefactoring.cs" />
     <Compile Include="Helper\SyntaxNodeHelper.cs" />
+    <Compile Include="Refactorings\TypeIdentifierConvention\TypeIdentifierConventionRefactoring.cs" />
     <Compile Include="Refactorings\IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
     <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
