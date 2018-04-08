@@ -14,6 +14,27 @@ namespace RefactoringTesting.Helper
             return CSharpSyntaxTree.ParseText(source).GetRoot();
         }
         
+        public static void TestDiagnosticResult<T>(IRefactoring refactoring, string inputCode, string outputMessage, Func<SyntaxNode, SyntaxNode> findNodeFunc)
+        {
+            var node = Compile(inputCode);
+            node = findNodeFunc(node);
+            Assert.IsNotNull(node);
+            var diagnosticResult = refactoring.DoDiagnosis(node);
+
+            if (!diagnosticResult.DiagnosticFound)
+            {
+                Assert.AreEqual(string.Empty, outputMessage);
+                return;
+            }
+            
+            Assert.AreEqual(outputMessage, diagnosticResult.Message);
+        }
+
+        public static void TestDiagnosticResult<T>(IRefactoring refactoring, string inputCode, string outputMessage = "")
+        {
+            TestDiagnosticResult<T>(refactoring, inputCode, outputMessage, FindNodeOfType<T>);
+        }
+
         public static void TestCodeFix<T>(IRefactoring refactoring, string inputCode, string expectedNodeText, Func<SyntaxNode, SyntaxNode> findNodeFunc)
         {
             var node = Compile(inputCode);

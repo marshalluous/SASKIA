@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Refactorings.BooleanConstantComparison;
 using RefactoringTesting.Helper;
+using Refactoring.Helper;
 
 namespace RefactoringTesting
 {
@@ -9,55 +10,79 @@ namespace RefactoringTesting
     public sealed class BooleanConstantComparisonRefactoringTesting
     {
         [TestMethod]
-        public void CompareWithTrueLiteralOnRightHandSideTest()
+        public void CompareWithTrueLiteralOnRightHandSideCodeFixTest()
         {
             TestCodeFix("var b = x == true;", "x");
         }
+        
+        [TestMethod]
+        public void CompareWithTrueLiteralOnRightHandSideDiagnosticTest()
+        {
+            TestDiagnosticResult("var b = x == true;", RefactoringMessageFactory.BooleanComparisonMessage("true"));
+        }
 
         [TestMethod]
-        public void CompareWithFalseLiteralOnRightHandSideTest()
+        public void CompareWithFalseLiteralOnRightHandSideCodeFixTest()
         {
             TestCodeFix("var b = x == false;", "!x");
         }
 
         [TestMethod]
-        public void EqualsEqualsNestedInEqualsEqualsTest()
+        public void CompareWithFalseLiteralOnRightHandSideDiagnosticTest()
+        {
+            TestDiagnosticResult("var b = x == false;", RefactoringMessageFactory.BooleanComparisonMessage("false"));
+        }
+
+        [TestMethod]
+        public void EqualsEqualsNestedInEqualsEqualsCodeFixTest()
         {
             TestCodeFix("var x = 4 == 12 == true;", "4 == 12");
         }
 
         [TestMethod]
-        public void CompareWithTrueLiteralOnLeftHandSide()
+        public void EqualsEqualsNestedInEqualsEqualsDiagnosticTest()
         {
-            TestCodeFix("var b = true == x", "x");
+            TestDiagnosticResult("var x = 4 == 12 == true;", RefactoringMessageFactory.BooleanComparisonMessage("true"));
         }
 
         [TestMethod]
-        public void CompareWithFalseLiteralOnLeftHandSide()
+        public void CompareWithTrueLiteralOnLeftHandSideCodeFixTest()
+        {
+            TestCodeFix("var b = true == x", "x");
+        }
+        
+        [TestMethod]
+        public void CompareWithTrueLiteralOnLeftHandSideDiagnosticTest()
+        {
+            TestDiagnosticResult("var b = true == x", RefactoringMessageFactory.BooleanComparisonMessage("true"));
+        }
+
+        [TestMethod]
+        public void CompareWithFalseLiteralOnLeftHandSideCodeFixTest()
         {
             TestCodeFix("var b = false == x", "!x");
         }
 
         [TestMethod]
-        public void NotEqualsCompareWithTrueLiteralOnRightHandSideTest()
+        public void NotEqualsCompareWithTrueLiteralOnRightHandSideCodeFixTest()
         {
             TestCodeFix("var b = x != true;", "!x");
         }
 
         [TestMethod]
-        public void NotEqualsCompareWithFalseLiteralOnRightHandSideTest()
+        public void NotEqualsCompareWithFalseLiteralOnRightHandSideCodeFixTest()
         {
             TestCodeFix("var b = x != false;", "x");
         }
 
         [TestMethod]
-        public void NotEqualsCompareWithTrueLiteralOnLeftHandSide()
+        public void NotEqualsCompareWithTrueLiteralOnLeftHandSideCodeFixTest()
         {
             TestCodeFix("var b = true != x", "!x");
         }
 
         [TestMethod]
-        public void NotEqualsCompareWithFalseLiteralOnLeftHandSide()
+        public void NotEqualsCompareWithFalseLiteralOnLeftHandSideCodeFixTest()
         {
             TestCodeFix("var b = false != x", "x");
         }
@@ -74,6 +99,12 @@ namespace RefactoringTesting
         {
             TestCodeFix("var k = false != A();", "A()");
             TestCodeFix("var k = A() != true;", "!A()");
+        }
+        
+        [TestMethod]
+        public void MethodCallNotEqualsComparisonDiagnosticTest()
+        {
+            TestDiagnosticResult("var k = false != A();", RefactoringMessageFactory.BooleanComparisonMessage("false"));
         }
         
         [TestMethod]
@@ -97,6 +128,11 @@ namespace RefactoringTesting
         private static void TestCodeFix(string inputCode, string expectedNodeText)
         {
             TestHelper.TestCodeFix<BinaryExpressionSyntax>(new BooleanConstantComparisonRefactoring(), inputCode, expectedNodeText);
+        }
+
+        private static void TestDiagnosticResult(string inputCode, string diagnosticMessage)
+        {
+            TestHelper.TestDiagnosticResult<BinaryExpressionSyntax>(new BooleanConstantComparisonRefactoring(), inputCode, diagnosticMessage);
         }
     }
 }
