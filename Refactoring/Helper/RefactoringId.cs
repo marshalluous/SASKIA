@@ -15,7 +15,8 @@
         NotOperatorInversion,
         LongParameterList,
         PotentialStaticMethod,
-        IdentifierConvention
+        TypeIdentifierConvention,
+        MethodPropertyIdentifierConvention
     }
 
     internal static class RefactoringIdsMethods

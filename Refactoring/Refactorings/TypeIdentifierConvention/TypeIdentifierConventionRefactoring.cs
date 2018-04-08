@@ -4,11 +4,11 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 
-namespace Refactoring.Refactorings.IdentifierConvention
+namespace Refactoring.Refactorings.TypeIdentifierConvention
 {
     public sealed class TypeIdentifierConventionRefactoring : IRefactoring
     {
-        public string DiagnosticId => RefactoringId.IdentifierConvention.GetDiagnosticId();
+        public string DiagnosticId => RefactoringId.TypeIdentifierConvention.GetDiagnosticId();
 
         public string Title => DiagnosticId;
 

@@ -193,11 +193,12 @@
     <Compile Include="Refactorings\LinesOfCode\LinesOfCodeRefactoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Refactorings\LongParameterList\LongParameterListRefactoring.cs" />
+    <Compile Include="Refactorings\MethodPropertyIdentifierConvention\MethodPropertyIdentifierConventionRefactoring.cs" />
     <Compile Include="Refactorings\NotOperatorInversion\ExpressionNotInverter.cs" />
     <Compile Include="Refactorings\NotOperatorInversion\NotOperatorInversionRefactoring.cs" />
     <Compile Include="Refactorings\PotentialStaticMethod\PotentialStaticMethodRefactoring.cs" />
-    <Compile Include="Refactorings\TypeIdentifierChecker.cs" />
-    <Compile Include="Refactorings\TypeIdentifierConventionRefactoring.cs" />
+    <Compile Include="Helper\IdentifierChecker.cs" />
+    <Compile Include="Refactorings\TypeIdentifierConvention\TypeIdentifierConventionRefactoring.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

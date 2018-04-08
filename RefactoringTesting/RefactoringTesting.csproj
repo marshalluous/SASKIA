@@ -126,6 +126,7 @@
     <Compile Include="ConditionalComplexityRefactoringTesting.cs" />
     <Compile Include="DepthOfInheritanceRefactoringTesting.cs" />
     <Compile Include="Helper\TestHelper.cs" />
+    <Compile Include="MethodPropertyIdentifierConventionRefactoringTesting.cs" />
     <Compile Include="TypeIdentifierConventionRefactoringTesting.cs" />
     <Compile Include="IfAndElseBlockEqualsRefactoringTesting.cs" />
     <Compile Include="IfReturnBooleanRefactoringTesting.cs" />

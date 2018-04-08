@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Refactoring.Helper;
+using System.Linq;
 using System.Text;
 
 namespace Refactoring.Helper
