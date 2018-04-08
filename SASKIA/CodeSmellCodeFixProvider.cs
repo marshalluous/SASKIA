@@ -23,8 +23,7 @@ namespace SASKIA
         
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            var refactoringMessage = $"Apply refactoring {refactoring.DiagnosticId}";
-            var codeAction = CodeAction.Create(refactoringMessage,
+            var codeAction = CodeAction.Create(refactoring.Description,
                 token => ApplyFix(context, token), string.Empty);
 
             context.RegisterCodeFix(codeAction, context.Diagnostics);

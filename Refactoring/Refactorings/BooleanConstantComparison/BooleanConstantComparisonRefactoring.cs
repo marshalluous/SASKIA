@@ -11,9 +11,9 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
     {
         public string DiagnosticId => RefactoringId.BooleanConstantComparison.GetDiagnosticId();
 
-        public string Title => "Comparison with boolean constant";
+        public string Title => RefactoringMessageFactory.BooleanComparisonTitle();
 
-        public string Description => Title;
+        public string Description => RefactoringMessageFactory.BooleanComparisonDescription();
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
@@ -25,7 +25,6 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var equalsEqualsNode = (BinaryExpressionSyntax) node;
-
             var diagnosticInfo = CheckForBooleanLiteral(equalsEqualsNode.Left);
 
             if (diagnosticInfo != null)
@@ -77,13 +76,13 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
         private static DiagnosticInfo CheckForBooleanLiteral(SyntaxNode syntaxNode)
         {
             return IsBooleanLiteralNode(syntaxNode, out var literalText)
-                ? DiagnosticInfo.CreateFailedResult($"Unnecessary comparison with {literalText} literal detected")
+                ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.BooleanComparisonMessage(literalText))
                 : null;
         }
 
         private static bool IsBooleanLiteralNode(SyntaxNode syntaxNode, out string literalText)
         {
-            literalText = syntaxNode.GetText().ToString().Trim();
+            literalText = SyntaxNodeHelper.GetText(syntaxNode);
             return IsTrueNode(syntaxNode) || IsFalseNode(syntaxNode);
         }
 

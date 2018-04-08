@@ -22,7 +22,7 @@ namespace RefactoringTesting
 		{
 			var node = TestHelper.Compile(source);
             node = TestHelper.FindNodeOfType<ClassDeclarationSyntax>(node);
-			var refactoring = new ClassNameRefactoring();
+			var refactoring = new TypoRefactoring();
 			var resultNodes = refactoring.GetFixableNodes(node);
             ListCompare(expectedWords.ToList(), resultNodes.Select(resultNode => resultNode.ToString()).ToList());
 		}

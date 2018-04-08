@@ -25,8 +25,7 @@ namespace SASKIA
                 message,
                 Category,
                 DiagnosticSeverity.Warning,
-                true,
-                refactoring.Description);
+                true);
         }
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => 

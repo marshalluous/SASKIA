@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using NHunspell;
 
@@ -26,7 +27,7 @@ namespace Refactoring.Helper
 		public IEnumerable<string> GetSuggestions(string word)
 		{
 			return ExecuteHunspellQuery(hunspell => {
-				return hunspell.Suggest(word);
+				return hunspell.Suggest(word).Take(5);
 			});
 		}
 
@@ -40,7 +41,7 @@ namespace Refactoring.Helper
 
 		private string GetFileInProjectFolder(string fileName)
 		{
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + $"\\..\\..\\..\\{fileName}";
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + $"\\{fileName}";
 		}
 	}
 }

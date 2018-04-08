@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refactoring.Refactorings.IdentifierConvention;
+using Refactoring.Refactorings.TypeIdentifierConvention;
 using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
