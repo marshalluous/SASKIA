@@ -13,7 +13,7 @@ namespace Refactoring.Refactorings.DepthOfInheritance
 
         public string DiagnosticId => RefactoringId.DepthOfInheritance.GetDiagnosticId();
 
-        public string Title => DiagnosticId;
+        public string Title => RefactoringMessageFactory.DepthOfInheritanceTitle();
 
         public string Description => Title;
 
@@ -27,7 +27,8 @@ namespace Refactoring.Refactorings.DepthOfInheritance
             var depthOfInheritance = CalculateDepthOfInheritance(classSymbol);
 
             return depthOfInheritance > ThresholdDepthOfInheritance
-                ? DiagnosticInfo.CreateFailedResult("To many DIT levels", depthOfInheritance, classNode.Identifier.GetLocation())
+                ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.DepthOfInheritanceMessage(classSymbol.Name, depthOfInheritance),
+                depthOfInheritance, classNode.Identifier.GetLocation())
                 : DiagnosticInfo.CreateSuccessfulResult(depthOfInheritance);
         }
 
@@ -53,7 +54,6 @@ namespace Refactoring.Refactorings.DepthOfInheritance
         {
             if (typeSymbol == null || typeSymbol.Name == "Object")
                 return 0;
-
             return 1 + CalculateDepthOfInheritance(typeSymbol.BaseType);
         }
     }

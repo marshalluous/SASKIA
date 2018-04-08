@@ -31,5 +31,12 @@
 
         public static string ConditionalComplexityMessage(int mcCabeComplexity) =>
             $"Method code is too complex (McCabe complexity = {mcCabeComplexity}";
+
+        /* DepthOfInheritance */
+        public static string DepthOfInheritanceTitle() =>
+            "Depth Of Inheritance";
+
+        public static string DepthOfInheritanceMessage(string className, int levels) =>
+            $"The class {className} has {levels} inheritance levels";
     }
 }
