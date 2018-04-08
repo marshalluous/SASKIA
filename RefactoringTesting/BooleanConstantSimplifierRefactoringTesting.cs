@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Refactoring.Helper;
 using Refactoring.Refactorings.BooleanConstantSimplifier;
 using RefactoringTesting.Helper;
 
@@ -11,28 +12,49 @@ namespace RefactoringTesting
     public sealed class BooleanConstantSimplifierRefactoringTesting
     {
         [TestMethod]
-        public void MixedBooleanConstantExpressionTest()
+        public void MixedBooleanConstantExpressionCodeFixTest()
         {
             const string source = "var x = true && false || !true;";
             TestCodeFix(source, "false");
         }
 
         [TestMethod]
-        public void SimpleAndExpressionTest()
+        public void MixedBooleanConstantExpressionDiagnosticTest()
+        {
+            const string source = "var x = true && false || !true;";
+            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(false));
+        }
+        
+        [TestMethod]
+        public void SimpleAndExpressionCodeFixTest()
         {
             const string source = "var y = true && false;";
             TestCodeFix(source, "false");
         }
-
+        
         [TestMethod]
-        public void SimpleOrExpressionTest()
+        public void SimpleAndExpressionDiagnosticTest()
+        {
+            const string source = "var y = true && false;";
+            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(false));
+        }
+        
+        [TestMethod]
+        public void SimpleOrExpressionCodeFixTest()
         {
             const string source = "var z = true || false;";
             TestCodeFix(source, "true");
         }
 
         [TestMethod]
-        public void SimpleNotExpressionTest()
+        public void SimpleOrExpressionDiagnosticTest()
+        {
+            const string source = "var z = true || false;";
+            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(true));
+        }
+        
+        [TestMethod]
+        public void SimpleNotExpressionCodeFixTest()
         {
             const string source = "var z = !false;";
             TestCodeFix(source, "true");
@@ -40,10 +62,24 @@ namespace RefactoringTesting
 
 
         [TestMethod]
-        public void SimpleBracketExpressionTest()
+        public void SimpleNotExpressionDiagnosticTest()
+        {
+            const string source = "var z = !false;";
+            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(true));
+        }
+        
+        [TestMethod]
+        public void SimpleBracketExpressionCodeFixTest()
         {
             const string source = "var z = !(false || true);";
             TestCodeFix(source, "false");
+        }
+        
+        [TestMethod]
+        public void SimpleBracketExpressionDiagnosticTest()
+        {
+            const string source = "var z = !(false || true);";
+            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(false));
         }
 
         [TestMethod]
@@ -58,6 +94,11 @@ namespace RefactoringTesting
         {
             const string source = "bool X() { return !(!true); }";
             TestCodeFix(source, "true");
+        }
+
+        private static void TestDiagnostic(string inputCode, string outputMessage)
+        {
+            TestHelper.TestDiagnosticResult<BinaryExpressionSyntax>(new BooleanConstantSimplifierRefactoring(), inputCode, outputMessage, FindNode);
         }
 
         private static void TestCodeFix(string inputCode, string expectedNodeText)

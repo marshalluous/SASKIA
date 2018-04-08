@@ -11,9 +11,9 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
     {
         public string DiagnosticId => RefactoringId.BooleanConstantComparison.GetDiagnosticId();
 
-        public string Title => RefactoringMessageFactory.BooleanComparisonTitle();
+        public string Title => RefactoringMessageFactory.BooleanConstantComparisonTitle();
 
-        public string Description => RefactoringMessageFactory.BooleanComparisonDescription();
+        public string Description => RefactoringMessageFactory.BooleanConstantComparisonDescription();
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
@@ -76,7 +76,7 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
         private static DiagnosticInfo CheckForBooleanLiteral(SyntaxNode syntaxNode)
         {
             return IsBooleanLiteralNode(syntaxNode, out var literalText)
-                ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.BooleanComparisonMessage(literalText))
+                ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.BooleanConstantComparisonMessage(literalText == "true"))
                 : null;
         }
 

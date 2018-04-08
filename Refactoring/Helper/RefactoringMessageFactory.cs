@@ -2,13 +2,34 @@
 {
     internal static class RefactoringMessageFactory
     {
-        public static string BooleanComparisonTitle() =>
+        /* BooleanConstantComparison */
+        public static string BooleanConstantComparisonTitle() =>
             "Boolean constant comparison";
 
-        public static string BooleanComparisonDescription() =>
+        public static string BooleanConstantComparisonDescription() =>
             "Simplify boolean comparison expression";
 
-        public static string BooleanComparisonMessage(string comparisonKeyword) =>
-            $"Unnecessary comparison with {comparisonKeyword} detected";
+        public static string BooleanConstantComparisonMessage(bool comparisonLiteral) =>
+            $"Unnecessary comparison with {BooleanToString(comparisonLiteral)} detected";
+
+        /* BooleanConstantSimplifier */
+        public static string BooleanConstantSimplifierTitle() =>
+            "Boolean constant simplifier";
+
+        public static string BooleanConstantSimplifierDescription() =>
+            "Simplify boolean literal expression";
+
+        public static string BooleanConstantSimplifierMessage(bool simplifiedValue) =>
+             $"Constant boolean expression can be simplified to {BooleanToString(simplifiedValue)}";
+
+        private static string BooleanToString(bool boolValue) =>
+            boolValue ? "true" : "false";
+
+        /* ConditionalComplexity */
+        public static string ConditionalComplexityTitle() =>
+            "Conditional Complexity";
+
+        public static string ConditionalComplexityMessage(int mcCabeComplexity) =>
+            $"Method code is too complex (McCabe complexity = {mcCabeComplexity}";
     }
 }

@@ -18,7 +18,7 @@ namespace RefactoringTesting
         [TestMethod]
         public void CompareWithTrueLiteralOnRightHandSideDiagnosticTest()
         {
-            TestDiagnosticResult("var b = x == true;", RefactoringMessageFactory.BooleanComparisonMessage("true"));
+            TestDiagnosticResult("var b = x == true;", RefactoringMessageFactory.BooleanConstantComparisonMessage(true));
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace RefactoringTesting
         [TestMethod]
         public void CompareWithFalseLiteralOnRightHandSideDiagnosticTest()
         {
-            TestDiagnosticResult("var b = x == false;", RefactoringMessageFactory.BooleanComparisonMessage("false"));
+            TestDiagnosticResult("var b = x == false;", RefactoringMessageFactory.BooleanConstantComparisonMessage(false));
         }
 
         [TestMethod]
@@ -42,7 +42,7 @@ namespace RefactoringTesting
         [TestMethod]
         public void EqualsEqualsNestedInEqualsEqualsDiagnosticTest()
         {
-            TestDiagnosticResult("var x = 4 == 12 == true;", RefactoringMessageFactory.BooleanComparisonMessage("true"));
+            TestDiagnosticResult("var x = 4 == 12 == true;", RefactoringMessageFactory.BooleanConstantComparisonMessage(true));
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace RefactoringTesting
         [TestMethod]
         public void CompareWithTrueLiteralOnLeftHandSideDiagnosticTest()
         {
-            TestDiagnosticResult("var b = true == x", RefactoringMessageFactory.BooleanComparisonMessage("true"));
+            TestDiagnosticResult("var b = true == x", RefactoringMessageFactory.BooleanConstantComparisonMessage(true));
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace RefactoringTesting
         [TestMethod]
         public void MethodCallNotEqualsComparisonDiagnosticTest()
         {
-            TestDiagnosticResult("var k = false != A();", RefactoringMessageFactory.BooleanComparisonMessage("false"));
+            TestDiagnosticResult("var k = false != A();", RefactoringMessageFactory.BooleanConstantComparisonMessage(false));
         }
         
         [TestMethod]

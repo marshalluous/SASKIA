@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Refactoring.Helper;
 using Refactoring.Refactorings.ConditionalComplexity;
 using RefactoringTesting.Helper;
 
@@ -26,6 +27,15 @@ namespace RefactoringTesting
             TestComplexity("int a = 0; bool x = true; if (x && x) { return x ? x : !x; } if(x) { a = 5; }" +
                                          "if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; }" +
                                          "if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; }", true, 13);
+        }
+
+        [TestMethod]
+        public void ConditionalComplexityIfMethodDiagnosticTest()
+        {
+            TestDiagnostic("int a = 0; bool x = true; if (x && x) { return x ? x : !x; } if(x) { a = 5; }" +
+                                         "if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; }" +
+                                         "if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; }",
+                                         RefactoringMessageFactory.ConditionalComplexityMessage(13));
         }
 
         [TestMethod]
@@ -65,9 +75,16 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
-        public void ConditionalAccessTest()
+        public void ConditionalAccessCodeFixTest()
         {
             TestComplexity("string s = null; int? length = s?.Length;", false, 2);
+        }
+
+
+        [TestMethod]
+        public void ConditionalAccessDiagnosticTest()
+        {
+            TestDiagnostic("string s = null; int? length = s?.Length;", string.Empty);
         }
 
         [TestMethod]
@@ -123,6 +140,12 @@ namespace RefactoringTesting
             return "public void X() {" + code + "}";
         }
         
+        private static void TestDiagnostic(string inputCode, string outputMessage)
+        {
+            var methodCode = CreateMethodCode(inputCode);
+            TestHelper.TestDiagnosticResult<MethodDeclarationSyntax>(new ConditionalComplexityRefactoring(), methodCode, outputMessage);
+        }
+
         private static void TestComplexity(string inputCode, bool diagnosticFound, int metricValue)
         {
             var methodCode = CreateMethodCode(inputCode);

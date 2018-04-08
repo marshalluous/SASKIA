@@ -43,14 +43,18 @@ namespace Refactoring.Helper
             return (T) FindAncestorWithPredicate(syntaxToken, node => node is T && GetText(node) == text);
         }
 
-        public static SyntaxNode FindAncestorWithPredicate(SyntaxToken syntaxToken, Predicate<SyntaxNode> predicate)
+        public static SyntaxNode FindAncestorWithPredicate(SyntaxNode node, Predicate<SyntaxNode> predicate)
         {
-            var node = syntaxToken.Parent;
-
             while (!predicate(node))
                 node = node.Parent;
 
             return node;
+        }
+
+        public static SyntaxNode FindAncestorWithPredicate(SyntaxToken syntaxToken, Predicate<SyntaxNode> predicate)
+        {
+            var node = syntaxToken.Parent;
+            return FindAncestorWithPredicate(syntaxToken.Parent, predicate);
         }
         
         public static ExpressionSyntax AddParentheses(ExpressionSyntax expression)

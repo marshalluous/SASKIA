@@ -11,7 +11,9 @@ namespace Refactoring.Refactorings.ConditionalComplexity
         private const int ConditionalComplexityThreshold = 10;
 
         public string DiagnosticId => RefactoringId.ConditionalComplexity.GetDiagnosticId();
-        public string Title => DiagnosticId;
+
+        public string Title => RefactoringMessageFactory.ConditionalComplexityTitle();
+
         public string Description => Title;
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
@@ -24,8 +26,8 @@ namespace Refactoring.Refactorings.ConditionalComplexity
             var complexity = visitor.Visit(methodNode);
             
              return complexity > ConditionalComplexityThreshold ?
-                DiagnosticInfo.CreateFailedResult($"Method is too complex (McCabe = {complexity})", complexity,
-                    methodNode.Identifier.GetLocation()) :
+                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.ConditionalComplexityMessage(complexity),
+                    complexity, methodNode.Identifier.GetLocation()) :
                 DiagnosticInfo.CreateSuccessfulResult(complexity);
         }
 
@@ -34,9 +36,7 @@ namespace Refactoring.Refactorings.ConditionalComplexity
             yield return node;
         }
 
-        public SyntaxNode GetReplaceableNode(SyntaxToken token)
-        {
-            return token.Parent;
-        }
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            token.Parent;
     }
 }

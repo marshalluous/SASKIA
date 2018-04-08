@@ -13,17 +13,20 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             SyntaxNodeHelper.GetExpressionSyntaxKinds();
 
-        public string Title => "YXYX";
+        public string Title => RefactoringMessageFactory.BooleanConstantSimplifierTitle();
 
-        public string Description => Title;
+        public string Description => RefactoringMessageFactory.BooleanConstantSimplifierDescription();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var booleanVisitor = new BooleanConstantSimplifierVisitor();
             var value = booleanVisitor.Visit(node);
 
+            if (IsNestedExpression(node))
+                return DiagnosticInfo.CreateSuccessfulResult();
+
             return value != null && !(node is LiteralExpressionSyntax)
-                ? DiagnosticInfo.CreateFailedResult("Constant boolean expression can be simplified")
+                ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.BooleanConstantSimplifierMessage(value.Value))
                 : DiagnosticInfo.CreateSuccessfulResult();
         }
 
@@ -44,6 +47,14 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
             SyntaxNodeHelper.FindAncestorWithPredicate(token,
                 node => !(IsBooleanExpression(node) && IsBooleanExpression(node.Parent)));
         
+        private static bool IsNestedExpression(SyntaxNode node)
+        {
+            var parent = node.Parent;
+
+            return parent is PrefixUnaryExpressionSyntax ||
+                parent is BinaryExpressionSyntax ||
+                parent is ParenthesizedExpressionSyntax;
+        }
 
         private static bool IsBooleanExpression(SyntaxNode node)
         {
