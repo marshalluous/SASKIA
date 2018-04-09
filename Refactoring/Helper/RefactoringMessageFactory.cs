@@ -38,5 +38,15 @@
 
         public static string DepthOfInheritanceMessage(string className, int levels) =>
             $"The class {className} has {levels} inheritance levels";
+
+        /* IfAndElseBlockEquals */
+        public static string IfAndElseBlockEqualsTitle() =>
+            "If and else block are identical";
+
+        public static string IfAndElseBlockEqualsDescription() =>
+            "Get rid of the if statement";
+
+        public static string IfAndElseBlockEqualsMessage() =>
+            "If is not needed because then and else block are identical";
     }
 }

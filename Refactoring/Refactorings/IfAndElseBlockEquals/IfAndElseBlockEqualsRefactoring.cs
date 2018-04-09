@@ -11,9 +11,9 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
     {
         public string DiagnosticId => RefactoringId.IfAndElseBlockEquals.GetDiagnosticId();
 
-        public string Title => "If and else block are the same";
+        public string Title => RefactoringMessageFactory.IfAndElseBlockEqualsTitle();
 
-        public string Description => Title;
+        public string Description => RefactoringMessageFactory.IfAndElseBlockEqualsDescription();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.IfStatement };
@@ -22,47 +22,49 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
         {
             return GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
-                : DiagnosticInfo.CreateFailedResult("Then block and else block contains the same code");
+                : DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IfAndElseBlockEqualsMessage());
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var ifNode = (IfStatementSyntax) node;
+            var ifNode = (IfStatementSyntax)node;
+            
+            if (ifNode.Else == null || ContainsElseIfStatement(ifNode))
+                return null;
+
             var thenBlock = ifNode.Statement;
-
-            if (ifNode.Else == null)
-                return null;
-
-            if (ContainsElseIfStatement(ifNode))
-                return null;
-
             var elseBlock = ifNode.Else.ChildNodes().First();
-            
+
             var equalsValueClause = SyntaxFactory.EqualsValueClause(ifNode.Condition);
-            
-            var boolType = SyntaxFactory.ParseTypeName("bool");
 
-            var compilationUnit = SyntaxNodeHelper.FindAncestorOfType<CompilationUnitSyntax>(node.GetFirstToken());
+            var isPure = CheckExpressionPureness(node, ifNode);
+            var localDeclarationStatement = CreateDeclarationStatement(equalsValueClause);
 
-            var visitor = new PureExpressionCheckerVisitor(compilationUnit);
-            var isPure = visitor.Visit(ifNode.Condition);
-
-            var localDeclarationStatement = SyntaxFactory
-                .LocalDeclarationStatement(SyntaxFactory.VariableDeclaration(boolType, 
-                    SyntaxFactory.SeparatedList(
-                        new [] { SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("condition"), null, equalsValueClause) }                        
-                        )).NormalizeWhitespace());
+            if (!CompareSyntaxNodes(thenBlock, elseBlock))
+                return null;
 
             if (!isPure)
-            {
-                return CompareSyntaxNodes(thenBlock, elseBlock)
-                    ? new[] {localDeclarationStatement.NormalizeWhitespace()}.Union(ifNode.Statement.ChildNodes())
-                    : null;
-            }
+                return new[] { localDeclarationStatement.NormalizeWhitespace() }.Union(ifNode.Statement.ChildNodes());
 
-            return CompareSyntaxNodes(thenBlock, elseBlock)
-                ? ifNode.Statement.ChildNodes()
-                : null;
+            return ifNode.Statement.ChildNodes();
+        }
+
+        private static LocalDeclarationStatementSyntax CreateDeclarationStatement(EqualsValueClauseSyntax equalsValueClause)
+        {
+            var boolType = SyntaxFactory.ParseTypeName("bool");
+            var localDeclarationStatement = SyntaxFactory
+                .LocalDeclarationStatement(SyntaxFactory.VariableDeclaration(boolType,
+                    SyntaxFactory.SeparatedList(
+                        new[] { SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("condition"), null, equalsValueClause) }
+                        )).NormalizeWhitespace());
+            return localDeclarationStatement;
+        }
+
+        private static bool CheckExpressionPureness(SyntaxNode node, IfStatementSyntax ifNode)
+        {
+            var compilationUnit = SyntaxNodeHelper.FindAncestorOfType<CompilationUnitSyntax>(node.GetFirstToken());
+            var visitor = new PureExpressionCheckerVisitor(compilationUnit);
+            return visitor.Visit(ifNode.Condition);
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
@@ -75,19 +77,19 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
 
         private static bool CompareSyntaxNodes(SyntaxNode first, SyntaxNode second)
         {
-            if (first is BlockSyntax firstBlock && firstBlock.ChildNodes().Count() == 1)
-            {
-                first = firstBlock.ChildNodes().First();
-            }
-
-            if (second is BlockSyntax secondBlock && secondBlock.ChildNodes().Count() == 1)
-            {
-                second = secondBlock.ChildNodes().First();
-            }
-
+            first = NormalizeIfBlock(first);
+            second = NormalizeIfBlock(second);
+            
             return first.GetType() == second.GetType() &&
                 first.NormalizeWhitespace().GetText().ContentEquals(second.NormalizeWhitespace().GetText()) &&            
                 CompareSyntaxNodeList(first.ChildNodes().ToList(), second.ChildNodes().ToList());
+        }
+
+        private static SyntaxNode NormalizeIfBlock(SyntaxNode block)
+        {
+            if (block is BlockSyntax && block.ChildNodes().Count() == 1)
+                return block.ChildNodes().First();
+            return block;
         }
 
         private static bool CompareSyntaxNodeList(IList<SyntaxNode> first, IList<SyntaxNode> second)

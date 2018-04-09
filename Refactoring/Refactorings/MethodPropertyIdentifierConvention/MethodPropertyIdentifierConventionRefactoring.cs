@@ -18,7 +18,7 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
         {
             if (GetFixableNodes(node) == null)
                 return DiagnosticInfo.CreateSuccessfulResult();
-            return DiagnosticInfo.CreateFailedResult("sadfkjl");
+            return DiagnosticInfo.CreateFailedResult("sadfkjl", null, GetIdentifierToken(node).GetLocation());
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

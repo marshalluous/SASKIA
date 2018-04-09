@@ -18,7 +18,7 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
         {
             return GetFixableNodes(node) == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("Unconventional type name");
+                DiagnosticInfo.CreateFailedResult("Unconventional type name", null);
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
