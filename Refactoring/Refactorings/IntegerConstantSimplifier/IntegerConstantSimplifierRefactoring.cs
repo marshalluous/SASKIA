@@ -10,49 +10,52 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
     {
         public string DiagnosticId => RefactoringId.IntegerConstantSimplifier.GetDiagnosticId();
 
-        public string Title => DiagnosticId;
+        public string Title => RefactoringMessageFactory.IntegerConstantSimplifierTitle();
 
-        public string Description => Title;
+        public string Description => RefactoringMessageFactory.IntegerConstantSimplifierDescription();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             SyntaxNodeHelper.GetExpressionSyntaxKinds();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-             var result = GetFixableNodes(node);
-            return result == null && !(node is LiteralExpressionSyntax) ? 
+            var parentValue = EvaluateValue(node.Parent);
+
+            if (node is LiteralExpressionSyntax || parentValue != null)
+                return DiagnosticInfo.CreateSuccessfulResult();
+            
+            var value = EvaluateValue(node);
+
+            return value == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("Integer constant can be simplified");
+                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IntegerConstantSimplifierMessage(value.Value));
         }
         
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var visitor = new IntegerConstantSimplifierVisitor();
-            var value = visitor.Visit(node);
+            var value = EvaluateValue(node);
 
-            if (value == null)
+            if (value == null || node is LiteralExpressionSyntax)
                 return null;
-
+            
             var literal = SyntaxFactory.Literal(value.Value);
             return new [] { SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, literal) };
         }
-        
+
+        private static int? EvaluateValue(SyntaxNode node)
+        {
+            var visitor = new IntegerConstantSimplifierVisitor();
+            return visitor.Visit(node);
+        }
+
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
             var node = token.Parent;
 
-            while (IsIntegerNode(node) && IsIntegerNode(node.Parent))
+            while (EvaluateValue(node.Parent) != null)
                 node = node.Parent;
 
             return node;
-        }
-
-        private static bool IsIntegerNode(SyntaxNode node)
-        {
-            return node is BinaryExpressionSyntax ||
-                   node is ParenthesizedExpressionSyntax ||
-                   node is PrefixUnaryExpressionSyntax ||
-                   node is LiteralExpressionSyntax;
         }
     }
 }

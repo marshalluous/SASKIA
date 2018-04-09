@@ -25,6 +25,8 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
 		{
+            var fieldNode = (FieldDeclarationSyntax) node;
+
 			return null;
 		}
 

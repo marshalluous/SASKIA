@@ -47,6 +47,26 @@
             "Get rid of the if statement";
 
         public static string IfAndElseBlockEqualsMessage() =>
-            "If is not needed because then and else block are identical";
+            "If statement is not needed because then and else block are identical";
+
+        /* IfReturnBoolean */
+        public static string IfReturnBooleanTitle() =>
+            "If and else block just returns condition";
+
+        public static string IfReturnBooleanDescription() =>
+            "Get rid of the if statement";
+
+        public static string IfReturnBooleanMessage(string expression) =>
+            $"If statement is not needed. Just write {expression}";
+
+        /* IntegerConstantSimplifier */
+        public static string IntegerConstantSimplifierTitle() =>
+            "Integer constant simplifier";
+
+        public static string IntegerConstantSimplifierDescription() =>
+            "Simplify integer literal expression";
+
+        public static string IntegerConstantSimplifierMessage(int simplifiedValue) =>
+             $"Constant integer expression can be simplified to {simplifiedValue}";
     }
 }

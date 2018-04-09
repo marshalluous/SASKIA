@@ -45,7 +45,7 @@ namespace Refactoring.Refactorings.LackOfCohesion
                                                  (numberOfMethods - 1);
 
             return lackOfCohesionValue > lackOfCohesionThreshold ? 
-                DiagnosticInfo.CreateFailedResult("LCOM!", lackOfCohesionValue, node.GetLocation()) :
+                DiagnosticInfo.CreateFailedResult("LCOM!", lackOfCohesionValue, classNode.Identifier.GetLocation()) :
                 DiagnosticInfo.CreateSuccessfulResult(lackOfCohesionValue);
         }
 

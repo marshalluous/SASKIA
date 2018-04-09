@@ -20,9 +20,12 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
+            var ifNode = (IfStatementSyntax)node;
+
             return GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
-                : DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IfAndElseBlockEqualsMessage());
+                : DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IfAndElseBlockEqualsMessage(),
+                    markableLocation: ifNode.IfKeyword.GetLocation());
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
