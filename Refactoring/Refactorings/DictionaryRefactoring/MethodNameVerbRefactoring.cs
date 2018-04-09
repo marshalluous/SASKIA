@@ -15,6 +15,11 @@ namespace Refactoring.DictionaryRefactorings
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
 			new[] { SyntaxKind.MethodDeclaration };
 
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{
 		    var methodNode = (MethodDeclarationSyntax)node;

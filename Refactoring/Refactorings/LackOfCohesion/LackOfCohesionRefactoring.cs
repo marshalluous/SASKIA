@@ -17,8 +17,12 @@ namespace Refactoring.Refactorings.LackOfCohesion
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
             new [] { node };
-    
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
+
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             const double lackOfCohesionThreshold = 0.6d;
 

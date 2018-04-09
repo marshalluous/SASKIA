@@ -15,7 +15,7 @@ namespace RefactoringTesting
 		public void SimpleClassNameTypoTest()
 		{
 			var source = "class Appartment {}";
-			TypoTest(source, new[] { "class Apartment{}" });
+			TypoTest(source, new[] { "class Apartment {}" });
 		}
 		
 		private static void TypoTest(string source, IEnumerable<string> expectedWords)

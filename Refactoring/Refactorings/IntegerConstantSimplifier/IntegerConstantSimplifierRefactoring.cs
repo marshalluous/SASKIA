@@ -14,7 +14,12 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
 
         public string Description => Title;
 
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+
+		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             SyntaxNodeHelper.GetExpressionSyntaxKinds();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)

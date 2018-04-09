@@ -38,5 +38,8 @@ namespace Refactoring.Refactorings.ConditionalComplexity
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             token.Parent;
-    }
+		
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+	}
 }

@@ -14,7 +14,11 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
 
         public string Description => DiagnosticId;
 
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             if (GetFixableNodes(node) == null)
                 return DiagnosticInfo.CreateSuccessfulResult();

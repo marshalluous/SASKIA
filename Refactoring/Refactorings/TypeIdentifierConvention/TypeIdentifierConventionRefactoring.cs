@@ -13,8 +13,12 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
         public string Title => DiagnosticId;
 
         public string Description => Title;
+		
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
 
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
+
+		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             return GetFixableNodes(node) == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :

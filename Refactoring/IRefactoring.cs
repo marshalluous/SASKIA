@@ -13,5 +13,6 @@ namespace Refactoring
         DiagnosticInfo DoDiagnosis(SyntaxNode node);
         IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node);
         SyntaxNode GetReplaceableNode(SyntaxToken token);
+		SyntaxNode GetReplaceableRootNode(SyntaxToken token);
     }
 }

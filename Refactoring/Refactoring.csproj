@@ -169,6 +169,7 @@
     <Compile Include="Helper\HunspellEngine.cs" />
     <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
     <Compile Include="Helper\RefactoringMessageFactory.cs" />
+    <Compile Include="Helper\SemanticSymbolBuilder.cs" />
     <Compile Include="Helper\WordSplitter.cs" />
     <Compile Include="Helper\WordTypeChecker.cs" />
     <Compile Include="Refactorings\BooleanConstantComparison\BooleanConstantComparisonRefactoring.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="DiagnosticInfo.cs" />
     <Compile Include="Refactorings\DictionaryRefactoring\TypoRefactoring.cs" />
     <Compile Include="Helper\SyntaxNodeHelper.cs" />
+    <Compile Include="Refactorings\DictionaryRefactoring\TypoRefactoringVisitor.cs" />
     <Compile Include="Refactorings\IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
     <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />

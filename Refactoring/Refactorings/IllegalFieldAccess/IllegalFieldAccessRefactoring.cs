@@ -17,7 +17,11 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node) =>
             new[] {node};
 
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var fieldNode = (FieldDeclarationSyntax) node;
             return DiagnosticInfo.CreateSuccessfulResult();

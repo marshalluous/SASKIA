@@ -17,7 +17,12 @@ namespace Refactoring.Refactorings.LongParameterList
 
         public string Description => Title;
 
-        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+
+		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             return null;
         }

@@ -34,6 +34,9 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
                    DiagnosticInfo.CreateSuccessfulResult();
         }
 
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
             return SyntaxNodeHelper.FindAncestorWithPredicate(token, node =>
