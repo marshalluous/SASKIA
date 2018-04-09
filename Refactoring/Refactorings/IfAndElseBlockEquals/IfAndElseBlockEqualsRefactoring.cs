@@ -44,7 +44,10 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
                 return null;
 
             if (!isPure)
-                return new[] { localDeclarationStatement.NormalizeWhitespace() }.Union(ifNode.Statement.ChildNodes());
+                return new[] { localDeclarationStatement
+                    .NormalizeWhitespace()
+                    .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed)
+                }.Union(ifNode.Statement.ChildNodes());
 
             return ifNode.Statement.ChildNodes();
         }
