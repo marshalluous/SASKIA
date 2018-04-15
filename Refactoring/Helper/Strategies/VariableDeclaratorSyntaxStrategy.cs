@@ -6,14 +6,12 @@ namespace Refactoring.Helper.Strategies
 {
 	class VariableDeclaratorSyntaxStrategy : TypoRefactoringStrategy
 	{
+		protected override List<string> IgnorableWords => new List<string> { "_" };
+		protected override Dictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>>();
+
 		protected override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
 			return ((VariableDeclaratorSyntax)syntaxNode).Identifier;
-		}
-
-		protected override void RemoveIgnorableWords(List<string> wordList)
-		{
-			wordList.Remove("_");
 		}
 	}
 }

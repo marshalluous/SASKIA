@@ -6,14 +6,14 @@ namespace Refactoring.Helper.Strategies
 {
 	class InterfaceDeclarationSyntaxStrategy : TypoRefactoringStrategy
 	{
+		protected override List<string> IgnorableWords => new List<string> { "I" };
+		protected override Dictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
+			{ "_", new List<string> { "" } }
+		};
+
 		protected override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
 			return ((InterfaceDeclarationSyntax)syntaxNode).Identifier;
-		}
-
-		protected override void RemoveIgnorableWords(List<string> wordList)
-		{
-			wordList.Remove("I");
 		}
 	}
 }

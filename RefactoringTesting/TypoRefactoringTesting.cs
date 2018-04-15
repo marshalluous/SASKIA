@@ -31,6 +31,20 @@ namespace RefactoringTesting
 		}
 
 		[TestMethod]
+		public void SimpleStructNameTypoTest()
+		{
+			var source = "struct Appartment {}";
+			TypoTest<StructDeclarationSyntax>(source, new[] { "struct Apartment{}" });
+		}
+
+		[TestMethod]
+		public void SimpleEnumNameTypoTest()
+		{
+			var source = "enum Appartment {}";
+			TypoTest<EnumDeclarationSyntax>(source, new[] { "enum Apartment{}" });
+		}
+
+		[TestMethod]
 		public void SimpleClassNameTypoTest()
 		{
 			var source = "class Appartment {}";
@@ -66,8 +80,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int rooomCount;" +
 				"}";
-			TypoTest<VariableDeclaratorSyntax>(source, new[] { "" +
-				"roomCount;"});
+			TypoTest<VariableDeclaratorSyntax>(source, new[] { "roomCount"});
 		}
 
 		[TestMethod]
@@ -78,7 +91,7 @@ namespace RefactoringTesting
 					" private int _rooomCount;" +
 				"}";
 			TypoTest<VariableDeclaratorSyntax>(source, new[] { "" +
-				"_roomCount;"});
+				"_roomCount"});
 		}
 
 		[TestMethod]
@@ -95,7 +108,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private void RooomCount(){}" +
 				"}";
-			TypoTest<VariableDeclaratorSyntax>(source, new[] { "private void RoomCount(){}" });
+			TypoTest<MethodDeclarationSyntax>(source, new[] { "private void RoomCount(){}" });
 		}
 	}
 }

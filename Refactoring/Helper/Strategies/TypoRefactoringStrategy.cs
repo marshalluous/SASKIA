@@ -7,6 +7,9 @@ namespace Refactoring.Helper.Strategies
 {
 	abstract class TypoRefactoringStrategy
 	{
+		protected abstract List<string> IgnorableWords { get; }
+		protected abstract Dictionary<string, List<string>> DefaultSuggestions { get; }
+
 		public DiagnosticInfo Diagnose(SyntaxNode syntaxNode, string description)
 		{
 			var syntaxToken = GetSyntaxToken(syntaxNode);
@@ -27,28 +30,23 @@ namespace Refactoring.Helper.Strategies
 
 		protected virtual void EvaluateTypo(List<string> wordList, out string affectedWord, out bool hasTypo, out List<string> suggestions)
 		{
-			RemoveIgnorableWords(wordList);
-			Evaluate(wordList, out affectedWord, out hasTypo, out suggestions);
-		}
-
-		private static void Evaluate(List<string> wordList, out string affectedWord, out bool hasTypo, out List<string> suggestions)
-		{
 			suggestions = null;
 			hasTypo = false;
 			affectedWord = "";
 			var hunspell = new HunspellEngine();
 			foreach (var word in wordList.Where(w => hunspell.HasTypo(w)))
 			{
+				if (IgnorableWords.Contains(word)) continue;
 				hasTypo = true;
 				affectedWord = word;
+				if (DefaultSuggestions.ContainsKey(word))
+				{
+					suggestions = DefaultSuggestions[word];
+					return;
+				}
 				suggestions = hunspell.GetSuggestions(word);
 				return;
 			}
-		}
-
-		protected void SafeEvaluateTypo(List<string> wordList, out string affectedWord, out bool hasTypo, out List<string> suggestions)
-		{
-			Evaluate(wordList, out affectedWord, out hasTypo, out suggestions);
 		}
 
 		public IEnumerable<SyntaxNode> EvaluateNodes(SyntaxNode node)
@@ -58,7 +56,7 @@ namespace Refactoring.Helper.Strategies
 			string affectedWord = "";
 			List<string> suggestions;
 			var allWords = WordSplitter.GetSplittedWordList(identifier.Text);
-			SafeEvaluateTypo(allWords, out affectedWord, out hasTypo, out suggestions);
+			EvaluateTypo(allWords, out affectedWord, out hasTypo, out suggestions);
 			if (suggestions == null)
 				return null;
 			int affectedIndex = allWords.FindIndex(w => w == affectedWord);
@@ -77,7 +75,5 @@ namespace Refactoring.Helper.Strategies
 		}
 
 		protected abstract SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode);
-
-		protected abstract void RemoveIgnorableWords(List<string> wordList);
 	}
 }
