@@ -20,7 +20,6 @@ namespace Refactoring.Helper
 		{
 			return ExecuteHunspellQuery(hunspell =>
 			{
-				if (wordString == "_") return false;
 				var capitalWord = MorphWord(wordString, char.ToUpper);
 				var smallWord = MorphWord(wordString, char.ToLower);
 				return !(hunspell.Spell(capitalWord) || hunspell.Spell(smallWord));
