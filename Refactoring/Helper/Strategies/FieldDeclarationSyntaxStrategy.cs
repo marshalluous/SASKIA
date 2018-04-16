@@ -4,16 +4,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	class MethodDeclarationSyntaxStrategy : TypoRefactoringStrategy
+	class FieldDeclarationSyntaxStrategy : TypoRefactoringStrategy
 	{
 		protected override IEnumerable<string> IgnorableWords => new List<string>();
-		protected override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
-			{ "_", new List<string> { "" } }
-		};
+		protected override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> { };
+		protected override string NamePrefix => "_";
 
 		protected override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
-			return ((MethodDeclarationSyntax)syntaxNode).Identifier;
+			return ((FieldDeclarationSyntax)syntaxNode).Declaration.Variables.First().Identifier;
 		}
 	}
 }

@@ -6,8 +6,8 @@ namespace Refactoring.Helper.Strategies
 {
 	class VariableDeclaratorSyntaxStrategy : TypoRefactoringStrategy
 	{
-		protected override List<string> IgnorableWords => new List<string> { "_" };
-		protected override Dictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>>();
+		protected override IEnumerable<string> IgnorableWords => new List<string> { "_" };
+		protected override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>>();
 
 		protected override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{

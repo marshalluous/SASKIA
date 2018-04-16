@@ -6,10 +6,11 @@ namespace Refactoring.Helper.Strategies
 {
 	class InterfaceDeclarationSyntaxStrategy : TypoRefactoringStrategy
 	{
-		protected override List<string> IgnorableWords => new List<string> { "I" };
-		protected override Dictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
+		protected override IEnumerable<string> IgnorableWords => new List<string> { "I" };
+		protected override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
 			{ "_", new List<string> { "" } }
 		};
+		protected override string NamePrefix => "I";
 
 		protected override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{

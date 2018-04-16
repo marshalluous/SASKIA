@@ -16,10 +16,12 @@ namespace Refactoring.Helper
 				return new MethodDeclarationSyntaxStrategy();
 			else if (type == typeof(VariableDeclaratorSyntax))
 				return new VariableDeclaratorSyntaxStrategy();
-			//else if (type == typeof(StructDeclarationSyntax))
-			//	return new StructDeclaratorSyntaxStrategy();
-			//else if (type == typeof(EnumDeclarationSyntax))
-			//	return new EnumDeclaratorSyntaxStrategy();
+			else if (type == typeof(StructDeclarationSyntax))
+				return new StructDeclarationSyntaxStrategy();
+			else if (type == typeof(EnumDeclarationSyntax))
+				return new EnumDeclarationSyntaxStrategy();
+			else if (type == typeof(FieldDeclarationSyntax))
+				return new FieldDeclarationSyntaxStrategy();
 			else
 				return new PropertyDeclarationSyntaxStrategy();
 		}

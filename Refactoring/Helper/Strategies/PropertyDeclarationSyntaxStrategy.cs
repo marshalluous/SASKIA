@@ -6,8 +6,8 @@ namespace Refactoring.Helper.Strategies
 {
 	class PropertyDeclarationSyntaxStrategy : TypoRefactoringStrategy
 	{
-		protected override List<string> IgnorableWords => new List<string>();
-		protected override Dictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
+		protected override IEnumerable<string> IgnorableWords => new List<string>();
+		protected override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
 			{ "_", new List<string> { "" } }
 		};
 

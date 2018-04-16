@@ -170,9 +170,12 @@
     <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
     <Compile Include="Helper\RefactoringMessageFactory.cs" />
     <Compile Include="Helper\Strategies\ClassDeclarationSyntaxStrategy.cs" />
+    <Compile Include="Helper\Strategies\EnumDeclarationSyntaxStrategy.cs" />
+    <Compile Include="Helper\Strategies\FieldDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\InterfaceDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\MethodDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\PropertyDeclarationSyntaxStrategy.cs" />
+    <Compile Include="Helper\Strategies\StructDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\TypoRefactoringStrategy.cs" />
     <Compile Include="Helper\Strategies\VariableDeclaratorSyntaxStrategy.cs" />
     <Compile Include="Helper\TypoRefactoryFactory.cs" />

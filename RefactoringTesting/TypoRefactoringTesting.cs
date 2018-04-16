@@ -11,13 +11,9 @@ namespace RefactoringTesting
 	[TestClass]
 	public sealed class TypoRefactoringTesting
 	{
-		private static void  TypoTest<T>(string source, IEnumerable<string> expectedWords)
+		private static void  TypoTest<T>(string source, string expected)
 		{
-			var node = TestHelper.Compile(source);
-			node = TestHelper.FindNodeOfType<T>(node);
-			var refactoring = new TypoRefactoring();
-			var resultNodes = refactoring.GetFixableNodes(node);
-			ListCompare(expectedWords.ToList(), resultNodes.Select(resultNode => resultNode.ToString()).ToList());
+			TestHelper.TestCodeFix<T>(new TypoRefactoring(), source, expected);
 		}
 
 		private static void ListCompare(IList<string> first, IList<string> second)
@@ -34,21 +30,21 @@ namespace RefactoringTesting
 		public void SimpleStructNameTypoTest()
 		{
 			var source = "struct Appartment {}";
-			TypoTest<StructDeclarationSyntax>(source, new[] { "struct Apartment{}" });
+			TypoTest<StructDeclarationSyntax>(source, "struct Apartment{}");
 		}
 
 		[TestMethod]
 		public void SimpleEnumNameTypoTest()
 		{
 			var source = "enum Appartment {}";
-			TypoTest<EnumDeclarationSyntax>(source, new[] { "enum Apartment{}" });
+			TypoTest<EnumDeclarationSyntax>(source,  "enum Apartment{}");
 		}
 
 		[TestMethod]
 		public void SimpleClassNameTypoTest()
 		{
 			var source = "class Appartment {}";
-			TypoTest<ClassDeclarationSyntax>(source, new[] { "class Apartment{}" });
+			TypoTest<ClassDeclarationSyntax>(source, "class Apartment{}");
 		}
 
 		[TestMethod]
@@ -58,8 +54,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int RooomCount { get; set; }" +
 				"}";
-			TypoTest<PropertyDeclarationSyntax>(source, new[] { "" +
-				"private int RoomCount{ get; set; }"});
+			TypoTest<PropertyDeclarationSyntax>(source, "private int RoomCount{ get; set; }");
 		}
 
 		[TestMethod]
@@ -69,8 +64,18 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int _RoomCount { get; set; }" +
 				"}";
-			TypoTest<PropertyDeclarationSyntax>(source, new[] { "" +
-				"private int RoomCount{ get; set; }"});
+			TypoTest<PropertyDeclarationSyntax>(source, "private int RoomCount{ get; set; }");
+		}
+
+		[TestMethod]
+		public void SimpleLinkedPropertyFieldTypoTest()
+		{
+			var source = "" +
+				"class Apartment {" +
+					"private int _rooomCount;" +
+					"private int RoomCount { get { return _rooomCount; } set{ _rooomCount=value; } }" +
+				"}";
+			TypoTest<FieldDeclarationSyntax>(source, "private int _roomCount;");
 		}
 
 		[TestMethod]
@@ -80,7 +85,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int rooomCount;" +
 				"}";
-			TypoTest<VariableDeclaratorSyntax>(source, new[] { "roomCount"});
+			TypoTest<VariableDeclaratorSyntax>(source, "roomCount");
 		}
 
 		[TestMethod]
@@ -90,15 +95,14 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int _rooomCount;" +
 				"}";
-			TypoTest<VariableDeclaratorSyntax>(source, new[] { "" +
-				"_roomCount"});
+			TypoTest<VariableDeclaratorSyntax>(source, "_roomCount");
 		}
 
 		[TestMethod]
 		public void SimpleInterfaceNameTypoTest()
 		{
 			var source = "interface IAppartment {}";
-			TypoTest<InterfaceDeclarationSyntax>(source, new[] { "interface IApartment{}" });
+			TypoTest<InterfaceDeclarationSyntax>(source, "interface IApartment{}");
 		}
 
 		[TestMethod]
@@ -108,7 +112,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private void RooomCount(){}" +
 				"}";
-			TypoTest<MethodDeclarationSyntax>(source, new[] { "private void RoomCount(){}" });
+			TypoTest<MethodDeclarationSyntax>(source, "private void RoomCount(){}");
 		}
 	}
 }
