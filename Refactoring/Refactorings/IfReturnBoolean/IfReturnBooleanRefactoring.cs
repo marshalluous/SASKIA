@@ -15,7 +15,11 @@ namespace Refactoring.Refactorings.IfReturnBoolean
 
         public string Description => RefactoringMessageFactory.IfReturnBooleanDescription();
 
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] {SyntaxKind.IfStatement};
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)

@@ -46,8 +46,11 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorWithPredicate(token,
                 node => !(IsBooleanExpression(node) && IsBooleanExpression(node.Parent)));
-        
-        private static bool IsNestedExpression(SyntaxNode node)
+		
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+		private static bool IsNestedExpression(SyntaxNode node)
         {
             var parent = node.Parent;
 

@@ -143,6 +143,7 @@
     <Compile Include="ClassNameRefactoringTesting.cs" />
     <Compile Include="UseOfVarRefactoringTesting.cs" />
     <Compile Include="WhitespaceFixRefactoringTesting.cs" />
+    <Compile Include="TypoRefactoringTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

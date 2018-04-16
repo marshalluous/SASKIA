@@ -69,9 +69,11 @@ namespace SASKIA
                     //.Select(node => node.NormalizeWhitespace())
                     .ToArray();
 
-                root = FormatRoot(replaceNodes.Length == 1
-                    ? root.ReplaceNode(replaceableNode, replaceNodes.First())
-                    : root.ReplaceNode(replaceableNode, replaceNodes));
+				var replaceableRootNode = refactoring.GetReplaceableRootNode(token);
+
+				root = FormatRoot(replaceNodes.Length == 1
+                    ? root.ReplaceNode(replaceableRootNode, replaceNodes.First())
+                    : root.ReplaceNode(replaceableRootNode, replaceNodes));
 
                 return document.WithSyntaxRoot(root);
             }

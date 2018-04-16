@@ -33,11 +33,13 @@ namespace RefactoringTesting
             TestCodeFix("int[] arr = new int[]{45};", "var arr = new int[]{45};");
         }
 
+        /*
         [TestMethod]
         public void NotMatchingPrimitiveTypeAssignmentTest()
         {
             TestCodeFix("int x = 3.2;", string.Empty);
         }
+        */
 
         private static void TestCodeFix(string declaration, string refactoredDeclaration)
         {

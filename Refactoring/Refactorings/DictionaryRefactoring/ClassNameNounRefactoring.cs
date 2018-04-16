@@ -16,6 +16,10 @@ namespace Refactoring.Refactorings.DictionaryRefactoring
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
 			new[] { SyntaxKind.ClassDeclaration };
 
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{
 			var classNode = (ClassDeclarationSyntax)node;

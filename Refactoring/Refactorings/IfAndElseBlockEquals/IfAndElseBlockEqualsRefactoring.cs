@@ -18,7 +18,12 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.IfStatement };
 
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+
+		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var ifNode = (IfStatementSyntax)node;
 

@@ -14,7 +14,12 @@ namespace Refactoring.Refactorings.NotOperatorInversion
 
         public string Description => Title;
 
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+			GetReplaceableNode(token);
+
+
+		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] {SyntaxKind.LogicalNotExpression};
             
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)

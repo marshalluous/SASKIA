@@ -77,5 +77,9 @@ namespace Refactoring.Refactorings.UseOfVar
             return model.GetDeclaredSymbol(classSemanticNode);
         }
 
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -95,5 +95,10 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
             var compilation = CSharpCompilation.Create("CompilationUnit", new[] { classSyntaxTree });
             return compilation.GetSemanticModel(classNode.SyntaxTree);
         }
+
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

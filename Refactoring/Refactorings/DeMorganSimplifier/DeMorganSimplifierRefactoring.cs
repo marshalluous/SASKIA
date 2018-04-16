@@ -61,12 +61,17 @@ namespace Refactoring.Refactorings.DeMorganSimplifier
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
-            return SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
+            return GetReplaceableRootNode(token);
         }
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize()
         {
             return new[] { SyntaxKind.LogicalNotExpression };
         }
-    }
+
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
+		{
+			return SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
+		}
+	}
 }

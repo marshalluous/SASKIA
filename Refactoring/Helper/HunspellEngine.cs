@@ -9,10 +9,17 @@ namespace Refactoring.Helper
 {
 	public sealed class HunspellEngine
 	{
+		private string ExecutableAssemlyPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+		public HunspellEngine()
+		{
+			Hunspell.NativeDllPath = ExecutableAssemlyPath;
+		}
+
 		public bool HasTypo(string wordString)
 		{
-			return ExecuteHunspellQuery(hunspell => {
-				if (wordString == "_") return false;
+			return ExecuteHunspellQuery(hunspell =>
+			{
 				var capitalWord = MorphWord(wordString, char.ToUpper);
 				var smallWord = MorphWord(wordString, char.ToLower);
 				return !(hunspell.Spell(capitalWord) || hunspell.Spell(smallWord));
@@ -28,7 +35,8 @@ namespace Refactoring.Helper
 
 		public List<string> GetSuggestions(string word)
 		{
-			return ExecuteHunspellQuery(hunspell => {
+			return ExecuteHunspellQuery(hunspell =>
+			{
 				var list = hunspell.Suggest(word).Take(5);
 				List<string> suggestions = new List<string>();
 				foreach (var suggestion in list)
@@ -49,7 +57,7 @@ namespace Refactoring.Helper
 
 		private string GetFileInProjectFolder(string fileName)
 		{
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + $"\\{fileName}";
+			return ExecutableAssemlyPath + $"\\{fileName}";
 		}
 	}
 }

@@ -36,6 +36,11 @@ namespace Refactoring.Refactorings.WhitespaceFix
             return token.Parent;
         }
 
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
+        {
+            return GetReplaceableNode(token);
+        }
+
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.NamespaceDeclaration };
     }
