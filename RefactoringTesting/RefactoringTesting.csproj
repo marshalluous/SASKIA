@@ -124,8 +124,10 @@
     <Compile Include="BooleanConstantComparisonRefactoringTesting.cs" />
     <Compile Include="BooleanConstantSimplifierRefactoringTesting.cs" />
     <Compile Include="ConditionalComplexityRefactoringTesting.cs" />
+    <Compile Include="DeMorganSimplifierRefactoringTesting.cs" />
     <Compile Include="DepthOfInheritanceRefactoringTesting.cs" />
     <Compile Include="Helper\TestHelper.cs" />
+    <Compile Include="IllegalFieldAccessRefactoringTesting.cs" />
     <Compile Include="MethodPropertyIdentifierConventionRefactoringTesting.cs" />
     <Compile Include="TypeIdentifierConventionRefactoringTesting.cs" />
     <Compile Include="IfAndElseBlockEqualsRefactoringTesting.cs" />
@@ -138,7 +140,7 @@
     <Compile Include="PotentialStaticMethodRefactoringTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PureExpressionCheckerTesting.cs" />
-    <Compile Include="ClassNameRefactoringTesting.cs" />
+    <Compile Include="TypoRefactoringTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

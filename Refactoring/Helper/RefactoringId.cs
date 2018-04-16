@@ -16,7 +16,8 @@
         LongParameterList,
         PotentialStaticMethod,
         TypeIdentifierConvention,
-        MethodPropertyIdentifierConvention
+        MethodPropertyIdentifierConvention,
+        DeMorganSimplifier
     }
 
     internal static class RefactoringIdsMethods

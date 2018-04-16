@@ -66,7 +66,7 @@ namespace SASKIA
                     return document.WithSyntaxRoot(root);
 
                 replaceNodes = replaceNodes
-                    .Select(node => node.NormalizeWhitespace())
+                    //.Select(node => node.NormalizeWhitespace())
                     .ToArray();
 
 				var replaceableRootNode = refactoring.GetReplaceableRootNode(token);

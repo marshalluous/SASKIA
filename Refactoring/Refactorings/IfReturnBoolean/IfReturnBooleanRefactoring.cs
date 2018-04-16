@@ -11,9 +11,9 @@ namespace Refactoring.Refactorings.IfReturnBoolean
     {
         public string DiagnosticId => RefactoringId.IfReturnBoolean.GetDiagnosticId();
 
-        public string Title => DiagnosticId;
+        public string Title => RefactoringMessageFactory.IfReturnBooleanTitle();
 
-        public string Description => Title;
+        public string Description => RefactoringMessageFactory.IfReturnBooleanDescription();
 
 
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
@@ -24,10 +24,14 @@ namespace Refactoring.Refactorings.IfReturnBoolean
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var result = GetFixableNodes(node);
-            return result == null ? 
+            var fixableNodes = GetFixableNodes(node);
+            var ifNode = (IfStatementSyntax)node;
+
+            return fixableNodes == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("Return Anti-Pattern");
+                DiagnosticInfo.CreateFailedResult(
+                    RefactoringMessageFactory.IfReturnBooleanMessage(fixableNodes.First().ToString()), 
+                    markableLocation: ifNode.IfKeyword.GetLocation());
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
@@ -38,7 +42,7 @@ namespace Refactoring.Refactorings.IfReturnBoolean
             var elseNode = GetElseBlock(ifNode);
 
             if (elseNode == null)
-                return new[] { node };
+                return null;
 
             if (IsReturnBooleanStatement(thenNode, "true") && IsReturnBooleanStatement(elseNode, "false"))
             {
@@ -47,10 +51,11 @@ namespace Refactoring.Refactorings.IfReturnBoolean
             }
 
             if (!IsReturnBooleanStatement(thenNode, "false") || !IsReturnBooleanStatement(elseNode, "true"))
-                return new[] { node };
+                return null;
 
             var condition = SyntaxNodeHelper.AddParentheses(ifNode.Condition);
             var notNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, condition);
+
             return new[] { SyntaxFactory.ReturnStatement(notNode).NormalizeWhitespace() };
         }
 
