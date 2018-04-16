@@ -20,8 +20,9 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var fieldNode = (FieldDeclarationSyntax) node;
-            return DiagnosticInfo.CreateSuccessfulResult();
+            return GetFixableNodes(node) == null
+                ? DiagnosticInfo.CreateSuccessfulResult()
+                : DiagnosticInfo.CreateFailedResult("xxxx");
         }
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
@@ -54,17 +55,12 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
             return fieldNode.Modifiers.Where(modifier => !IsVisibilityModifier(modifier.Text));
         }
 
-        private static bool HasOnlyPrivateModifier(FieldDeclarationSyntax fieldNode)
+        private static bool HasOnlyPrivateModifier(BaseFieldDeclarationSyntax fieldNode)
         {
-            var presentModifiers = fieldNode.Modifiers.Where(modifier => IsVisibilityModifier(modifier.Text.Trim()));
-            return presentModifiers.Count() == 1 && presentModifiers.First().Text == "private";
+            var presentModifiers = fieldNode.Modifiers.Where(modifier => IsVisibilityModifier(modifier.Text.Trim())).ToArray();
+            return presentModifiers.Length == 1 && presentModifiers.First().Text == "private";
         }
         
-        private static bool HasVisibilityQualifier(FieldDeclarationSyntax fieldNode, string expectedModifier)
-        {
-            return fieldNode.Modifiers.OfType<SyntaxToken>().Any(modifier => modifier.Text.Trim() == expectedModifier);
-        }
-
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<FieldDeclarationSyntax>(token);
 

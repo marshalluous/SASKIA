@@ -18,7 +18,7 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
         {
             return GetFixableNodes(node) == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("Unconventional type name", null);
+                DiagnosticInfo.CreateFailedResult("Unconventional type name");
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
@@ -40,17 +40,17 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
                 if (!IdentifierChecker.IsUpperCamelCase(identifierText))
                 {
                     var newIdentifierToken = SyntaxFactory.Identifier(IdentifierChecker.ToUpperCamelCaseIdentifier(identifierText));
-                    return new SyntaxNode[] { node.ReplaceToken(delegateNode.Identifier, newIdentifierToken) };
+                    return new[] { node.ReplaceToken(delegateNode.Identifier, newIdentifierToken) };
                 }
             }
             
             if (node is BaseTypeDeclarationSyntax typeNode)
             {
-                if (!IdentifierChecker.IsUpperCamelCase(identifierText))
-                {
-                    var newIdentifierToken = SyntaxFactory.Identifier(IdentifierChecker.ToUpperCamelCaseIdentifier(identifierText));
-                    return new SyntaxNode[] { node.ReplaceToken(typeNode.Identifier, newIdentifierToken) };
-                }
+                if (IdentifierChecker.IsUpperCamelCase(identifierText))
+                    return null;
+
+                var newIdentifierToken = SyntaxFactory.Identifier(IdentifierChecker.ToUpperCamelCaseIdentifier(identifierText));
+                return new[] { node.ReplaceToken(typeNode.Identifier, newIdentifierToken) };
             }
 
             return null;
@@ -64,7 +64,7 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
             return identifierText;
         }
 
-        private bool CheckInterfacePrefix(string identifierText)
+        private static bool CheckInterfacePrefix(string identifierText)
         {
             return IdentifierChecker.IsUpperCamelCase(identifierText) &&
                 identifierText.StartsWith("I");
@@ -81,14 +81,13 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
 
         private static string GetIdentifier(SyntaxNode node)
         {
-            if (node is BaseTypeDeclarationSyntax typeNode)
+            switch (node)
             {
-                return typeNode.Identifier.Text.Trim();
-            }
+                case BaseTypeDeclarationSyntax typeNode:
+                    return typeNode.Identifier.Text.Trim();
 
-            if (node is DelegateDeclarationSyntax delegateNode)
-            {
-                return delegateNode.Identifier.Text.Trim();
+                case DelegateDeclarationSyntax delegateNode:
+                    return delegateNode.Identifier.Text.Trim();
             }
 
             return string.Empty;

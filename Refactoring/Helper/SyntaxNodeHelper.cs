@@ -53,7 +53,6 @@ namespace Refactoring.Helper
 
         public static SyntaxNode FindAncestorWithPredicate(SyntaxToken syntaxToken, Predicate<SyntaxNode> predicate)
         {
-            var node = syntaxToken.Parent;
             return FindAncestorWithPredicate(syntaxToken.Parent, predicate);
         }
         

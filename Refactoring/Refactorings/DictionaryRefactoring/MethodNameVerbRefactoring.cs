@@ -1,10 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
-using System.Collections.Generic;
 
-namespace Refactoring.DictionaryRefactorings
+namespace Refactoring.Refactorings.DictionaryRefactoring
 {
     public sealed class MethodNameVerbRefactoring : Dictionary, IRefactoring
 	{

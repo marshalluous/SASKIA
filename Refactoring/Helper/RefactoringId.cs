@@ -17,7 +17,9 @@
         PotentialStaticMethod,
         TypeIdentifierConvention,
         MethodPropertyIdentifierConvention,
-        DeMorganSimplifier
+        DeMorganSimplifier,
+        WhitespaceFix,
+        UseOfVar
     }
 
     internal static class RefactoringIdsMethods

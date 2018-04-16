@@ -200,6 +200,8 @@
     <Compile Include="Refactorings\PotentialStaticMethod\PotentialStaticMethodRefactoring.cs" />
     <Compile Include="Helper\IdentifierChecker.cs" />
     <Compile Include="Refactorings\TypeIdentifierConvention\TypeIdentifierConventionRefactoring.cs" />
+    <Compile Include="Refactorings\UseOfVar\UseOfVarRefactoring.cs" />
+    <Compile Include="Refactorings\WhitespaceFix\WhitespaceFixRefactoring.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

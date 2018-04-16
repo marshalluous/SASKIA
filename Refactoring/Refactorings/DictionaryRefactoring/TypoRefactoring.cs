@@ -1,11 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Refactoring.DictionaryRefactorings
+namespace Refactoring.Refactorings.DictionaryRefactoring
 {
     public sealed class TypoRefactoring : IRefactoring
 	{
@@ -62,15 +62,14 @@ namespace Refactoring.DictionaryRefactorings
 		}
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
-        {
-            if (node is ClassDeclarationSyntax)
-				return EvaluateNodes((ClassDeclarationSyntax)node, ((ClassDeclarationSyntax)node).Identifier);
-            else if (node is MethodDeclarationSyntax)
-				return EvaluateNodes((MethodDeclarationSyntax)node, ((MethodDeclarationSyntax)node).Identifier);
-			else if (node is VariableDeclaratorSyntax)
-				return EvaluateNodes((VariableDeclaratorSyntax)node, ((VariableDeclaratorSyntax)node).Identifier);
-			else
-				return EvaluateNodes((PropertyDeclarationSyntax)node, ((PropertyDeclarationSyntax)node).Identifier);
+		{
+		    if (node is ClassDeclarationSyntax classNode)
+				return EvaluateNodes(classNode, classNode.Identifier);
+		    if (node is MethodDeclarationSyntax methodNode)
+		        return EvaluateNodes(methodNode, methodNode.Identifier);
+		    if (node is VariableDeclaratorSyntax variableNode)
+		        return EvaluateNodes(variableNode, variableNode.Identifier);
+            return EvaluateNodes((PropertyDeclarationSyntax)node, ((PropertyDeclarationSyntax)node).Identifier);
 		}
 
 		private IEnumerable<SyntaxNode> EvaluateNodes(SyntaxNode node, SyntaxToken identifier)

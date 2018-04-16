@@ -27,13 +27,11 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
             var classSymbol = semanticModel.GetDeclaredSymbol(classNode);
             var isPotentialStaticMethod = IsPotentialStaticMethod(methodNode.Body, semanticModel, classSymbol);
 
-            if (isPotentialStaticMethod)
-            {
-                var staticKeyword = SyntaxFactory.Token(SyntaxKind.StaticKeyword);
-                return new[] { methodNode.AddModifiers(staticKeyword).NormalizeWhitespace() };
-            }
+            if (!isPotentialStaticMethod)
+                return null;
 
-            return null;
+            var staticKeyword = SyntaxFactory.Token(SyntaxKind.StaticKeyword);
+            return new[] { methodNode.AddModifiers(staticKeyword).NormalizeWhitespace() };
         }
         
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
@@ -58,38 +56,40 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
 
             if (nodeText == "this" || nodeText == "base")
                 return false;
-
-
+            
             if (syntaxNode is IdentifierNameSyntax)
             {
                 var declaredSymbol = semanticModel.GetSymbolInfo(syntaxNode).Symbol;
-
-                if (declaredSymbol == null)
-                    return true;
-
-                if (declaredSymbol.ContainingType != classSymbol)
-                    return true;
-
-                if (!(declaredSymbol is IFieldSymbol || declaredSymbol is IMethodSymbol || declaredSymbol is IPropertySymbol))
-                    return true;
-
-                return declaredSymbol.IsStatic;
+                return SymbolRefersToStaticDeclarationSymbol(classSymbol, declaredSymbol);
             }
 
-            return syntaxNode.ChildNodes().All(child => IsPotentialStaticMethod(child, semanticModel, classSymbol));
+            return syntaxNode.ChildNodes()
+                .All(child => IsPotentialStaticMethod(child, semanticModel, classSymbol));
         }
 
-        private static bool MethodIsPrivate(MethodDeclarationSyntax methodNode)
+        private static bool SymbolRefersToStaticDeclarationSymbol(ITypeSymbol classSymbol, ISymbol declaredSymbol)
+        {
+            // ReSharper disable once PossibleUnintendedReferenceComparison
+            if (declaredSymbol == null || declaredSymbol.ContainingType != classSymbol)
+                return true;
+
+            if (!(declaredSymbol is IFieldSymbol || declaredSymbol is IMethodSymbol || declaredSymbol is IPropertySymbol))
+                return true;
+
+            return declaredSymbol.IsStatic;
+        }
+
+        private static bool MethodIsPrivate(BaseMethodDeclarationSyntax methodNode)
         {
             return methodNode.Modifiers.Any(SyntaxKind.PrivateKeyword);
         }
 
-        private static bool MethodIsStatic(MethodDeclarationSyntax methodNode)
+        private static bool MethodIsStatic(BaseMethodDeclarationSyntax methodNode)
         {
             return methodNode.Modifiers.Any(SyntaxKind.StaticKeyword);
         }
 
-        private static SemanticModel GetSemanticModel(BaseTypeDeclarationSyntax classNode)
+        private static SemanticModel GetSemanticModel(SyntaxNode classNode)
         {
             var classSyntaxTree = classNode.SyntaxTree;
             var compilation = CSharpCompilation.Create("CompilationUnit", new[] { classSyntaxTree });

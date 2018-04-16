@@ -57,6 +57,8 @@
     <Compile Include="CodeFixProviders\NotOperationInversionCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\PotentialStaticMethodCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\TypeIdentifierConventionCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\UseOfVarCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\WhitespaceFixCodeFixProvider.cs" />
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\DeMorganSimplifierDiagnosticAnalyzer.cs" />
@@ -78,6 +80,8 @@
     <Compile Include="DiagnosticAnalyzers\NotOperatorInversionDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\PotentialStaticMethodDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\TypeIdentifierConventionDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\UseOfVarDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\WhitespaceFixDiagnosticAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

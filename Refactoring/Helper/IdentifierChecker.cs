@@ -1,5 +1,4 @@
-﻿using Refactoring.Helper;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 namespace Refactoring.Helper
@@ -20,9 +19,8 @@ namespace Refactoring.Helper
         
         public static string ToUpperCamelCaseIdentifier(string identifierName)
         {
-            if (string.IsNullOrEmpty(identifierName))
-                return string.Empty;
-            return FixUnderlines(char.ToUpper(identifierName[0]) + identifierName.Substring(1));
+            return string.IsNullOrEmpty(identifierName) ? 
+                string.Empty : FixUnderlines(char.ToUpper(identifierName[0]) + identifierName.Substring(1));
         }
 
         public static string FixUnderlines(string identifierName)
@@ -30,18 +28,18 @@ namespace Refactoring.Helper
             if (string.IsNullOrEmpty(identifierName))
                 return identifierName;
             
-            bool upperNext = false;
+            var upperNext = false;
             var result = new StringBuilder();
 
-            for (var index = 0; index < identifierName.Length; ++index)
+            foreach (var currentChar in identifierName)
             {
-                if (identifierName[index] == '_')
+                if (currentChar == '_')
                 {
                     upperNext = true;
                 }
                 else
                 {
-                    var nextChar = identifierName[index];
+                    var nextChar = currentChar;
 
                     if (upperNext)
                     {

@@ -1,11 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Data.SQLite;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
-using System.Collections.Generic;
-using System.Data.SQLite;
 
-namespace Refactoring.DictionaryRefactorings
+namespace Refactoring.Refactorings.DictionaryRefactoring
 {
     public sealed class ClassNameNounRefactoring : Dictionary, IRefactoring
 	{

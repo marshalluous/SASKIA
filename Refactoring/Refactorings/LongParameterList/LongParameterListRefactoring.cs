@@ -9,7 +9,7 @@ namespace Refactoring.Refactorings.LongParameterList
 {
     public sealed class LongParameterListRefactoring : IRefactoring
     {
-        private const int parameterCountThreshold = 3;
+        private const int ParameterCountThreshold = 3;
 
         public string DiagnosticId => RefactoringId.LongParameterList.GetDiagnosticId();
 
@@ -27,7 +27,7 @@ namespace Refactoring.Refactorings.LongParameterList
             var methodNode = (MethodDeclarationSyntax)node;
             var parameterCount = methodNode.ParameterList.ChildNodes().Count();
 
-            if (parameterCount > parameterCountThreshold)
+            if (parameterCount > ParameterCountThreshold)
             {
                 return DiagnosticInfo.CreateFailedResult("Long Parameter List", parameterCount, methodNode.Identifier.GetLocation());
             }

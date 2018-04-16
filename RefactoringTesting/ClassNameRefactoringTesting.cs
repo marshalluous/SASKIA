@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refactoring.DictionaryRefactorings;
+using Refactoring.Refactorings.DictionaryRefactoring;
 using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
@@ -14,8 +13,7 @@ namespace RefactoringTesting
 		[TestMethod]
 		public void SimpleClassNameTypoTest()
 		{
-			var source = "class Appartment {}";
-			TypoTest(source, new[] { "class Apartment{}" });
+		    TypoTest("class Appartment {}", new[] { "class Apartment{}" });
 		}
 		
 		private static void TypoTest(string source, IEnumerable<string> expectedWords)
@@ -29,9 +27,9 @@ namespace RefactoringTesting
 
 		private static void ListCompare(IList<string> first, IList<string> second)
 		{
-			Assert.AreEqual(first.Count(), second.Count());
+			Assert.AreEqual(first.Count, second.Count);
 
-			for (var index = 0; index < first.Count(); ++index)
+			for (var index = 0; index < first.Count; ++index)
 			{
 				Assert.AreEqual(first[index], second[index]);
 			}
