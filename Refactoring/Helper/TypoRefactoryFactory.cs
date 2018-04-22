@@ -6,7 +6,7 @@ namespace Refactoring.Helper
 {
 	class TypoRefactoryFactory
 	{
-		public static TypoRefactoringStrategy GetStrategy(Type type)
+		public static DictionaryRefactoringStrategy GetStrategy(Type type)
 		{
 			if (type == typeof(ClassDeclarationSyntax))
 				return new ClassDeclarationSyntaxStrategy();

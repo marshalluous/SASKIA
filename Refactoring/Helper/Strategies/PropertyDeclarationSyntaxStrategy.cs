@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	class PropertyDeclarationSyntaxStrategy : TypoRefactoringStrategy
+	class PropertyDeclarationSyntaxStrategy : DictionaryRefactoringStrategy
 	{
 		protected override IEnumerable<string> IgnorableWords => new List<string>();
 		protected override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {

@@ -19,8 +19,7 @@ namespace Refactoring.DictionaryRefactorings
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{
 			var strategy = TypoRefactoryFactory.GetStrategy(node.GetType());
-			return strategy.Diagnose(node, Description);
-
+			return strategy.DiagnoseTypo(node, Description);
 		}
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

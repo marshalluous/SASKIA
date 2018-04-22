@@ -70,7 +70,7 @@ namespace RefactoringTesting
 
 
         [TestMethod]
-        private static void TestCodeFix(string inputCode, string expectedNodeText)
+        private void TestCodeFix(string inputCode, string expectedNodeText)
         {
             TestHelper.TestCodeFix<FieldDeclarationSyntax>(new IllegalFieldAccessRefactoring(), inputCode, expectedNodeText);
         }

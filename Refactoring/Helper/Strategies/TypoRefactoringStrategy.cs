@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Refactoring.Helper.Strategies
 {
-	abstract class TypoRefactoringStrategy
+	abstract class DictionaryRefactoringStrategy : Dictionary
 	{
 		protected abstract IEnumerable<string> IgnorableWords { get; }
 		protected abstract IDictionary<string, List<string>> DefaultSuggestions { get; }
@@ -29,15 +29,25 @@ namespace Refactoring.Helper.Strategies
 			return EvaluateTypo(allWords);
 		}
 
-		public DiagnosticInfo Diagnose(SyntaxNode syntaxNode, string description)
+		public DiagnosticInfo DiagnoseTypo(SyntaxNode syntaxNode, string description)
 		{
 			var typoCheckResult = CheckTypo(syntaxNode, out var syntaxToken, out _, out _);
 
 			if (!typoCheckResult.IsIdentifierCorrectable)
 				return DiagnosticInfo.CreateSuccessfulResult();
-			
+
 			var suggestionsAsString = "Suggestions:\n" + typoCheckResult.Suggestions.Aggregate((x, y) => $"{x}\r\n{y}");
 			return DiagnosticInfo.CreateFailedResult($"{description}: {typoCheckResult.AffectedWord}.\n{suggestionsAsString}", markableLocation: syntaxToken.GetLocation());
+		}
+
+		public DiagnosticInfo DiagnoseNoun(SyntaxNode syntaxNode, string description)
+		{
+			var classNode = GetSyntaxToken(syntaxNode);
+			var identifierText = classNode.Text;
+			var lastWord = WordSplitter.GetLastWord(identifierText);
+			if (!new WordTypeChecker(Database).IsNoun(lastWord))
+				return DiagnosticInfo.CreateFailedResult($"{description}: {lastWord}.", markableLocation: classNode.GetLocation());
+			return DiagnosticInfo.CreateSuccessfulResult();
 		}
 
 		public IEnumerable<SyntaxNode> EvaluateNodes(SyntaxNode syntaxNode)
@@ -56,6 +66,11 @@ namespace Refactoring.Helper.Strategies
 			}
 
 			return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(newIdentifier)) };
+		}
+
+		public IEnumerable<SyntaxNode> EvaluateNounNodes(SyntaxNode syntaxNode)
+		{
+			return new[] { syntaxNode };
 		}
 
 		private static string ConcatNewIdentifier(List<string> allWords, string suggestion, string affectedWord)

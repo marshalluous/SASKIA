@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Refactoring;
 using Refactoring.DictionaryRefactorings;
 using RefactoringTesting.Helper;
 
@@ -11,9 +12,9 @@ namespace RefactoringTesting
 	[TestClass]
 	public sealed class TypoRefactoringTesting
 	{
-		private static void  TypoTest<T>(string source, string expected)
+		private static void  TypoTest<T>(IRefactoring refactoring, string source, string expected)
 		{
-			TestHelper.TestCodeFix<T>(new TypoRefactoring(), source, expected);
+			TestHelper.TestCodeFix<T>(refactoring, source, expected);
 		}
 
 		private static void ListCompare(IList<string> first, IList<string> second)
@@ -30,21 +31,21 @@ namespace RefactoringTesting
 		public void SimpleStructNameTypoTest()
 		{
 			var source = "struct Appartment {}";
-			TypoTest<StructDeclarationSyntax>(source, "struct Apartment{}");
+			TypoTest<StructDeclarationSyntax>(new TypoRefactoring(), source, "struct Apartment{}");
 		}
 
 		[TestMethod]
 		public void SimpleEnumNameTypoTest()
 		{
 			var source = "enum Appartment {}";
-			TypoTest<EnumDeclarationSyntax>(source,  "enum Apartment{}");
+			TypoTest<EnumDeclarationSyntax>(new TypoRefactoring(), source,  "enum Apartment{}");
 		}
 
 		[TestMethod]
 		public void SimpleClassNameTypoTest()
 		{
 			var source = "class Appartment {}";
-			TypoTest<ClassDeclarationSyntax>(source, "class Apartment{}");
+			TypoTest<ClassDeclarationSyntax>(new TypoRefactoring(), source, "class Apartment{}");
 		}
 
 		[TestMethod]
@@ -54,7 +55,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int RooomCount { get; set; }" +
 				"}";
-			TypoTest<PropertyDeclarationSyntax>(source, "private int RoomCount{ get; set; }");
+			TypoTest<PropertyDeclarationSyntax>(new TypoRefactoring(), source, "private int RoomCount{ get; set; }");
 		}
 
 		[TestMethod]
@@ -64,7 +65,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int _RoomCount { get; set; }" +
 				"}";
-			TypoTest<PropertyDeclarationSyntax>(source, "private int RoomCount{ get; set; }");
+			TypoTest<PropertyDeclarationSyntax>(new TypoRefactoring(), source, "private int RoomCount{ get; set; }");
 		}
 
 		[TestMethod]
@@ -75,7 +76,7 @@ namespace RefactoringTesting
 					"private int _rooomCount;" +
 					"private int RoomCount { get { return _rooomCount; } set{ _rooomCount=value; } }" +
 				"}";
-			TypoTest<FieldDeclarationSyntax>(source, "private int _roomCount;");
+			TypoTest<FieldDeclarationSyntax>(new TypoRefactoring(), source, "private int _roomCount;");
 		}
 
 		[TestMethod]
@@ -85,7 +86,7 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int rooomCount;" +
 				"}";
-			TypoTest<VariableDeclaratorSyntax>(source, "roomCount");
+			TypoTest<VariableDeclaratorSyntax>(new TypoRefactoring(), source, "roomCount");
 		}
 
 		[TestMethod]
@@ -95,14 +96,14 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private int _rooomCount;" +
 				"}";
-			TypoTest<VariableDeclaratorSyntax>(source, "_roomCount");
+			TypoTest<VariableDeclaratorSyntax>(new TypoRefactoring(), source, "_roomCount");
 		}
 
 		[TestMethod]
 		public void SimpleInterfaceNameTypoTest()
 		{
 			var source = "interface IAppartment {}";
-			TypoTest<InterfaceDeclarationSyntax>(source, "interface IApartment{}");
+			TypoTest<InterfaceDeclarationSyntax>(new TypoRefactoring(), source, "interface IApartment{}");
 		}
 
 		[TestMethod]
@@ -112,7 +113,35 @@ namespace RefactoringTesting
 				"class Apartment {" +
 					" private void RooomCount(){}" +
 				"}";
-			TypoTest<MethodDeclarationSyntax>(source, "private void RoomCount(){}");
+			TypoTest<MethodDeclarationSyntax>(new TypoRefactoring(), source, "private void RoomCount(){}");
+		}
+
+		[TestMethod]
+		public void SimpleClassNounTest()
+		{
+			var source = "class ApartmentKeep {}";
+			TypoTest<ClassDeclarationSyntax>(new ClassNameNounRefactoring(), source, "class ApartmentKeep {}");
+		}
+
+		[TestMethod]
+		public void SimpleInterfaceNounTest()
+		{
+			var source = "interface IApartmentDo {}";
+			TypoTest<InterfaceDeclarationSyntax>(new ClassNameNounRefactoring(), source, "interface IApartmentDo {}");
+		}
+
+		[TestMethod]
+		public void SimpleStructNounTest()
+		{
+			var source = "struct ApartmentDo {}";
+			TypoTest<StructDeclarationSyntax>(new ClassNameNounRefactoring(), source, "struct ApartmentDo {}");
+		}
+
+		[TestMethod]
+		public void SimpleEnumNounTest()
+		{
+			var source = "enum ApartmentDo {}";
+			TypoTest<EnumDeclarationSyntax>(new ClassNameNounRefactoring(), source, "enum ApartmentDo {}");
 		}
 	}
 }
