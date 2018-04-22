@@ -77,6 +77,7 @@ namespace RefactoringTesting
 					"private int RoomCount { get { return _rooomCount; } set{ _rooomCount=value; } }" +
 				"}";
 			TypoTest<FieldDeclarationSyntax>(new TypoRefactoring(), source, "private int _roomCount;");
+			Assert.AreEqual()
 		}
 
 		[TestMethod]

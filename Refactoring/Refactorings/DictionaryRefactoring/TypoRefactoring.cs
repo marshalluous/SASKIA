@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
-using Refactoring.Refactorings.DictionaryRefactoring;
 using System.Collections.Generic;
 
 namespace Refactoring.DictionaryRefactorings
@@ -14,7 +13,8 @@ namespace Refactoring.DictionaryRefactorings
 		public string Description => "Typo";
 
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-			new[] { SyntaxKind.ClassDeclaration, SyntaxKind.InterfaceDeclaration, SyntaxKind.MethodDeclaration, SyntaxKind.VariableDeclarator, SyntaxKind.PropertyDeclaration, SyntaxKind.FieldDeclaration };
+			new[] { SyntaxKind.ClassDeclaration, SyntaxKind.InterfaceDeclaration, SyntaxKind.MethodDeclaration,
+				SyntaxKind.VariableDeclarator, SyntaxKind.PropertyDeclaration, SyntaxKind.FieldDeclaration };
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{

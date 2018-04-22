@@ -19,7 +19,7 @@ namespace Refactoring.Helper.Strategies
 			var identifier = syntaxToken.Text;
 			namePrefixPresent = false;
 
-			if (identifier.StartsWith(NamePrefix))
+			if (NamePrefix != "" && identifier.StartsWith(NamePrefix))
 			{
 				identifier = identifier.Substring(NamePrefix.Length);
 				namePrefixPresent = true;
