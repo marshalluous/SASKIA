@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring;
 using Refactoring.DictionaryRefactorings;
+using Refactoring.Refactorings.DictionaryRefactoring;
 using RefactoringTesting.Helper;
 
 namespace RefactoringTesting
@@ -77,7 +78,6 @@ namespace RefactoringTesting
 					"private int RoomCount { get { return _rooomCount; } set{ _rooomCount=value; } }" +
 				"}";
 			TypoTest<FieldDeclarationSyntax>(new TypoRefactoring(), source, "private int _roomCount;");
-			Assert.AreEqual()
 		}
 
 		[TestMethod]
@@ -121,28 +121,28 @@ namespace RefactoringTesting
 		public void SimpleClassNounTest()
 		{
 			var source = "class ApartmentKeep {}";
-			TypoTest<ClassDeclarationSyntax>(new ClassNameNounRefactoring(), source, "class ApartmentKeep {}");
+			TypoTest<ClassDeclarationSyntax>(new WordTypeRefactoring(), source, "class ApartmentKeep {}");
 		}
 
 		[TestMethod]
 		public void SimpleInterfaceNounTest()
 		{
 			var source = "interface IApartmentDo {}";
-			TypoTest<InterfaceDeclarationSyntax>(new ClassNameNounRefactoring(), source, "interface IApartmentDo {}");
+			TypoTest<InterfaceDeclarationSyntax>(new WordTypeRefactoring(), source, "interface IApartmentDo {}");
 		}
 
 		[TestMethod]
 		public void SimpleStructNounTest()
 		{
 			var source = "struct ApartmentDo {}";
-			TypoTest<StructDeclarationSyntax>(new ClassNameNounRefactoring(), source, "struct ApartmentDo {}");
+			TypoTest<StructDeclarationSyntax>(new WordTypeRefactoring(), source, "struct ApartmentDo {}");
 		}
 
 		[TestMethod]
 		public void SimpleEnumNounTest()
 		{
 			var source = "enum ApartmentDo {}";
-			TypoTest<EnumDeclarationSyntax>(new ClassNameNounRefactoring(), source, "enum ApartmentDo {}");
+			TypoTest<EnumDeclarationSyntax>(new WordTypeRefactoring(), source, "enum ApartmentDo {}");
 		}
 	}
 }

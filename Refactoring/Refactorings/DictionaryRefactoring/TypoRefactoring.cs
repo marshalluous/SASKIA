@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
+using Refactoring.Helper.Strategies;
 using System.Collections.Generic;
 
 namespace Refactoring.DictionaryRefactorings
@@ -18,13 +19,13 @@ namespace Refactoring.DictionaryRefactorings
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{
-			var strategy = TypoRefactoryFactory.GetStrategy(node.GetType());
-			return strategy.DiagnoseTypo(node, Description);
+			var strategy = DictionaryRefactoryFactory.GetStrategy(node.GetType(), typeof(TypoRefactoringStrategy));
+			return strategy.Diagnose(node, Description);
 		}
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-			var strategy = TypoRefactoryFactory.GetStrategy(node.GetType());
+			var strategy = DictionaryRefactoryFactory.GetStrategy(node.GetType(), typeof(TypoRefactoringStrategy));
 			return strategy.EvaluateNodes(node);
 		}
 
