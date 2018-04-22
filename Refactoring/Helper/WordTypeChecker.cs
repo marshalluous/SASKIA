@@ -51,7 +51,7 @@ namespace Refactoring.Helper
 				while (reader.Read())
 				{
 					var wordType = reader.GetString(WordTypeLocation);
-					if (reader.GetString(WordTypeLocation).StartsWith("a")) return true;
+					if (reader.GetString(WordTypeLocation).StartsWith("a.")) return true;
 				}
 				return false;
 			}
