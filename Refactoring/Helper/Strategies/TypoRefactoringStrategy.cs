@@ -75,7 +75,7 @@ namespace Refactoring.Helper.Strategies
 			foreach (var word in wordList.Where(w => hunspell.HasTypo(w)))
 			{
 				if (strategy.IgnorableWords.Contains(word)) continue;
-				return new TypoCheckResult(word, true, strategy.DefaultSuggestions.ContainsKey(word) ? strategy.DefaultSuggestions[word] : hunspell.GetSuggestions(word));
+				return new TypoCheckResult(word, true, strategy.DefaultSuggestions.ContainsKey(word) ? strategy.DefaultSuggestions[word] : hunspell.GetSuggestions(word,5));
 			}
 			
 			return new TypoCheckResult(string.Empty, false, null);

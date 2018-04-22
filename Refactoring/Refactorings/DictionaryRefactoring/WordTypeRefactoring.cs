@@ -27,7 +27,8 @@ namespace Refactoring.Refactorings.DictionaryRefactoring
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
 		{
-			return new[] { node };
+			var strategy = DictionaryRefactoryFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
+			return strategy.EvaluateNodes(node);
 		}
 
 		public SyntaxNode GetReplaceableNode(SyntaxToken token)

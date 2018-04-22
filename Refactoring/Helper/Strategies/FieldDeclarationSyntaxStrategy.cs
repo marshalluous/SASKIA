@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -21,6 +22,11 @@ namespace Refactoring.Helper.Strategies
 		internal override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
 			return ((FieldDeclarationSyntax)syntaxNode).Declaration.Variables.First().Identifier;
+		}
+
+		internal override DiagnosticInfo DiagnoseWordType(SQLiteConnection database, string identifierText, SyntaxToken syntaxToken, string description)
+		{
+			return DiagnosticInfo.CreateSuccessfulResult();
 		}
 	}
 }

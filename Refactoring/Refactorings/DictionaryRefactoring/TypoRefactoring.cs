@@ -11,7 +11,7 @@ namespace Refactoring.DictionaryRefactorings
 	{
 		public string DiagnosticId => "SASKIA200";
 		public string Title => DiagnosticId;
-		public string Description => "Typo";
+		public string Description => "Typo in name";
 
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
 			new[] { SyntaxKind.ClassDeclaration, SyntaxKind.InterfaceDeclaration, SyntaxKind.MethodDeclaration,

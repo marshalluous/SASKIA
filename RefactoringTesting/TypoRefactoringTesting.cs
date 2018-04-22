@@ -120,29 +120,29 @@ namespace RefactoringTesting
 		[TestMethod]
 		public void SimpleClassNounTest()
 		{
-			var source = "class ApartmentKeep {}";
-			TypoTest<ClassDeclarationSyntax>(new WordTypeRefactoring(), source, "class ApartmentKeep {}");
+			var source = "class Downey {}";
+			TypoTest<ClassDeclarationSyntax>(new WordTypeRefactoring(), source, "class Down{}"); // no suggestion is being provided
 		}
 
 		[TestMethod]
 		public void SimpleInterfaceNounTest()
 		{
 			var source = "interface IApartmentDo {}";
-			TypoTest<InterfaceDeclarationSyntax>(new WordTypeRefactoring(), source, "interface IApartmentDo {}");
+			TypoTest<InterfaceDeclarationSyntax>(new WordTypeRefactoring(), source, "interface IApartmentDo {}"); // no suggestion is being provided
 		}
 
 		[TestMethod]
 		public void SimpleStructNounTest()
 		{
 			var source = "struct ApartmentDo {}";
-			TypoTest<StructDeclarationSyntax>(new WordTypeRefactoring(), source, "struct ApartmentDo {}");
+			TypoTest<StructDeclarationSyntax>(new WordTypeRefactoring(), source, "struct ApartmentDo {}"); // no suggestion is being provided
 		}
 
 		[TestMethod]
 		public void SimpleEnumNounTest()
 		{
 			var source = "enum ApartmentDo {}";
-			TypoTest<EnumDeclarationSyntax>(new WordTypeRefactoring(), source, "enum ApartmentDo {}");
+			TypoTest<EnumDeclarationSyntax>(new WordTypeRefactoring(), source, "enum ApartmentDo {}"); // no suggestion is being provided
 		}
 	}
 }
