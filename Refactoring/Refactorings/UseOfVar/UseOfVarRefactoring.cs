@@ -10,76 +10,77 @@ namespace Refactoring.Refactorings.UseOfVar
     public sealed class UseOfVarRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.UseOfVar.GetDiagnosticId();
-
-        public string Title => DiagnosticId;
-
-        public string Description => Title;
+        public string Title => RefactoringMessageFactory.UseOfVarTitle();
+        public string Description => RefactoringMessageFactory.UseOfVarDescription();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            new[] {SyntaxKind.LocalDeclarationStatement};
+            new[] { SyntaxKind.LocalDeclarationStatement };
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var variableNode = (LocalDeclarationStatementSyntax) node;
-
             return GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
-                : DiagnosticInfo.CreateFailedResult("use var", null, variableNode.Declaration.Type.GetLocation());
+                : CreateFailedDiagnosticResult(node as LocalDeclarationStatementSyntax);
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var variableNode = (LocalDeclarationStatementSyntax) node;
-
+            var variableNode = (LocalDeclarationStatementSyntax)node;
             var declaration = variableNode.Declaration;
 
-            if (CanUseVarKeyword(declaration))
+            if (!CanUseVarKeyword(variableNode, declaration))
                 return null;
-
+            
             return new[]
             {
-                variableNode.WithDeclaration(declaration.WithType(VarType())).NormalizeWhitespace()
+                variableNode.WithDeclaration(declaration.WithType(VarType()))
+                    .NormalizeWhitespace()
             };
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<LocalDeclarationStatementSyntax>(token);
-        
-        private static TypeSyntax VarType()
-        {
-            return SyntaxFactory.ParseTypeName("var");
-        }
 
-        private static bool CanUseVarKeyword(VariableDeclarationSyntax declaration)
+        private static bool CanUseVarKeyword(LocalDeclarationStatementSyntax variableNode,
+            VariableDeclarationSyntax declaration)
         {
-            if (declaration.Variables.Count != 1)
-                return true;
+            var declarationType = GetDeclarationType(declaration);
+
+            if (IsConstVariable(variableNode) || declarationType == null ||
+                declaration.Variables.Count != 1 || declarationType.IsValueType)
+                return false;
 
             var variable = declaration.Variables.First();
-            return variable.Initializer == null || declaration.Type.IsVar;
+            return variable.Initializer != null && !declaration.Type.IsVar;
         }
 
-        private static SemanticModel CreateSemanticModel(BaseTypeDeclarationSyntax classNode)
+        private static ITypeSymbol GetDeclarationType(VariableDeclarationSyntax declaration)
         {
-            var classSyntaxTree = classNode.SyntaxTree;
-            var compilation = CSharpCompilation.Create("CompilationUnit", new[] { classSyntaxTree });
-            var model = compilation.GetSemanticModel(classNode.SyntaxTree);
-            return model;
+            var semanticModel = GetSemanticModel(declaration);
+            return (ITypeSymbol)semanticModel.GetSymbolInfo(declaration.Type).Symbol;
         }
 
-        private static ITypeSymbol GetTypeSymbol(BaseTypeDeclarationSyntax classNode)
+        private static SemanticModel GetSemanticModel(VariableDeclarationSyntax declaration)
         {
-            var model = CreateSemanticModel(classNode);
-            var classSemanticNode = classNode.SyntaxTree.GetRoot().DescendantNodes()
-                .OfType<ClassDeclarationSyntax>()
-                .FirstOrDefault(node => node.Identifier == classNode.Identifier);
-
-            return model.GetDeclaredSymbol(classSemanticNode);
+            var classNode = SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(declaration.Type.GetFirstToken());
+            return SemanticSymbolBuilder.GetSemanticModel(classNode);
         }
 
-        public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
-        {
-            throw new System.NotImplementedException();
-        }
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+            GetReplaceableNode(token);
+        
+        private static TypeSyntax VarType() => SyntaxFactory.ParseTypeName("var");
+
+        private static bool IsConstVariable(LocalDeclarationStatementSyntax variableNode) =>
+            variableNode.Modifiers.Any(modifier => modifier.Kind() == SyntaxKind.ConstKeyword);
+
+        private static DiagnosticInfo CreateFailedDiagnosticResult(LocalDeclarationStatementSyntax variableNode) =>
+            DiagnosticInfo.CreateFailedResult(CreateFixMessage(variableNode), null, GetMarkableLocation(variableNode));
+
+        private static Location GetMarkableLocation(LocalDeclarationStatementSyntax variableNode) =>
+            variableNode.Declaration.Type.GetLocation();
+
+        private static string CreateFixMessage(LocalDeclarationStatementSyntax variableNode) =>
+            RefactoringMessageFactory.UseOfVarMessage(SyntaxNodeHelper.GetText(variableNode.Declaration.Type));
     }
 }

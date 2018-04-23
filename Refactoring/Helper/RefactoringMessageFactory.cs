@@ -68,5 +68,35 @@
 
         public static string IntegerConstantSimplifierMessage(int simplifiedValue) =>
              $"Constant integer expression can be simplified to {simplifiedValue}";
+
+        /* TypeIdentifier */
+        public static string TypeIdentifierTitle() =>
+            "Unconventional type name";
+
+        public static string TypeIdentifierDescription() =>
+            "Refactor type name to upper camel case";
+
+        public static string TypeIdentifierMessage(string actualTypeName, string refactoredTypeName) =>
+            $"Refactor type name from {actualTypeName} to {refactoredTypeName}";
+
+        /* UseOfVarRefactoring */
+        public static string UseOfVarTitle() =>
+            "Use var instead";
+
+        public static string UseOfVarDescription() =>
+            "Use var instead";
+
+        public static string UseOfVarMessage(string typeName) =>
+            $"Use var instead of {typeName}";
+
+        /* WhitespaceFixRefactoring */
+        public static string WhitespaceFixTitle() =>
+            "Unconventional code formatting";
+
+        public static string WhitespaceFixDescription() =>
+            "Format code";
+
+        public static string WhitespaceFixMessage() =>
+            "Correct formatted code makes the source code easier to read";
     }
 }

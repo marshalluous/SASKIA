@@ -96,9 +96,7 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
             return compilation.GetSemanticModel(classNode.SyntaxTree);
         }
 
-        public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
-        {
-            throw new System.NotImplementedException();
-        }
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+            GetReplaceableNode(token);
     }
 }

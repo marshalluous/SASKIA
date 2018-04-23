@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -9,8 +11,10 @@ namespace Refactoring.Helper
 	{
 		public static SemanticModel GetSemanticModel(BaseTypeDeclarationSyntax classNode)
 		{
+		    var corePath = typeof(object).GetTypeInfo().Assembly.Location;
+		    var mscorlib = MetadataReference.CreateFromFile(corePath);
 			var classSyntaxTree = classNode.SyntaxTree;
-			var compilation = CSharpCompilation.Create("CompilationUnit", new[] { classSyntaxTree });
+			var compilation = CSharpCompilation.Create("CompilationUnit", new[] { classSyntaxTree }, references: new [] { mscorlib });
 			return compilation.GetSemanticModel(classNode.SyntaxTree);
 		}
 

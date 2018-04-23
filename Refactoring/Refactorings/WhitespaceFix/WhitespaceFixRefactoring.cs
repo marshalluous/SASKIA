@@ -9,39 +9,42 @@ namespace Refactoring.Refactorings.WhitespaceFix
     public sealed class WhitespaceFixRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.WhitespaceFix.GetDiagnosticId();
-
-        public string Title => DiagnosticId;
-
-        public string Description => DiagnosticId;
+        public string Title => RefactoringMessageFactory.WhitespaceFixTitle();
+        public string Description => RefactoringMessageFactory.WhitespaceFixDescription();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var namespaceNode = (NamespaceDeclarationSyntax) node;
-
             return GetFixableNodes(node) == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("fix whitespace", null, namespaceNode.Name.GetLocation());
+                GetFailedDiagnosticInfo(namespaceNode);
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var whitespaceFixNode = node.NormalizeWhitespace();
+            var whitespaceFixNode = GetFixedNode(node);
             return node.ToString() == whitespaceFixNode.ToString() ?
-                null : 
+                null :
                 new[] { whitespaceFixNode };
         }
-
-        public SyntaxNode GetReplaceableNode(SyntaxToken token)
-        {
-            return token.Parent;
-        }
-
-        public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
-        {
-            return GetReplaceableNode(token);
-        }
-
+        
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorOfType<NamespaceDeclarationSyntax>(token);
+        
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+            GetReplaceableNode(token);
+    
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.NamespaceDeclaration };
+
+        private static SyntaxNode GetFixedNode(SyntaxNode node) =>
+            node.NormalizeWhitespace().WithLeadingTrivia(SyntaxFactory.CarriageReturnLineFeed);
+
+        private static DiagnosticInfo GetFailedDiagnosticInfo(NamespaceDeclarationSyntax namespaceNode) =>
+            DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.WhitespaceFixMessage()
+                , null, GetLocation(namespaceNode));
+
+        private static Location GetLocation(NamespaceDeclarationSyntax node) =>
+            node.Name.GetLocation();
     }
 }

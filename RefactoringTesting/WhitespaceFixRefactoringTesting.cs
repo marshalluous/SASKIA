@@ -20,6 +20,21 @@ namespace RefactoringTesting
             TestCodeFix("namespace Y    {       \t delegate void X(); }", "namespace Y\r\n{\r\n    delegate void X();\r\n}");
         }
 
+        [TestMethod]
+        public void TestWhitespaceFix3()
+        {
+            TestCodeFix("namespace Z{ public interface A { void N(); } }",
+                "namespace Z\r\n{\r\n    public interface A\r\n    {\r\n        void N();\r\n    }\r\n}");
+        }
+
+        [TestMethod]
+        public void TestWhitespaceFix4()
+        {
+            TestCodeFix("namespace X{class \rY{void \n Z() { if (4 < 12) { }}\t}}}",
+                "namespace X\r\n{\r\n    class Y\r\n    {\r\n        void Z()\r\n        {\r\n            if (4 < 12)\r\n" +
+                "            {\r\n            }\r\n        }\r\n    }\r\n}");
+        }
+
         private static void TestCodeFix(string inputCode, string outputCode)
         {
             TestHelper.TestCodeFix<NamespaceDeclarationSyntax>(new WhitespaceFixRefactoring(), inputCode, outputCode);

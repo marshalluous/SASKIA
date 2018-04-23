@@ -17,7 +17,7 @@ namespace RefactoringTesting
         [TestMethod]
         public void SimpleLocalVariableWithAssignmentTest()
         {
-            TestCodeFix("int x = 4;", "var x = 4;");
+            TestCodeFix("int x = 4;", string.Empty);
             TestCodeFix("var x = 4;", string.Empty);
         }
 
@@ -32,15 +32,25 @@ namespace RefactoringTesting
         {
             TestCodeFix("int[] arr = new int[]{45};", "var arr = new int[]{45};");
         }
-
-        /*
+        
         [TestMethod]
         public void NotMatchingPrimitiveTypeAssignmentTest()
         {
             TestCodeFix("int x = 3.2;", string.Empty);
         }
-        */
 
+        [TestMethod]
+        public void ConstReferenceTypeVariableTest()
+        {
+            TestCodeFix("const string s = \"a\";", string.Empty);
+        }
+
+        [TestMethod]
+        public void ConstValueTypeVariableTest()
+        {
+            TestCodeFix("const float f = 3f;", string.Empty);
+        }
+        
         private static void TestCodeFix(string declaration, string refactoredDeclaration)
         {
             var source = "class X { void Y() { " + declaration + " } }";
