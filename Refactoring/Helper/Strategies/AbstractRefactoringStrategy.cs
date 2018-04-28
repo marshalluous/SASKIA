@@ -14,7 +14,26 @@ namespace Refactoring.Helper.Strategies
 		internal abstract string NamePrefix { get; }
 		internal abstract SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode);
 		internal abstract Type BaseType { get; }
-		internal IEnumerable<SyntaxNode> EvaluateWordType(SyntaxNode syntaxNode, SQLiteConnection database)
+
+        //public IEnumerable<SyntaxNode> EvaluateNodes(SyntaxNode syntaxNode)
+        //{
+        //    var typoCheckResult = CheckTypo(syntaxNode, out var syntaxToken, out var namePrefixPresent, out var allWords);
+
+        //    if (!typoCheckResult.IsIdentifierCorrectable)
+        //        return null;
+
+        //    var suggestion = typoCheckResult.Suggestions.First();
+        //    string newIdentifier = ConcatNewIdentifier(allWords, suggestion, typoCheckResult.AffectedWord);
+
+        //    if (namePrefixPresent)
+        //    {
+        //        newIdentifier = strategy.NamePrefix + newIdentifier;
+        //    }
+
+        //    return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(newIdentifier)) };
+        //}
+
+        internal IEnumerable<SyntaxNode> EvaluateWordType(SyntaxNode syntaxNode, SQLiteConnection database)
 		{
 			var hunspell = new HunspellEngine();
 			var syntaxToken = GetSyntaxToken(syntaxNode);
@@ -23,28 +42,29 @@ namespace Refactoring.Helper.Strategies
 			var clearedSuggestions = new List<string>();
 			var wordTypechecker = new WordTypeChecker(database);
 			foreach (var word in suggestions)
-			{
-				if (!wordTypechecker.IsVerb(word) &&
-					!wordTypechecker.IsAdverb(word)
-					// && is no Adjective etc
-					)
-					clearedSuggestions.Add(word);
-			}
+            {
+                if (IsANoun(word, wordTypechecker))
+                {
+                    clearedSuggestions.Add(word);
+                }
+            }
 
-			return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(suggestions.Last())) }; 
-			
-			// TypoCheckResult(word, true, strategy.DefaultSuggestions.ContainsKey(word) ? strategy.DefaultSuggestions[word] : hunspell.GetSuggestions(word));
-
-			//return new TypoCheckResult(string.Empty, false, null);
-
-			//return new[] { syntaxNode };
+            return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(suggestions.Last())) };
 		}
 
-		internal virtual DiagnosticInfo DiagnoseWordType(SQLiteConnection database, string identifierText, SyntaxToken syntaxToken, string description)
+        private bool IsANoun(string word, WordTypeChecker wordTypechecker)
+        {
+            return !wordTypechecker.IsVerb(word) &&
+                   !wordTypechecker.IsAdverb(word) &&
+                   !wordTypechecker.IsAdjective(word) &&
+                   wordTypechecker.IsNoun(word);
+        }
+
+        internal virtual DiagnosticInfo DiagnoseWordType(SQLiteConnection database, string identifierText, SyntaxToken syntaxToken, string description)
 		{
 			var lastWord = WordSplitter.GetLastWord(identifierText);
 			if (!new WordTypeChecker(database).IsNoun(lastWord))
-				return DiagnosticInfo.CreateFailedResult($"{description}: Class name must be a noun.", markableLocation: syntaxToken.GetLocation());
+				return DiagnosticInfo.CreateFailedResult($"{description}: Missing noun in identifier", markableLocation: syntaxToken.GetLocation());
 			return DiagnosticInfo.CreateSuccessfulResult();
 		}
 	}

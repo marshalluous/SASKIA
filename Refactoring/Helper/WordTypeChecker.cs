@@ -21,7 +21,7 @@ namespace Refactoring.Helper
                 while (reader.Read())
                 {
 					var wordType = reader.GetString(WordTypeLocation);
-					if (wordType.StartsWith("n")) return true;
+					if (wordType.Contains("n.")) return true;
                 }
                 return false;
             }
@@ -36,25 +36,40 @@ namespace Refactoring.Helper
                 while (reader.Read())
 				{
 					var wordType = reader.GetString(WordTypeLocation);
-					if (wordType.StartsWith("v")) return true;
+					if (wordType.Contains("v.")) return true;
                 }
                 return false;
             }
         }
 
-		public bool IsAdverb(string word)
-		{
-			using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
-			{
-				getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
-				var reader = getWordFromDatabase.ExecuteReader();
-				while (reader.Read())
-				{
-					var wordType = reader.GetString(WordTypeLocation);
-					if (reader.GetString(WordTypeLocation).StartsWith("a.")) return true;
-				}
-				return false;
-			}
-		}
+        public bool IsAdverb(string word)
+        {
+            using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
+            {
+                getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+                var reader = getWordFromDatabase.ExecuteReader();
+                while (reader.Read())
+                {
+                    var wordType = reader.GetString(WordTypeLocation);
+                    if (reader.GetString(WordTypeLocation).Contains("adv.")) return true;
+                }
+                return false;
+            }
+        }
+
+        public bool IsAdjective(string word)
+        {
+            using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
+            {
+                getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+                var reader = getWordFromDatabase.ExecuteReader();
+                while (reader.Read())
+                {
+                    var wordType = reader.GetString(WordTypeLocation);
+                    if (reader.GetString(WordTypeLocation).Contains("adj.")) return true;
+                }
+                return false;
+            }
+        }
     }
 }
