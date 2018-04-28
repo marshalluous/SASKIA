@@ -5,8 +5,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	class InterfaceDeclarationSyntaxStrategy : AbstractRefactoringStrategy
-	{
+    class InterfaceDeclarationSyntaxStrategy : ClassTypeDeclarationSyntaxStrategy
+    {
 		internal override IEnumerable<string> IgnorableWords => new List<string> { "I" };
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
 			{ "_", new List<string> { "" } }
@@ -23,5 +23,5 @@ namespace Refactoring.Helper.Strategies
 		{
 			return ((InterfaceDeclarationSyntax)syntaxNode).Identifier;
 		}
-	}
+    }
 }

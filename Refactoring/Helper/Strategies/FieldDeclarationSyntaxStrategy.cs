@@ -6,8 +6,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	class FieldDeclarationSyntaxStrategy : AbstractRefactoringStrategy
-	{
+	class FieldDeclarationSyntaxStrategy : FieldTypeDeclarationSyntaxStrategy
+    {
 		internal override IEnumerable<string> IgnorableWords => new List<string>();
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> { };
 		internal override string NamePrefix => "_";
@@ -22,11 +22,6 @@ namespace Refactoring.Helper.Strategies
 		internal override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
 			return ((FieldDeclarationSyntax)syntaxNode).Declaration.Variables.First().Identifier;
-		}
-
-		internal override DiagnosticInfo DiagnoseWordType(SQLiteConnection database, string identifierText, SyntaxToken syntaxToken, string description)
-		{
-			return DiagnosticInfo.CreateSuccessfulResult();
 		}
 	}
 }

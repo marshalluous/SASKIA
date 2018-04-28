@@ -170,8 +170,11 @@
     <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
     <Compile Include="Helper\RefactoringMessageFactory.cs" />
     <Compile Include="Helper\SemanticSymbolBuilder.cs" />
+    <Compile Include="Helper\Strategies\AbstractClasses\MethodTypeDeclarationSyntaxStrategy.cs" />
+    <Compile Include="Helper\Strategies\AbstractClasses\FieldTypeDeclarationSyntaxStrategy.cs" />
+    <Compile Include="Helper\Strategies\AbstractClasses\ClassTypeDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\IRefactoringBaseStrategy.cs" />
-    <Compile Include="Helper\Strategies\AbstractRefactoringStrategy.cs" />
+    <Compile Include="Helper\Strategies\AbstractClasses\AbstractRefactoringStrategy.cs" />
     <Compile Include="Helper\Strategies\ClassDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\EnumDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\FieldDeclarationSyntaxStrategy.cs" />

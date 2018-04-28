@@ -6,8 +6,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	class EnumDeclarationSyntaxStrategy : AbstractRefactoringStrategy
-	{
+	class EnumDeclarationSyntaxStrategy : ClassTypeDeclarationSyntaxStrategy
+    {
 		internal override IEnumerable<string> IgnorableWords => new List<string>();
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> { { "_", new List<string> { "" } } };
 

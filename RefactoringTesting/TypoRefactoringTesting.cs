@@ -42,6 +42,13 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void StructUnderlineNameTypoTest()
+        {
+            var source = "struct Appartment_Room {}";
+            TypoTest<StructDeclarationSyntax>(new TypoRefactoring(), source, "struct Apartment_Room{}");
+        }
+
+        [TestMethod]
         public void SimpleEnumNameTypoTest()
         {
             var source = "enum Appartment {}";
@@ -56,10 +63,31 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void EnumUnerlineNameTypoTest()
+        {
+            var source = "enum Appartment_Room {}";
+            TypoTest<EnumDeclarationSyntax>(new TypoRefactoring(), source, "enum Apartment_Room{}");
+        }
+
+        [TestMethod]
         public void SimpleClassNameTypoTest()
+        {
+            var source = "class Appartment {}";
+            TypoTest<ClassDeclarationSyntax>(new TypoRefactoring(), source, "class Apartment{}");
+        }
+
+        [TestMethod]
+        public void ClassNameTypoTest()
         {
             var source = "class AppartmentRoom {}";
             TypoTest<ClassDeclarationSyntax>(new TypoRefactoring(), source, "class ApartmentRoom{}");
+        }
+
+        [TestMethod]
+        public void ClassUnderlineNameTypoTest()
+        {
+            var source = "class Appartment_Room {}";
+            TypoTest<ClassDeclarationSyntax>(new TypoRefactoring(), source, "class Apartment_Room{}");
         }
 
         [TestMethod]
@@ -171,6 +199,16 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void UnderlinedDoubleFieldNameTypoTest()
+        {
+            var source = "" +
+                "class Apartment {" +
+                    " private int _rooom_Count;" +
+                "}";
+            TypoTest<VariableDeclaratorSyntax>(new TypoRefactoring(), source, "_room_Count");
+        }
+
+        [TestMethod]
         public void SimpleInterfaceNameTypoTest()
         {
             var source = "interface IAppartment {}";
@@ -182,6 +220,20 @@ namespace RefactoringTesting
         {
             var source = "interface IAppartmentRoom {}";
             TypoTest<InterfaceDeclarationSyntax>(new TypoRefactoring(), source, "interface IApartmentRoom{}");
+        }
+
+        [TestMethod]
+        public void InterfaceUnderlineNameTypoTest()
+        {
+            var source = "interface IAppartment_Room {}";
+            TypoTest<InterfaceDeclarationSyntax>(new TypoRefactoring(), source, "interface IApartment_Room{}");
+        }
+
+        [TestMethod]
+        public void InterfaceDoubleUnderlineNameTypoTest()
+        {
+            var source = "interface I_Appartment_Room {}";
+            TypoTest<InterfaceDeclarationSyntax>(new TypoRefactoring(), source, "interface I_Apartment_Room{}");
         }
 
         [TestMethod]
@@ -202,6 +254,16 @@ namespace RefactoringTesting
                     " private void RooomCount(){}" +
                 "}";
             TypoTest<MethodDeclarationSyntax>(new TypoRefactoring(), source, "private void RoomCount(){}");
+        }
+
+        [TestMethod]
+        public void MethodUnderlineNameTypoTest()
+        {
+            var source = "" +
+                "class Apartment {" +
+                    " private void Rooom_Count(){}" +
+                "}";
+            TypoTest<MethodDeclarationSyntax>(new TypoRefactoring(), source, "private void Room_Count(){}");
         }
 
     }

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	class MethodDeclarationSyntaxStrategy : AbstractRefactoringStrategy
-	{
+    class MethodDeclarationSyntaxStrategy : MethodTypeDeclarationSyntaxStrategy
+    {
 		internal override IEnumerable<string> IgnorableWords => new List<string>();
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
 			{ "_", new List<string> { "" } }
@@ -26,16 +25,5 @@ namespace Refactoring.Helper.Strategies
 		{
 			return ((MethodDeclarationSyntax)syntaxNode).Identifier;
 		}
-
-		internal override DiagnosticInfo DiagnoseWordType(SQLiteConnection database, string identifierText, SyntaxToken syntaxToken, string description)
-		{
-			var wordList = WordSplitter.GetSplittedWordList(identifierText);
-			foreach (var word in wordList)
-			{
-				if (new WordTypeChecker(database).IsVerb(word))
-					return DiagnosticInfo.CreateSuccessfulResult();
-			}
-			return DiagnosticInfo.CreateFailedResult($"{description}.", markableLocation: syntaxToken.GetLocation());
-		}
-	}
+    }
 }

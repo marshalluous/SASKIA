@@ -12,6 +12,25 @@ namespace Refactoring.Helper
             this.database = database;
         }
 
+        public bool IsDefinitivelyNoun(string word)
+        {
+            using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
+            {
+                getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+                var reader = getWordFromDatabase.ExecuteReader();
+                while (reader.Read())
+                {
+                    var wordType = reader.GetString(WordTypeLocation);
+                    if (wordType.Contains("n.") &&
+                        !(wordType.Contains("v.") || 
+                            wordType.Contains("adv.") ||
+                            wordType.Contains("adj.")))
+                        return true;
+                }
+                return false;
+            }
+        }
+
         public bool IsNoun(string word)
         {
             using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
@@ -51,7 +70,7 @@ namespace Refactoring.Helper
                 while (reader.Read())
                 {
                     var wordType = reader.GetString(WordTypeLocation);
-                    if (reader.GetString(WordTypeLocation).Contains("adv.")) return true;
+                    if (wordType.Contains("adv.")) return true;
                 }
                 return false;
             }
@@ -66,7 +85,7 @@ namespace Refactoring.Helper
                 while (reader.Read())
                 {
                     var wordType = reader.GetString(WordTypeLocation);
-                    if (reader.GetString(WordTypeLocation).Contains("adj.")) return true;
+                    if (wordType.Contains("adj.")) return true;
                 }
                 return false;
             }
