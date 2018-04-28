@@ -9,8 +9,8 @@ namespace Refactoring.DictionaryRefactorings
 {
 	public sealed class TypoRefactoring : IRefactoring
 	{
-		public string DiagnosticId => "SASKIA200";
-		public string Title => DiagnosticId;
+		public string DiagnosticId => RefactoringId.TypoChecker.GetDiagnosticId();
+        public string Title => DiagnosticId;
 		public string Description => "Typo in name";
 
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>

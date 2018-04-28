@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -55,7 +56,10 @@ namespace Refactoring.Helper.Strategies
         {
             var lastWord = WordSplitter.GetLastWord(identifierText);
             if (!new WordTypeChecker(database).IsNoun(lastWord))
+            {
+                StatisticsLogger.Log("ProjectName", SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(syntaxToken).Identifier.Text);
                 return DiagnosticInfo.CreateFailedResult($"{description}: Missing noun in identifier", markableLocation: syntaxToken.GetLocation());
+            }
             return DiagnosticInfo.CreateSuccessfulResult();
         }
     }

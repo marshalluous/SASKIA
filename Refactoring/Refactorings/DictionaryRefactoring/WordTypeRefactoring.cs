@@ -8,8 +8,8 @@ namespace Refactoring.Refactorings.DictionaryRefactoring
 {
 	public sealed class WordTypeRefactoring : IRefactoring
 	{
-		public string DiagnosticId => "SASKIA220";
-		public string Title => DiagnosticId;
+		public string DiagnosticId => RefactoringId.WordTypeChecker.GetDiagnosticId();
+        public string Title => DiagnosticId;
 		public string Description => "Word Type error";
 
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>

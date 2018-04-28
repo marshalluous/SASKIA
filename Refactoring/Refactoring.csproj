@@ -164,12 +164,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DictionaryClass.cs" />
+    <Compile Include="Helper\DictionaryClass.cs" />
     <Compile Include="Helper\RefactoringId.cs" />
     <Compile Include="Helper\HunspellEngine.cs" />
     <Compile Include="Helper\PureExpressionCheckerVisitor.cs" />
     <Compile Include="Helper\RefactoringMessageFactory.cs" />
     <Compile Include="Helper\SemanticSymbolBuilder.cs" />
+    <Compile Include="Helper\StatisticsLogger.cs" />
     <Compile Include="Helper\Strategies\AbstractClasses\MethodTypeDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\AbstractClasses\FieldTypeDeclarationSyntaxStrategy.cs" />
     <Compile Include="Helper\Strategies\AbstractClasses\ClassTypeDeclarationSyntaxStrategy.cs" />
@@ -192,7 +193,6 @@
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierRefactoring.cs" />
     <Compile Include="Refactorings\BooleanConstantSimplifier\BooleanConstantSimplifierVisitor.cs" />
     <Compile Include="Refactorings\DeMorganSimplifier\DeMorganSimplifierRefactoring.cs" />
-    <Compile Include="Refactorings\DictionaryRefactoring\MethodNameVerbRefactoring.cs" />
     <Compile Include="Refactorings\ConditionalComplexity\ConditionalComplexityRefactoring.cs" />
     <Compile Include="Refactorings\ConditionalComplexity\ConditionalComplexityVisitor.cs" />
     <Compile Include="Refactorings\DepthOfInheritance\DepthOfInheritanceRefactoring.cs" />
@@ -227,6 +227,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Statistics.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
