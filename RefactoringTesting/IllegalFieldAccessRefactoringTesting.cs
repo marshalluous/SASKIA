@@ -68,9 +68,8 @@ namespace RefactoringTesting
             TestCodeFix("class N { static double x; }", "private static double x;");
         }
 
-
         [TestMethod]
-        private static void TestCodeFix(string inputCode, string expectedNodeText)
+        public void TestCodeFix(string inputCode, string expectedNodeText)
         {
             TestHelper.TestCodeFix<FieldDeclarationSyntax>(new IllegalFieldAccessRefactoring(), inputCode, expectedNodeText);
         }

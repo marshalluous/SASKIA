@@ -20,7 +20,8 @@ namespace Refactoring.Helper
                 var reader = getWordFromDatabase.ExecuteReader();
                 while (reader.Read())
                 {
-                    if (reader.GetString(WordTypeLocation).StartsWith("n")) return true;
+					var wordType = reader.GetString(WordTypeLocation);
+					if (wordType.StartsWith("n")) return true;
                 }
                 return false;
             }
@@ -33,11 +34,27 @@ namespace Refactoring.Helper
                 getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
                 var reader = getWordFromDatabase.ExecuteReader();
                 while (reader.Read())
-                {
-                    if (reader.GetString(WordTypeLocation).StartsWith("v")) return true;
+				{
+					var wordType = reader.GetString(WordTypeLocation);
+					if (wordType.StartsWith("v")) return true;
                 }
                 return false;
             }
         }
+
+		public bool IsAdverb(string word)
+		{
+			using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
+			{
+				getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+				var reader = getWordFromDatabase.ExecuteReader();
+				while (reader.Read())
+				{
+					var wordType = reader.GetString(WordTypeLocation);
+					if (reader.GetString(WordTypeLocation).StartsWith("a.")) return true;
+				}
+				return false;
+			}
+		}
     }
 }
