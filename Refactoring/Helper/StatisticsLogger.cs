@@ -23,7 +23,7 @@ namespace Refactoring.Helper
             }
         }
 
-        public static void Log(string projectname, string className, [CallerFilePath] string callerClassPath = null, [CallerMemberName] string refactoringMethod = null)
+        public static void Log(string projectname, string className = "ClassNodeNotFoundError", [CallerFilePath] string callerClassPath = null, [CallerMemberName] string refactoringMethod = null)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Refactoring.Helper
                 using (SQLiteCommand saveToDatabase = new SQLiteCommand(Database))
                 {
                     saveToDatabase.CommandText = $"insert into entries (project, date, refactoring_class, refactoring_method) values ('{projectname}', '{dateString}', '{refactoringClass}', '{refactoringMethod}')";
-                    saveToDatabase.ExecuteNonQuery();
+                    saveToDatabase.ExecuteNonQueryAsync();
                 }
             }
             catch (Exception e)

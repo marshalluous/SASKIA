@@ -34,7 +34,13 @@ namespace Refactoring.Helper
         public static T FindAncestorOfType<T>(SyntaxToken syntaxToken)
             where T : SyntaxNode
         {
-            return (T) FindAncestorWithPredicate(syntaxToken, node => node is T);
+            return (T)FindAncestorWithPredicate(syntaxToken, node => node is T);
+        }
+
+        public static T FindAncestorOfType<T>(SyntaxNode syntaxNode)
+            where T : SyntaxNode
+        {
+            return (T)FindAncestorWithPredicate(syntaxNode, node => node is T);
         }
 
         public static T FindAncestorOfTypeWithText<T>(SyntaxToken syntaxToken, string text)
@@ -45,7 +51,7 @@ namespace Refactoring.Helper
 
         public static SyntaxNode FindAncestorWithPredicate(SyntaxNode node, Predicate<SyntaxNode> predicate)
         {
-            while (!predicate(node))
+            while (node != null && !predicate(node))
                 node = node.Parent;
 
             return node;

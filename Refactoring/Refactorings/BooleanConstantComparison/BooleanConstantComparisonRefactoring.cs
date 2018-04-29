@@ -78,9 +78,12 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
 
         private static DiagnosticInfo CheckForBooleanLiteral(SyntaxNode syntaxNode)
         {
-            return IsBooleanLiteralNode(syntaxNode, out var literalText)
-                ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.BooleanConstantComparisonMessage(literalText == "true"))
-                : null;
+            if (IsBooleanLiteralNode(syntaxNode, out var literalText))
+            {
+                StatisticsLogger.Log("ProjectName", SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(syntaxNode)?.Identifier.Text);
+                return DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.BooleanConstantComparisonMessage(literalText == "true"));
+            }
+            return null;
         }
 
         private static bool IsBooleanLiteralNode(SyntaxNode syntaxNode, out string literalText)
