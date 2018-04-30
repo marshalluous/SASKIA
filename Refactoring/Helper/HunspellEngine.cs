@@ -33,11 +33,13 @@ namespace Refactoring.Helper
 			return word.Replace(firstLetter, morphedFirst);
 		}
 
-		public List<string> GetSuggestions(string word)
+		public List<string> GetSuggestions(string word, int threshold=0)
 		{
 			return ExecuteHunspellQuery(hunspell =>
 			{
-				var list = hunspell.Suggest(word).Take(5);
+				var list = hunspell.Suggest(word);
+				if (threshold > 0)
+					list = list.Take(5).ToList();
 				List<string> suggestions = new List<string>();
 				foreach (var suggestion in list)
 				{

@@ -1,17 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	class ClassDeclarationSyntaxStrategy : TypoRefactoringStrategy
-	{
-		protected override IEnumerable<string> IgnorableWords => new List<string>();
-		protected override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
+	class ClassDeclarationSyntaxStrategy : ClassTypeDeclarationSyntaxStrategy
+    {
+		internal override IEnumerable<string> IgnorableWords => new List<string>();
+		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
 			{ "_", new List<string> { "" } }
 		};
+		internal override Type BaseType { get; }
 
-		protected override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
+		public ClassDeclarationSyntaxStrategy(Type baseType)
+		{
+			BaseType = baseType;
+		}
+
+		internal override string NamePrefix => string.Empty;
+
+
+		internal override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
 			return ((ClassDeclarationSyntax)syntaxNode).Identifier;
 		}

@@ -2,26 +2,24 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Refactoring.Helper.Strategies
 {
-	abstract class TypoRefactoringStrategy
+	sealed class TypoRefactoringStrategy : Dictionary, IRefactoringBaseStrategy
 	{
-		protected abstract IEnumerable<string> IgnorableWords { get; }
-		protected abstract IDictionary<string, List<string>> DefaultSuggestions { get; }
-		protected abstract SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode);
-		protected virtual string NamePrefix => string.Empty;
+		private AbstractRefactoringStrategy strategy;
 
 		private TypoCheckResult CheckTypo(SyntaxNode syntaxNode, out SyntaxToken syntaxToken,
 			out bool namePrefixPresent, out List<string> allWords)
 		{
-			syntaxToken = GetSyntaxToken(syntaxNode);
+			syntaxToken = strategy.GetSyntaxToken(syntaxNode);
 			var identifier = syntaxToken.Text;
 			namePrefixPresent = false;
 
-			if (identifier.StartsWith(NamePrefix))
+			if (strategy.NamePrefix != "" && identifier.StartsWith(strategy.NamePrefix))
 			{
-				identifier = identifier.Substring(NamePrefix.Length);
+				identifier = identifier.Substring(strategy.NamePrefix.Length);
 				namePrefixPresent = true;
 			}
 
@@ -35,8 +33,9 @@ namespace Refactoring.Helper.Strategies
 
 			if (!typoCheckResult.IsIdentifierCorrectable)
 				return DiagnosticInfo.CreateSuccessfulResult();
-			
-			var suggestionsAsString = "Suggestions:\n" + typoCheckResult.Suggestions.Aggregate((x, y) => $"{x}\r\n{y}");
+
+            StatisticsLogger.Log("ProjectName", SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(syntaxToken).Identifier.Text);
+            var suggestionsAsString = "Suggestions:\n" + typoCheckResult.Suggestions.Aggregate((x, y) => $"{x}\r\n{y}");
 			return DiagnosticInfo.CreateFailedResult($"{description}: {typoCheckResult.AffectedWord}.\n{suggestionsAsString}", markableLocation: syntaxToken.GetLocation());
 		}
 
@@ -52,7 +51,7 @@ namespace Refactoring.Helper.Strategies
 
 			if (namePrefixPresent)
 			{
-				newIdentifier = NamePrefix + newIdentifier;
+				newIdentifier = strategy.NamePrefix + newIdentifier;
 			}
 
 			return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(newIdentifier)) };
@@ -77,11 +76,17 @@ namespace Refactoring.Helper.Strategies
 
 			foreach (var word in wordList.Where(w => hunspell.HasTypo(w)))
 			{
-				if (IgnorableWords.Contains(word)) continue;
-				return new TypoCheckResult(word, true, DefaultSuggestions.ContainsKey(word) ? DefaultSuggestions[word] : hunspell.GetSuggestions(word));
+				if (strategy.IgnorableWords.Contains(word)) continue;
+				return new TypoCheckResult(word, true, strategy.DefaultSuggestions.ContainsKey(word) ? strategy.DefaultSuggestions[word] : hunspell.GetSuggestions(word,5));
 			}
 			
 			return new TypoCheckResult(string.Empty, false, null);
+		}
+
+
+		public void RegisterStrategy(AbstractRefactoringStrategy strategy)
+		{
+			this.strategy = strategy;
 		}
 
 		private sealed class TypoCheckResult

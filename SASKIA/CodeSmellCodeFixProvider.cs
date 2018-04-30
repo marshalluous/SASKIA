@@ -70,12 +70,12 @@ namespace SASKIA
                     .ToArray();
 
 				var replaceableRootNode = refactoring.GetReplaceableRootNode(token);
-
+				
 				root = FormatRoot(replaceNodes.Length == 1
-                    ? root.ReplaceNode(replaceableRootNode, replaceNodes.First())
-                    : root.ReplaceNode(replaceableRootNode, replaceNodes));
+			                    ? root.ReplaceNode(replaceableNode, replaceNodes.First())
+			                    : root.ReplaceNode(replaceableNode, replaceNodes));
 
-                return document.WithSyntaxRoot(root);
+				return document.WithSyntaxRoot(root);
             }
             catch (Exception exception)
             {

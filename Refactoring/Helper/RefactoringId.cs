@@ -20,7 +20,9 @@
         DeMorganSimplifier,
         WhitespaceFix,
         UseOfVar,
-        LongConstantSimplifier
+        LongConstantSimplifier,
+        WordTypeChecker,
+        TypoChecker
     }
 
     internal static class RefactoringIdsMethods

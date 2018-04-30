@@ -12,6 +12,25 @@ namespace Refactoring.Helper
             this.database = database;
         }
 
+        public bool IsDefinitivelyNoun(string word)
+        {
+            using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
+            {
+                getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+                var reader = getWordFromDatabase.ExecuteReader();
+                while (reader.Read())
+                {
+                    var wordType = reader.GetString(WordTypeLocation);
+                    if (wordType.Contains("n.") &&
+                        !(wordType.Contains("v.") || 
+                            wordType.Contains("adv.") ||
+                            wordType.Contains("adj.")))
+                        return true;
+                }
+                return false;
+            }
+        }
+
         public bool IsNoun(string word)
         {
             using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
@@ -20,7 +39,8 @@ namespace Refactoring.Helper
                 var reader = getWordFromDatabase.ExecuteReader();
                 while (reader.Read())
                 {
-                    if (reader.GetString(WordTypeLocation).StartsWith("n")) return true;
+					var wordType = reader.GetString(WordTypeLocation);
+					if (wordType.Contains("n.")) return true;
                 }
                 return false;
             }
@@ -33,8 +53,39 @@ namespace Refactoring.Helper
                 getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
                 var reader = getWordFromDatabase.ExecuteReader();
                 while (reader.Read())
+				{
+					var wordType = reader.GetString(WordTypeLocation);
+					if (wordType.Contains("v.")) return true;
+                }
+                return false;
+            }
+        }
+
+        public bool IsAdverb(string word)
+        {
+            using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
+            {
+                getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+                var reader = getWordFromDatabase.ExecuteReader();
+                while (reader.Read())
                 {
-                    if (reader.GetString(WordTypeLocation).StartsWith("v")) return true;
+                    var wordType = reader.GetString(WordTypeLocation);
+                    if (wordType.Contains("adv.")) return true;
+                }
+                return false;
+            }
+        }
+
+        public bool IsAdjective(string word)
+        {
+            using (SQLiteCommand getWordFromDatabase = new SQLiteCommand(database))
+            {
+                getWordFromDatabase.CommandText = $"select * from entries where word = '{word}'";
+                var reader = getWordFromDatabase.ExecuteReader();
+                while (reader.Read())
+                {
+                    var wordType = reader.GetString(WordTypeLocation);
+                    if (wordType.Contains("adj.")) return true;
                 }
                 return false;
             }

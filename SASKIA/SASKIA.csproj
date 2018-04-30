@@ -52,6 +52,7 @@
     <Compile Include="CodeFixProviders\IllegalFieldAccessCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\LongConstantSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\MethodPropertyIdentifierConventionCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\WordTypeCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\TypoCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfAndElseBlockEqualsCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfReturnBooleanCodeFixProvider.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="DiagnosticAnalyzers\MethodNameVerbDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\ClassNameNounDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\MethodPropertyIdentifierConventionDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\WordTypeDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\TypoDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantComparisonDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\BooleanConstantSimplifierDiagnosticAnalyzer.cs" />
