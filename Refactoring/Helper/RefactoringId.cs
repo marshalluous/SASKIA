@@ -19,7 +19,8 @@
         MethodPropertyIdentifierConvention,
         DeMorganSimplifier,
         WhitespaceFix,
-        UseOfVar
+        UseOfVar,
+        LongConstantSimplifier
     }
 
     internal static class RefactoringIdsMethods

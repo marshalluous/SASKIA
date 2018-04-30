@@ -4,13 +4,13 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 
-namespace Refactoring.Refactorings.IntegerConstantSimplifier
+namespace Refactoring.Refactorings.LongConstantSimplifier
 {
-    public sealed class IntegerConstantSimplifierRefactoring : IRefactoring
+    public sealed class LongConstantSimplifierRefactoring : IRefactoring
     {
-        public string DiagnosticId => RefactoringId.IntegerConstantSimplifier.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.IntegerConstantSimplifierTitle();
-        public string Description => RefactoringMessageFactory.IntegerConstantSimplifierDescription();
+        public string DiagnosticId => RefactoringId.LongConstantSimplifier.GetDiagnosticId();
+        public string Title => RefactoringMessageFactory.LongConstantSimplifierTitle();
+        public string Description => RefactoringMessageFactory.LongConstantSimplifierDescription();
         
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
@@ -29,7 +29,7 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
 
             return value == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IntegerConstantSimplifierMessage(value.Value));
+                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.LongConstantSimplifierMessage(value.Value));
         }
         
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
@@ -43,9 +43,9 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
             return new [] { SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, literal) };
         }
 
-        private static int? EvaluateValue(SyntaxNode node)
+        private static long? EvaluateValue(SyntaxNode node)
         {
-            var visitor = new IntegerConstantSimplifierVisitor();
+            var visitor = new LongConstantSimplifierVisitor();
             return visitor.Visit(node);
         }
 

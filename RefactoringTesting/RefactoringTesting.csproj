@@ -158,6 +158,7 @@
     <Compile Include="DepthOfInheritanceRefactoringTesting.cs" />
     <Compile Include="Helper\TestHelper.cs" />
     <Compile Include="IllegalFieldAccessRefactoringTesting.cs" />
+    <Compile Include="LongConstantSimplifierRefactoringTesting.cs" />
     <Compile Include="MethodPropertyIdentifierConventionRefactoringTesting.cs" />
     <Compile Include="TypeIdentifierConventionRefactoringTesting.cs" />
     <Compile Include="IfAndElseBlockEqualsRefactoringTesting.cs" />

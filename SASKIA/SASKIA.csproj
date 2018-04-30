@@ -50,6 +50,7 @@
     <Compile Include="CodeFixProviders\BooleanConstantSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\DeMorganSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IllegalFieldAccessCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\LongConstantSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\MethodPropertyIdentifierConventionCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\TypoCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfAndElseBlockEqualsCodeFixProvider.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="CodeSmellCodeFixProvider.cs" />
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\DeMorganSimplifierDiagnosticAnalyzer.cs" />
+    <Compile Include="DiagnosticAnalyzers\LongConstantSimplifierDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\MethodNameVerbDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\ClassNameNounDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\MethodPropertyIdentifierConventionDiagnosticAnalyzer.cs" />

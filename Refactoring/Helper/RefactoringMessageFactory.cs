@@ -89,6 +89,16 @@
         public static string IntegerConstantSimplifierMessage(int simplifiedValue) =>
              $"Constant integer expression can be simplified to {simplifiedValue}";
 
+        /* LongConstantSimplifier */
+        public static string LongConstantSimplifierTitle() =>
+            "Long constant simplifier";
+
+        public static string LongConstantSimplifierDescription() =>
+            "Simplify long literal expression";
+
+        public static string LongConstantSimplifierMessage(long simplifiedValue) =>
+            $"Constant long expression can be simplified to {simplifiedValue}";
+
         /* LongParameterList */
         public static string LongParameterListTitle() =>
             "Long parameter list detected";

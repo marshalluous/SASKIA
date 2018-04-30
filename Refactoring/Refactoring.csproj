@@ -194,6 +194,9 @@
     <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />
     <Compile Include="IRefactoring.cs" />
     <Compile Include="Refactorings\IllegalFieldAccess\IllegalFieldAccessRefactoring.cs" />
+    <Compile Include="Refactorings\LongConstantSimplifier\LongConstantOperatorSimplifier.cs" />
+    <Compile Include="Refactorings\LongConstantSimplifier\LongConstantSimplifierRefactoring.cs" />
+    <Compile Include="Refactorings\LongConstantSimplifier\LongConstantSimplifierVisitor.cs" />
     <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantOperatorSimplifier.cs" />
     <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantSimplifierRefactoring.cs" />
     <Compile Include="Refactorings\IntegerConstantSimplifier\IntegerConstantSimplifierVisitor.cs" />
