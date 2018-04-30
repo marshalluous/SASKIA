@@ -23,6 +23,32 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void TestReturnInBrackets()
+        {
+            var source = GetCodeTemplate("if (A()) { { return true; } } else {{return false; }}");
+            TestCodeFix(source, "return A();");
+            source = GetCodeTemplate("if (B()) { { return false; }} else {{  return true; }}");
+            TestCodeFix(source, "return !B();");
+        }
+
+        [TestMethod]
+        public void TestReturnLiteralInBrackets()
+        {
+            var source = GetCodeTemplate("if (A() && B()) { return ((true)); } else { return (((false))); }");
+            TestCodeFix(source, "return A() && B();");
+            source = GetCodeTemplate("if (A() || B()) { return (false); } else { return ( ( true)); }");
+            TestCodeFix(source, "return !(A() || B());");
+        }
+
+        [TestMethod]
+        public void TestBracketBlocksAndBlacketLiteral()
+        {
+            var source =
+                GetCodeTemplate("if (expr is DateTime) {{ return ((((false)))); }} else {{{{ return ((true)); }}}}");
+            TestCodeFix(source, "return !(expr is DateTime);");
+        }
+
+        [TestMethod]
         public void TestMethodCallCondition()
         {
             var source = GetCodeTemplate("if (A()) { return false; } else { return true; }");
@@ -38,7 +64,7 @@ namespace RefactoringTesting
             var source = GetCodeTemplate("if (4 < 12) { return false; } else return true;");
             TestCodeFix(source, "return !(4 < 12);");
         }
-        
+
         private static string GetCodeTemplate(string code)
         {
             return "class X { public bool Y() {" + code + "}}";

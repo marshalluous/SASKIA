@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -11,67 +10,71 @@ namespace Refactoring.Refactorings.DeMorganSimplifier
     {
         public string DiagnosticId => RefactoringId.DeMorganSimplifier.GetDiagnosticId();
 
-        public string Title => DiagnosticId;
+        public string Title => RefactoringMessageFactory.DeMorganSimplifierTitle();
 
-        public string Description => Title;
+        public string Description => RefactoringMessageFactory.DeMorganSimplifierDescription();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            return GetFixableNodes(node) == null ?
+            var actualExpression = node.ToString();
+            var fixedNodes = GetFixableNodes(node);
+            
+            return fixedNodes == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("DeMorgan");
+                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.DeMorganSimplifierMessage(actualExpression));
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var notNode = (PrefixUnaryExpressionSyntax)node;
+            var notNode = (PrefixUnaryExpressionSyntax) node;
+            var binaryExpressionNode = GetBinaryExpression(notNode);
 
-            if (notNode.ChildNodes().First() is ParenthesizedExpressionSyntax parenthesizedNode)
+            if (binaryExpressionNode == null)
+                return null;
+
+            var notLeftNode = Not(binaryExpressionNode.Left);
+            var notRightNode = Not(binaryExpressionNode.Right);
+
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (binaryExpressionNode.OperatorToken.Kind())
             {
-                var expressionNode = parenthesizedNode.Expression;
-                
-                if (expressionNode is BinaryExpressionSyntax binaryExpressionNode)
-                {
-                    var leftNode = binaryExpressionNode.Left;
-                    var rightNode = binaryExpressionNode.Right;
-                    var notLeftNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, SyntaxNodeHelper.AddParentheses(leftNode));
-                    var notRightNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, SyntaxNodeHelper.AddParentheses(rightNode));
-                    
-                    if (binaryExpressionNode.OperatorToken.Text == "||")
-                    {
-                        return CreateResultNode(SyntaxKind.LogicalAndExpression, notLeftNode, notRightNode);
-                    }
-
-                    if (binaryExpressionNode.OperatorToken.Text == "&&")
-                    {
-                        return CreateResultNode(SyntaxKind.LogicalOrExpression, notLeftNode, notRightNode);
-                    }
-                }
+                case SyntaxKind.BarBarToken:
+                    return CreateResultNode(SyntaxKind.LogicalAndExpression, notLeftNode, notRightNode);
+                case SyntaxKind.AmpersandAmpersandToken:
+                    return CreateResultNode(SyntaxKind.LogicalOrExpression, notLeftNode, notRightNode);
+                default:
+                    return null;
             }
-
-            return null;
         }
+
+        private static BinaryExpressionSyntax GetBinaryExpression(PrefixUnaryExpressionSyntax prefixNode)
+        {
+            if (!(prefixNode.Operand is ParenthesizedExpressionSyntax parenthesizedNode))
+                return null;
+
+            var expressionNode = parenthesizedNode.Expression;
+
+            if (!(expressionNode is BinaryExpressionSyntax binaryExpressionNode))
+                return null;
+
+            return binaryExpressionNode;
+        }
+
+        private static ExpressionSyntax Not(ExpressionSyntax node) =>
+            SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, SyntaxNodeHelper.AddParentheses(node));
 
         private static IEnumerable<SyntaxNode> CreateResultNode(SyntaxKind operatorKind, ExpressionSyntax leftHandSide,
-            ExpressionSyntax rightHandSide)
-        {
-            return new[] { SyntaxFactory.BinaryExpression(operatorKind, leftHandSide, rightHandSide)
+            ExpressionSyntax rightHandSide) =>
+            new[] { SyntaxFactory.BinaryExpression(operatorKind, leftHandSide, rightHandSide)
                 .NormalizeWhitespace() };
-        }
 
-        public SyntaxNode GetReplaceableNode(SyntaxToken token)
-        {
-            return GetReplaceableRootNode(token);
-        }
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            GetReplaceableRootNode(token);
 
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize()
-        {
-            return new[] { SyntaxKind.LogicalNotExpression };
-        }
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            new[] { SyntaxKind.LogicalNotExpression };
 
-		public SyntaxNode GetReplaceableRootNode(SyntaxToken token)
-		{
-			return SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
-		}
+		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
 	}
 }

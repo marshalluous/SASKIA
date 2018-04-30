@@ -44,6 +44,24 @@ namespace RefactoringTesting
             TestParameterList("public void X(int x, int y, int z, int a, bool b) { }", true, 5);
         }
 
+        [TestMethod]
+        public void StaticMethodTest()
+        {
+            TestParameterList("private static void A(int a, double b) {}", false, 2);
+        }
+
+        [TestMethod]
+        public void DefaultValueForParameterMethodTest()
+        {
+            TestParameterList("private void X(int a = 4, char c = 'a') {}", false, 2);
+        }
+
+        [TestMethod]
+        public void ParamsKeywordTest()
+        {
+            TestParameterList("private void A(int x, params int[] ... xarr) {}", false, 2);
+        }
+
         private static void TestParameterList(string inputCode, bool diagnosticFound, int metricValue)
         {
             TestHelper.TestMetric<MethodDeclarationSyntax>(new LongParameterListRefactoring(), inputCode, diagnosticFound, metricValue);

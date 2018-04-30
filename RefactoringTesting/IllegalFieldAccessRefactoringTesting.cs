@@ -68,7 +68,38 @@ namespace RefactoringTesting
             TestCodeFix("class N { static double x; }", "private static double x;");
         }
 
+        [TestMethod]
+        public void PrivateFieldTest()
+        {
+            TestCodeFix("class A { private int a; }", string.Empty);
+        }
 
+        [TestMethod]
+        public void PrivateStaticFieldTest()
+        {
+            TestCodeFix("class B { static private float b; }", string.Empty);
+        }
+
+        [TestMethod]
+        public void MixedVisibilityTest()
+        {
+            TestCodeFix("class X { private int a; }", string.Empty);
+            TestCodeFix("class X { public float b; }", "private float b;");
+            TestCodeFix("class T { protected int x; }", "private int x;");
+            TestCodeFix("class A { protected internal string s; }", "private string s;");
+            TestCodeFix("class B { internal int a; }", "private int a;");
+        }
+        
+        [TestMethod]
+        public void MixedVisibilityStaticTest()
+        {
+            TestCodeFix("class X { private static int a; }", string.Empty);
+            TestCodeFix("class X { public static float b; }", "private static float b;");
+            TestCodeFix("class T { protected static int x; }", "private static int x;");
+            TestCodeFix("class A { protected internal static string s; }", "private static string s;");
+            TestCodeFix("class B { internal static int a; }", "private static int a;");
+        }
+        
         [TestMethod]
         private static void TestCodeFix(string inputCode, string expectedNodeText)
         {

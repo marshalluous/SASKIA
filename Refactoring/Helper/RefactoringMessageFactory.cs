@@ -30,7 +30,7 @@
             "Conditional Complexity";
 
         public static string ConditionalComplexityMessage(int mcCabeComplexity) =>
-            $"Method code is too complex (McCabe complexity = {mcCabeComplexity}";
+            $"Method code is too complex (McCabe complexity = {mcCabeComplexity})";
 
         /* DepthOfInheritance */
         public static string DepthOfInheritanceTitle() =>
@@ -38,6 +38,16 @@
 
         public static string DepthOfInheritanceMessage(string className, int levels) =>
             $"The class {className} has {levels} inheritance levels";
+
+        /* DeMorganSimplifier */
+        public static string DeMorganSimplifierTitle() =>
+            "Negation of && or || expression can be simplified";
+
+        public static string DeMorganSimplifierDescription() =>
+            DeMorganSimplifierTitle();
+
+        public static string DeMorganSimplifierMessage(string actualExpression) =>
+            $"{actualExpression} can be simplified";
 
         /* IfAndElseBlockEquals */
         public static string IfAndElseBlockEqualsTitle() =>
@@ -59,6 +69,16 @@
         public static string IfReturnBooleanMessage(string expression) =>
             $"If statement is not needed. Just write {expression}";
 
+        /* IllegalFieldAccess */
+        public static string IllegalFieldAccessTitle() =>
+            "Non-private field detected";
+
+        public static string IllegalFieldAccessDescription() =>
+            "Make field private";
+
+        public static string IllegalFieldAccessMessage() =>
+            "Field should be private";
+
         /* IntegerConstantSimplifier */
         public static string IntegerConstantSimplifierTitle() =>
             "Integer constant simplifier";
@@ -68,6 +88,16 @@
 
         public static string IntegerConstantSimplifierMessage(int simplifiedValue) =>
              $"Constant integer expression can be simplified to {simplifiedValue}";
+
+        /* LongParameterList */
+        public static string LongParameterListTitle() =>
+            "Long parameter list detected";
+
+        public static string LongParameterListDescription() =>
+            "Long parameter list detected";
+
+        public static string LongParameterListMessage(int parameterCount) =>
+            $"Long parameter with {parameterCount} parameters list detected";
 
         /* TypeIdentifier */
         public static string TypeIdentifierTitle() =>

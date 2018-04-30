@@ -13,31 +13,23 @@ namespace Refactoring.Refactorings.LongParameterList
 
         public string DiagnosticId => RefactoringId.LongParameterList.GetDiagnosticId();
 
-        public string Title => DiagnosticId;
+        public string Title => RefactoringMessageFactory.LongParameterListTitle();
 
-        public string Description => Title;
-
-
+        public string Description => RefactoringMessageFactory.LongParameterListDescription();
+        
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
-
-
-		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
-        {
-            return null;
-        }
+        
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
+            null;
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var methodNode = (MethodDeclarationSyntax)node;
-            var parameterCount = methodNode.ParameterList.ChildNodes().Count();
-
-            if (parameterCount > ParameterCountThreshold)
-            {
-                return DiagnosticInfo.CreateFailedResult("Long Parameter List", parameterCount, methodNode.Identifier.GetLocation());
-            }
-
-            return DiagnosticInfo.CreateSuccessfulResult(parameterCount);
+            var parameterCount = GetParameterCount(methodNode);
+            return parameterCount <= ParameterCountThreshold ? 
+                DiagnosticInfo.CreateSuccessfulResult(parameterCount) : 
+                CreateFailedDiagnostics(parameterCount, methodNode.Identifier.GetLocation());
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
@@ -45,5 +37,16 @@ namespace Refactoring.Refactorings.LongParameterList
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.MethodDeclaration };
+
+        private static DiagnosticInfo CreateFailedDiagnostics(int parameterCount, Location markableLocation)
+        {
+            var diagnosticMessage = RefactoringMessageFactory.LongParameterListMessage(parameterCount);
+            return DiagnosticInfo.CreateFailedResult(diagnosticMessage, parameterCount, markableLocation);
+        }
+
+        private static int GetParameterCount(BaseMethodDeclarationSyntax methodNode) =>
+            methodNode.ParameterList
+                .ChildNodes().OfType<ParameterSyntax>()
+                .Count(parameter => parameter.Modifiers.All(modifier => modifier.Text != "params"));
     }
 }

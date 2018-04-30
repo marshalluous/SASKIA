@@ -125,6 +125,30 @@ namespace RefactoringTesting
             TestCodeFix("var x = ((nameof(x) == \"x\") == false);", "!(nameof(x) == \"x\")");
         }
 
+        [TestMethod]
+        public void TestOmittingOfComparisonWithTrueLiteral()
+        {
+            TestCodeFix("var a = x   == true;", "x");
+            TestCodeFix("var b = true == A();", "A()");
+            TestCodeFix("var n = true != false;", "!false");
+            TestCodeFix("var k = true != x;", "!x");
+        }
+
+        [TestMethod]
+        public void TestComparisonWithFalseLiteralConvertionToNotExpression()
+        {
+            TestCodeFix("var a = x == false;", "!x");
+            TestCodeFix("var b = false == A(5);", "!A(5)");
+            TestCodeFix("var n = false != false;", "false");
+            TestCodeFix("var k = false != x;", "x");
+        }
+
+        [TestMethod]
+        public void TestBinaryExpressions()
+        {
+            TestCodeFix("var x = 4 < 12 == false;", "!(4 < 12)");
+        }
+
         private static void TestCodeFix(string inputCode, string expectedNodeText)
         {
             TestHelper.TestCodeFix<BinaryExpressionSyntax>(new BooleanConstantComparisonRefactoring(), inputCode, expectedNodeText);

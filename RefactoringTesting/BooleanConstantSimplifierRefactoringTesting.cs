@@ -96,6 +96,29 @@ namespace RefactoringTesting
             TestCodeFix(source, "true");
         }
 
+        [TestMethod]
+        public void UnnecessaryTopLevelBracketTest()
+        {
+            var source = "bool X() { return (false); }";
+            TestCodeFix(source, "false");
+            source = "bool X() { return ((true)); }";
+            TestCodeFix(source, "true");
+        }
+
+        [TestMethod]
+        public void MixedBooleanExpressionTest1()
+        {
+            const string source = "bool X() { return true && ((false) || !true); }";
+            TestCodeFix(source, "false");
+        }
+
+        [TestMethod]
+        public void MixedBooleanExpressionTest2()
+        {
+            const string source = "bool Y() { return false && (!(true)) || true";
+            TestCodeFix(source, "true");
+        }
+
         private static void TestDiagnostic(string inputCode, string outputMessage)
         {
             TestHelper.TestDiagnosticResult<BinaryExpressionSyntax>(new BooleanConstantSimplifierRefactoring(), inputCode, outputMessage, FindNode);
@@ -108,7 +131,7 @@ namespace RefactoringTesting
         
         private static SyntaxNode FindNode(SyntaxNode node)
         {
-            if (node is BinaryExpressionSyntax || node is PrefixUnaryExpressionSyntax)
+            if (node is BinaryExpressionSyntax || node is PrefixUnaryExpressionSyntax || node is ParenthesizedExpressionSyntax)
                 return node;
 
             return node.ChildNodes().Select(FindNode).FirstOrDefault(foundNode => foundNode != null);

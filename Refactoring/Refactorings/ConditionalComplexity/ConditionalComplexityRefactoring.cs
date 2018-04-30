@@ -21,25 +21,31 @@ namespace Refactoring.Refactorings.ConditionalComplexity
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var methodNode = (MethodDeclarationSyntax) node;
-            var visitor = new ConditionalComplexityVisitor();
-            var complexity = visitor.Visit(methodNode);
-            
-             return complexity > ConditionalComplexityThreshold ?
-                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.ConditionalComplexityMessage(complexity),
-                    complexity, methodNode.Identifier.GetLocation()) :
-                DiagnosticInfo.CreateSuccessfulResult(complexity);
+            var methodNode = (MethodDeclarationSyntax)node;
+            var complexity = CalculateComplexity(methodNode);
+
+            return complexity > ConditionalComplexityThreshold ?
+               CreateFailedDiagnosticResult(methodNode, complexity) :
+               DiagnosticInfo.CreateSuccessfulResult(complexity);
         }
 
-        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
-        {
-            yield return node;
-        }
+        private static DiagnosticInfo CreateFailedDiagnosticResult(MethodDeclarationSyntax methodNode, int complexity) => 
+            DiagnosticInfo.CreateFailedResult
+                (RefactoringMessageFactory.ConditionalComplexityMessage(complexity), complexity, methodNode.Identifier.GetLocation());
 
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
+            new[] {node};
+    
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             token.Parent;
 		
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
-	}
+
+        private static int CalculateComplexity(SyntaxNode methodNode)
+        {
+            var visitor = new ConditionalComplexityVisitor();
+            return visitor.Visit(methodNode);
+        }
+    }
 }

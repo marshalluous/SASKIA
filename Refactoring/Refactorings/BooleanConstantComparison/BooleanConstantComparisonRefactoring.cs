@@ -37,21 +37,19 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
 
-        public SyntaxNode GetReplaceableNode(SyntaxToken token)
-        {
-            return SyntaxNodeHelper.FindAncestorWithPredicate(token, node =>
-            {
-                if (node is BinaryExpressionSyntax binaryExpression)
-                    return binaryExpression.OperatorToken.Text == "==" ||
-                           binaryExpression.OperatorToken.Text == "!=";
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorWithPredicate(token, IsEqualsComparisonNode);
+    
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            new[] {SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression};
 
-                return false;
-            });
-        }
-
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize()
+        private static bool IsEqualsComparisonNode(SyntaxNode node)
         {
-            return new[] {SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression};
+            if (node is BinaryExpressionSyntax binaryExpression)
+                return binaryExpression.OperatorToken.Text == "==" ||
+                       binaryExpression.OperatorToken.Text == "!=";
+
+            return false;
         }
 
         private static void InternApplyFix(SyntaxNode syntaxNode, ICollection<SyntaxNode> replaceNodes)
@@ -71,37 +69,32 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
             var not = IsTrueNode(literalNode) != (compareOperator == "==");
 
             replaceNodes.Add(not
-                ? SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, 
-                    SyntaxNodeHelper.AddParentheses(otherNode))
+                ? NegateNode(otherNode)
                 : otherNode);
         }
 
-        private static DiagnosticInfo CheckForBooleanLiteral(SyntaxNode syntaxNode)
-        {
-            return IsBooleanLiteralNode(syntaxNode, out var literalText)
+        private static PrefixUnaryExpressionSyntax NegateNode(ExpressionSyntax otherNode) =>
+            SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression,
+                                SyntaxNodeHelper.AddParentheses(otherNode));
+        
+        private static DiagnosticInfo CheckForBooleanLiteral(SyntaxNode syntaxNode) =>
+            IsBooleanLiteralNode(syntaxNode, out var literalText)
                 ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.BooleanConstantComparisonMessage(literalText == "true"))
                 : null;
-        }
-
+        
         private static bool IsBooleanLiteralNode(SyntaxNode syntaxNode, out string literalText)
         {
             literalText = SyntaxNodeHelper.GetText(syntaxNode);
             return IsTrueNode(syntaxNode) || IsFalseNode(syntaxNode);
         }
 
-        private static bool IsFalseNode(SyntaxNode syntaxNode)
-        {
-            return IsLiteralNode(syntaxNode, "false");
-        }
+        private static bool IsFalseNode(SyntaxNode syntaxNode) =>
+            IsLiteralNode(syntaxNode, "false");
 
-        private static bool IsTrueNode(SyntaxNode syntaxNode)
-        {
-            return IsLiteralNode(syntaxNode, "true");
-        }
+        private static bool IsTrueNode(SyntaxNode syntaxNode) =>
+            IsLiteralNode(syntaxNode, "true");
 
-        private static bool IsLiteralNode(SyntaxNode syntaxNode, string expectedLiteral)
-        {
-            return SyntaxNodeHelper.CheckNodeTypeAndText(syntaxNode, typeof(LiteralExpressionSyntax), expectedLiteral);
-        }
+        private static bool IsLiteralNode(SyntaxNode syntaxNode, string expectedLiteral) =>
+            SyntaxNodeHelper.CheckNodeTypeAndText(syntaxNode, typeof(LiteralExpressionSyntax), expectedLiteral);
     }
 }

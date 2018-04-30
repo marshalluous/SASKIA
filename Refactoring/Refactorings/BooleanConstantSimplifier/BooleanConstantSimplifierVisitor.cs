@@ -36,15 +36,8 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
             if (leftValue == null || rightValue == null)
                 return null;
 
-            switch (node.OperatorToken.Kind())
-            {
-                case SyntaxKind.AmpersandAmpersandToken:
-                    return leftValue.Value && rightValue.Value;
-                case SyntaxKind.BarBarToken:
-                    return leftValue.Value || rightValue.Value;
-                default:
-                    return null;
-            }
+            return BooleanExpressionSimplifier.SimplifyBinaryExpression(node.OperatorToken.Kind(), 
+                leftValue.Value, rightValue.Value);
         }
     }
 }

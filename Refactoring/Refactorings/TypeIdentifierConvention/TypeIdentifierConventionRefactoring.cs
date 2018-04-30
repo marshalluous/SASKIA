@@ -23,7 +23,7 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
                 DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory
                     .TypeIdentifierMessage(GetIdentifierText(node), GetIdentifierText(fixableNodes.First())), null, GetIdentifierToken(node).GetLocation());
         }
-
+        
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var identifier = GetIdentifierToken(node);

@@ -49,6 +49,7 @@
     <Compile Include="CodeFixProviders\BooleanConstantComparisonCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\BooleanConstantSimplifierCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\DeMorganSimplifierCodeFixProvider.cs" />
+    <Compile Include="CodeFixProviders\IllegalFieldAccessCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\MethodPropertyIdentifierConventionCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\TypoCodeFixProvider.cs" />
     <Compile Include="CodeFixProviders\IfAndElseBlockEqualsCodeFixProvider.cs" />

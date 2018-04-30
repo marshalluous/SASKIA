@@ -31,8 +31,7 @@ namespace RefactoringTesting
         {
             TestCodeFix("!(x == 4 || x == 12) && !(x == 3)", "!(x == 4) && !(x == 12)");
         }
-
-
+        
         [TestMethod]
         public void TestTripleAndExpression()
         {
@@ -43,6 +42,20 @@ namespace RefactoringTesting
         public void TestTripleAndExpressionApplyTwice()
         {
             TestCodeFix("!(x == 4 && x == 12) || !(x == 3)", "!(x == 4) || !(x == 12)");
+        }
+
+        [TestMethod]
+        public void TestMixedExpression1()
+        {
+            TestCodeFix("!(x == 12 || x != 4)", "!(x == 12) && !(x != 4)");
+            TestCodeFix("!(A() && B())", "!A() || !B()");
+        }
+
+        [TestMethod]
+        public void TestMixedExpression2()
+        {
+            TestCodeFix("!((X()) && Y())", "!(X()) || !Y()");
+            TestCodeFix("!((4 < 12) || ((3 > 43))", "!(4 < 12) && !((3 > 43))");
         }
         
         private static void TestCodeFix(string sourceCode, string expectedNodeText)

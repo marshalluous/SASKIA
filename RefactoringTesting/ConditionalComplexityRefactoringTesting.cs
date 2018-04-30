@@ -135,11 +135,54 @@ namespace RefactoringTesting
             TestComplexity("try { int x = 12; if (x > 5 && x < 20) { } else {} } catch (Exception e) when e is Exception {}", false, 5);
         }
 
+        [TestMethod]
+        public void DocumentationIfTest()
+        {
+            TestComplexity("if (i < 0) return -1; if (i < 2) return 1; return Fi(i - 1) + Fi(i - 2);", false, 3);
+        }
+
+        [TestMethod]
+        public void BubbleSortComplexityTest()
+        {
+            TestComplexity(@"public static void Sort(int[] data) 
+                { 
+                    int i, j; 
+                    int N = data.Length; 
+ 
+                    for (j=N-1; j>0; j--) { 
+                        for (i=0; i<j; i++) { 
+                           if (data [i] > data [i + 1]) 
+                                exchange (data, i, i + 1); 
+                        } 
+                    } 
+                } ", false, 4);
+        }
+
+        [TestMethod]
+        public void IfAndOrTest()
+        {
+            TestComplexity("if (x && y || x) {}", false, 4);
+        }
+
+        [TestMethod]
+        public void SwitchCaseDefaultTest()
+        {
+            TestComplexity("int x = 3; switch (x) { case 4: break; case 12: break; default: break; }", false, 3);
+        }
+
+        [TestMethod]
+        public void CatchWhenBlockTest()
+        {
+            TestComplexity("try { int x = 4 / 0; } catch (A e) when e is Fish { }" +
+                           "catch (A e) when e is Bird {}" +
+                           "catch (Exception e) { throw; }", false, 6);
+        }
+        
         private static string CreateMethodCode(string code)
         {
             return "public void X() {" + code + "}";
         }
-        
+
         private static void TestDiagnostic(string inputCode, string outputMessage)
         {
             var methodCode = CreateMethodCode(inputCode);

@@ -17,47 +17,49 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.IfStatement };
-
-
+        
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
-
-
+        
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var ifNode = (IfStatementSyntax)node;
-
+            var ifNode = (IfStatementSyntax) node;
             return GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
-                : DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IfAndElseBlockEqualsMessage(),
-                    markableLocation: ifNode.IfKeyword.GetLocation());
+                : CreateFailedDiagnosticResult(ifNode);
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var ifNode = (IfStatementSyntax)node;
-            
-            if (ifNode.Else == null || ContainsElseIfStatement(ifNode))
+            var ifNode = (IfStatementSyntax) node;
+
+            if (!IfAndElseBlockEquals(ifNode))
                 return null;
+
+            var equalsValueClause = SyntaxFactory.EqualsValueClause(ifNode.Condition);
+            var localDeclarationStatement = CreateDeclarationStatement(equalsValueClause);
+
+            return !CheckExpressionPureness(node, ifNode) ? 
+                ConditionStatement(localDeclarationStatement).Union(ifNode.Statement.ChildNodes()) :
+                ifNode.Statement.ChildNodes();
+        }
+
+        private static bool IfAndElseBlockEquals(IfStatementSyntax ifNode)
+        {
+            if (ifNode.Else == null || ContainsElseIfStatement(ifNode))
+                return false;
 
             var thenBlock = ifNode.Statement;
             var elseBlock = ifNode.Else.ChildNodes().First();
+            return CompareSyntaxNodes(thenBlock, elseBlock);
+        }
 
-            var equalsValueClause = SyntaxFactory.EqualsValueClause(ifNode.Condition);
-
-            var isPure = CheckExpressionPureness(node, ifNode);
-            var localDeclarationStatement = CreateDeclarationStatement(equalsValueClause);
-
-            if (!CompareSyntaxNodes(thenBlock, elseBlock))
-                return null;
-
-            if (!isPure)
-                return new[] { localDeclarationStatement
-                    .NormalizeWhitespace()
-                    .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed)
-                }.Union(ifNode.Statement.ChildNodes());
-
-            return ifNode.Statement.ChildNodes();
+        private static IEnumerable<LocalDeclarationStatementSyntax> ConditionStatement(LocalDeclarationStatementSyntax localDeclarationStatement)
+        {
+            return new[] { localDeclarationStatement
+                .NormalizeWhitespace()
+                .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed)
+            };
         }
 
         private static LocalDeclarationStatementSyntax CreateDeclarationStatement(EqualsValueClauseSyntax equalsValueClause)
@@ -81,10 +83,8 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<IfStatementSyntax>(token);
 
-        private static bool ContainsElseIfStatement(IfStatementSyntax ifNode)
-        {
-            return ifNode.Else?.ChildNodes().First() is IfStatementSyntax;
-        }
+        private static bool ContainsElseIfStatement(IfStatementSyntax ifNode) =>
+            ifNode.Else?.ChildNodes().First() is IfStatementSyntax;
 
         private static bool CompareSyntaxNodes(SyntaxNode first, SyntaxNode second)
         {
@@ -103,19 +103,19 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
             return block;
         }
 
-        private static bool CompareSyntaxNodeList(IList<SyntaxNode> first, IList<SyntaxNode> second)
+        private static bool CompareSyntaxNodeList(ICollection<SyntaxNode> first, IList<SyntaxNode> second)
         {
             if (first.Count != second.Count)
                 return false;
 
-            var equalTrees = true;
-
-            for (var index = 0; index < first.Count; ++index)
-            {
-                equalTrees &= CompareSyntaxNodes(first[index], second[index]);
-            }
-
-            return equalTrees;
+            return
+                first.Count == second.Count &&
+                    first.Select((node, index) => new {node, index})
+                        .All(node => CompareSyntaxNodes(node.node, second[node.index]));
         }
+        
+        private static DiagnosticInfo CreateFailedDiagnosticResult(IfStatementSyntax ifNode) => 
+            DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IfAndElseBlockEqualsMessage(),
+                markableLocation: ifNode.IfKeyword.GetLocation());
     }
 }

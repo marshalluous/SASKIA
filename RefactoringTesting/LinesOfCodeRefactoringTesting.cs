@@ -27,6 +27,12 @@ namespace RefactoringTesting
             MethodDiagnosticTest(20, true);
         }
 
+        [TestMethod]
+        public void ReallyLongMethodTest()
+        {
+            MethodDiagnosticTest(45, true);
+        }
+
         private static string GenerateMethodCode(int linesOfCode)
         {
             var methodCode = new StringBuilder("public void A() {\r\n");

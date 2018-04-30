@@ -10,12 +10,9 @@ namespace Refactoring.Refactorings.IfReturnBoolean
     public sealed class IfReturnBooleanRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.IfReturnBoolean.GetDiagnosticId();
-
         public string Title => RefactoringMessageFactory.IfReturnBooleanTitle();
-
         public string Description => RefactoringMessageFactory.IfReturnBooleanDescription();
-
-
+        
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
 
@@ -37,64 +34,61 @@ namespace Refactoring.Refactorings.IfReturnBoolean
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var ifNode = (IfStatementSyntax)node;
-
-            var thenNode = GetThenBlock(ifNode);
-            var elseNode = GetElseBlock(ifNode);
+            var elseNode = ifNode.Else?.Statement;
 
             if (elseNode == null)
                 return null;
+            
+            var thenNode = NormalizeBlock(ifNode.Statement);
+            elseNode = NormalizeBlock(elseNode);
 
             if (IsReturnBooleanStatement(thenNode, "true") && IsReturnBooleanStatement(elseNode, "false"))
-            {
-                return new[] { SyntaxFactory.ReturnStatement(ifNode.Condition)
-                    .NormalizeWhitespace() };
-            }
+                return CreateReturnNode(ifNode.Condition);
 
-            if (!IsReturnBooleanStatement(thenNode, "false") || !IsReturnBooleanStatement(elseNode, "true"))
-                return null;
+            if (IsReturnBooleanStatement(thenNode, "false") && IsReturnBooleanStatement(elseNode, "true"))
+                return CreateReturnNode(Not(ifNode.Condition));
 
-            var condition = SyntaxNodeHelper.AddParentheses(ifNode.Condition);
-            var notNode = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, condition);
-
-            return new[] { SyntaxFactory.ReturnStatement(notNode).NormalizeWhitespace() };
+            return null;
         }
 
-        private static StatementSyntax GetElseBlock(IfStatementSyntax ifNode)
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) => 
+            SyntaxNodeHelper.FindAncestorOfType<IfStatementSyntax>(token);
+
+        private static IEnumerable<SyntaxNode> CreateReturnNode(ExpressionSyntax expressionNode)
         {
-            if (ifNode.Else == null)
-                return null;
-
-            var elseNode = ifNode.Else.Statement;
-
-            if (elseNode is BlockSyntax elseBlock && elseBlock.ChildNodes().Count() == 1)
-            {
-                return elseBlock.Statements.First();
-            }
-
-            return elseNode;
+            return new[] {SyntaxFactory.ReturnStatement(expressionNode).NormalizeWhitespace()};
         }
 
-        private static StatementSyntax GetThenBlock(IfStatementSyntax ifNode)
+        private static PrefixUnaryExpressionSyntax Not(ExpressionSyntax condition)
         {
-            var thenNode = ifNode.Statement;
-
-            if (thenNode is BlockSyntax thenBlock && thenBlock.ChildNodes().Count() == 1)
-            {
-                return thenBlock.Statements.First();
-            }
-
-            return thenNode;
+            condition = SyntaxNodeHelper.AddParentheses(condition);
+            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, condition);
         }
 
-        public SyntaxNode GetReplaceableNode(SyntaxToken token)
+        private static StatementSyntax NormalizeBlock(StatementSyntax ifBlockNode)
         {
-            return SyntaxNodeHelper.FindAncestorOfType<IfStatementSyntax>(token);
+            while (ifBlockNode.ChildNodes().Count() == 1 && ifBlockNode is BlockSyntax)
+            {
+                ifBlockNode = (StatementSyntax) ifBlockNode.ChildNodes().First();
+            }
+
+            return ifBlockNode;
         }
         
         private static bool IsReturnBooleanStatement(SyntaxNode statementNode, string booleanLiteral)
         {
             return statementNode is ReturnStatementSyntax returnNode &&
-                   SyntaxNodeHelper.GetText(returnNode.Expression) == booleanLiteral;
+                   SyntaxNodeHelper.GetText(NormalizeReturnValue(returnNode.Expression)) == booleanLiteral;
+        }
+
+        private static SyntaxNode NormalizeReturnValue(SyntaxNode node)
+        {
+            while (node is ParenthesizedExpressionSyntax)
+            {
+                node = ((ParenthesizedExpressionSyntax) node).Expression;
+            }
+
+            return node;
         }
     }
 }
