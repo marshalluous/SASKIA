@@ -66,8 +66,6 @@
     <Compile Include="CodeSmellDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\DeMorganSimplifierDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\LongConstantSimplifierDiagnosticAnalyzer.cs" />
-    <Compile Include="DiagnosticAnalyzers\MethodNameVerbDiagnosticAnalyzer.cs" />
-    <Compile Include="DiagnosticAnalyzers\ClassNameNounDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\MethodPropertyIdentifierConventionDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\WordTypeDiagnosticAnalyzer.cs" />
     <Compile Include="DiagnosticAnalyzers\TypoDiagnosticAnalyzer.cs" />

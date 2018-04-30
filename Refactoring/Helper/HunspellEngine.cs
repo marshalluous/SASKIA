@@ -10,10 +10,15 @@ namespace Refactoring.Helper
 	public sealed class HunspellEngine
 	{
 		private string ExecutableAssemlyPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+	    private static volatile bool dllLoaded;
 
 		public HunspellEngine()
 		{
-			Hunspell.NativeDllPath = ExecutableAssemlyPath;
+		    if (dllLoaded)
+		        return;
+
+		    Hunspell.NativeDllPath = ExecutableAssemlyPath;
+		    dllLoaded = true;
 		}
 
 		public bool HasTypo(string wordString)

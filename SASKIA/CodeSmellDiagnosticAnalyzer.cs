@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Refactoring;
+using Refactoring.Helper;
 
 namespace SASKIA
 {
@@ -52,6 +53,11 @@ namespace SASKIA
                 
                 var diagnostic = Diagnostic.Create(CreateRule(diagnosticInfo.Message), markableLocation);
                 context.ReportDiagnostic(diagnostic);
+
+                if (diagnosticInfo.DiagnosticFound)
+                {
+                    //StatisticsLogger.Log("", );
+                }
             }
             catch (Exception exception)
             {
