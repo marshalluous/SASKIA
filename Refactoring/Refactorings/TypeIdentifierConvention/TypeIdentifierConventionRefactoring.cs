@@ -68,6 +68,7 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
 
         private static string FixInterfaceName(string identifierText)
         {
+            identifierText = IdentifierChecker.FixUnderlines(identifierText);
             if (!CheckInterfacePrefix(identifierText))
                 return "I" + IdentifierChecker.ToUpperCamelCaseIdentifier(identifierText);
             return identifierText;
@@ -75,8 +76,9 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
 
         private static bool CheckInterfacePrefix(string identifierText)
         {
-            return IdentifierChecker.IsUpperCamelCase(identifierText) &&
-                   identifierText.StartsWith("I");
+            var upperCamelCase = IdentifierChecker.IsUpperCamelCase(identifierText);
+            var correctedIdentifierText = IdentifierChecker.FixUnderlines(identifierText);    
+            return upperCamelCase && correctedIdentifierText.StartsWith("I");
         }
 
         private static string GetIdentifierText(SyntaxNode node)

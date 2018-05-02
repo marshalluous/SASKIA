@@ -9,9 +9,7 @@ namespace Refactoring.Refactorings.DeMorganSimplifier
     public sealed class DeMorganSimplifierRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.DeMorganSimplifier.GetDiagnosticId();
-
         public string Title => RefactoringMessageFactory.DeMorganSimplifierTitle();
-
         public string Description => RefactoringMessageFactory.DeMorganSimplifierDescription();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)

@@ -10,9 +10,7 @@ namespace Refactoring.Refactorings.LackOfCohesion
     public sealed class LackOfCohesionRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.LackOfCohesion.GetDiagnosticId();
-
-        public string Title => DiagnosticId;
-
+        public string Title => RefactoringMessageFactory.LackOfCohesionTitle();
         public string Description => Title;
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
@@ -35,7 +33,7 @@ namespace Refactoring.Refactorings.LackOfCohesion
             var lackOfCohesionValue = CalculateLackOfCohesionValue(fieldSymbolList, methodNodeList, fieldAccessCounterMap);
 
             return lackOfCohesionValue > lackOfCohesionThreshold ?
-                DiagnosticInfo.CreateFailedResult("Lack Of Cohesion!", lackOfCohesionValue, classNode.Identifier.GetLocation()) :
+                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.LackOfCohesionMessage(lackOfCohesionValue), lackOfCohesionValue, classNode.Identifier.GetLocation()) :
                 DiagnosticInfo.CreateSuccessfulResult(lackOfCohesionValue);
         }
 

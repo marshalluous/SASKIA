@@ -10,9 +10,7 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
     public sealed class PotentialStaticMethodRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.PotentialStaticMethod.GetDiagnosticId();
-
         public string Title => DiagnosticId;
-
         public string Description => Title;
         
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

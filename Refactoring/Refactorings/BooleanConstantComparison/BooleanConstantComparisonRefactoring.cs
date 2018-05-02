@@ -10,9 +10,7 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
     public sealed class BooleanConstantComparisonRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.BooleanConstantComparison.GetDiagnosticId();
-
         public string Title => RefactoringMessageFactory.BooleanConstantComparisonTitle();
-
         public string Description => RefactoringMessageFactory.BooleanConstantComparisonDescription();
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

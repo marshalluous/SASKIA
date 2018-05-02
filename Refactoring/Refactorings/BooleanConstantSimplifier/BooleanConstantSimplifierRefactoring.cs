@@ -9,9 +9,7 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
     public sealed class BooleanConstantSimplifierRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.BooleanConstantSimplifier.GetDiagnosticId();
-        
         public string Title => RefactoringMessageFactory.BooleanConstantSimplifierTitle();
-
         public string Description => RefactoringMessageFactory.BooleanConstantSimplifierDescription();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>

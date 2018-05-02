@@ -13,8 +13,7 @@ namespace Refactoring.Refactorings.NotOperatorInversion
         public string Title => DiagnosticId;
 
         public string Description => Title;
-
-
+        
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
 
@@ -42,18 +41,14 @@ namespace Refactoring.Refactorings.NotOperatorInversion
 
             var expression = operandExpression.Expression;
             
-            if (expression is BinaryExpressionSyntax binaryExpression)
+            switch (expression)
             {
-                return new [] { ExpressionNotInverter.InvertBinaryExpression(binaryExpression) };
+                case BinaryExpressionSyntax binaryExpression:
+                    return new [] { ExpressionNotInverter.InvertBinaryExpression(binaryExpression) };
+                case PrefixUnaryExpressionSyntax unaryExpression when unaryExpression.OperatorToken.Kind() == SyntaxKind.ExclamationToken && unaryExpression.Operand is ParenthesizedExpressionSyntax nestedExpression:
+                    return new[] { nestedExpression.Expression.NormalizeWhitespace() };
             }
 
-            if (expression is PrefixUnaryExpressionSyntax unaryExpression &&
-                unaryExpression.OperatorToken.Kind() == SyntaxKind.ExclamationToken &&
-                unaryExpression.Operand is ParenthesizedExpressionSyntax nestedExpression)
-            {
-                return new[] { nestedExpression.Expression.NormalizeWhitespace() };
-            }
-            
             return null;
         }
         

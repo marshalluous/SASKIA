@@ -11,9 +11,7 @@ namespace Refactoring.Refactorings.ConditionalComplexity
         private const int ConditionalComplexityThreshold = 10;
 
         public string DiagnosticId => RefactoringId.ConditionalComplexity.GetDiagnosticId();
-
         public string Title => RefactoringMessageFactory.ConditionalComplexityTitle();
-
         public string Description => Title;
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>

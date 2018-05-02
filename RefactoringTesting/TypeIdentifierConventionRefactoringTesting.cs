@@ -112,6 +112,13 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void LeadingUnderlineTest()
+        {
+            TestInterfaceNameFix("_convertible", "IConvertible");
+            TestInterfaceNameFix("_i_camel_hunter", "ICamelHunter");
+        }
+
+        [TestMethod]
         public void CorrectInterfaceName()
         {
             TestInterfaceNameFix("IFishCreator", "IFishCreator");

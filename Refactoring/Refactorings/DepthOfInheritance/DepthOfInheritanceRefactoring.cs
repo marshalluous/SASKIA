@@ -12,9 +12,7 @@ namespace Refactoring.Refactorings.DepthOfInheritance
         private const int ThresholdDepthOfInheritance = 4;
 
         public string DiagnosticId => RefactoringId.DepthOfInheritance.GetDiagnosticId();
-
         public string Title => RefactoringMessageFactory.DepthOfInheritanceTitle();
-
         public string Description => Title;
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>

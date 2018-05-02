@@ -109,6 +109,13 @@
         public static string LongParameterListMessage(int parameterCount) =>
             $"Long parameter with {parameterCount} parameters list detected";
 
+        /* LackOfCohesion */
+        public static string LackOfCohesionTitle() =>
+            "Weak cohesion in class";
+
+        public static string LackOfCohesionMessage(double lcomValue) =>
+            $"Weak cohesion in class detected (LCOM*={lcomValue}";
+
         /* TypeIdentifier */
         public static string TypeIdentifierTitle() =>
             "Unconventional type name";
