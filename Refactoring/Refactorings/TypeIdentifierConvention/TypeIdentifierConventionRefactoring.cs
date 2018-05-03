@@ -10,8 +10,9 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
     public sealed class TypeIdentifierConventionRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.TypeIdentifierConvention.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.TypeIdentifierTitle();
-        public string Description => RefactoringMessageFactory.TypeIdentifierDescription();
+        public string Title => RefactoringMessages.TypeIdentifierTitle();
+        public string Description => RefactoringMessages.TypeIdentifierDescription();
+
         public SyntaxNode GetReplaceableNode(SyntaxToken token) => token.Parent;
         public SyntaxNode GetReplaceableRootNode(SyntaxToken token) => token.Parent;
 		
@@ -20,7 +21,7 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
 		    var fixableNodes = GetFixableNodes(node);
             return fixableNodes == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages
                     .TypeIdentifierMessage(GetIdentifierText(node), GetIdentifierText(fixableNodes.First())), null, GetIdentifierToken(node).GetLocation());
         }
         

@@ -162,7 +162,7 @@
     <Compile Include="Helper\RefactoringId.cs" />
     <Compile Include="Helper\HunspellEngine.cs" />
     <Compile Include="SyntaxTreeHelper\PureExpressionCheckerVisitor.cs" />
-    <Compile Include="Helper\RefactoringMessageFactory.cs" />
+    <Compile Include="Helper\RefactoringMessages.cs" />
     <Compile Include="SyntaxTreeHelper\SemanticSymbolBuilder.cs" />
     <Compile Include="Helper\StatisticsLogger.cs" />
     <Compile Include="Refactorings\DictionaryRefactoring\Strategies\AbstractClasses\MethodTypeDeclarationSyntaxStrategy.cs" />

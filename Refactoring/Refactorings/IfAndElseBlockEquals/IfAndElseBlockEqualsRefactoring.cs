@@ -11,8 +11,8 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
     public sealed class IfAndElseBlockEqualsRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.IfAndElseBlockEquals.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.IfAndElseBlockEqualsTitle();
-        public string Description => RefactoringMessageFactory.IfAndElseBlockEqualsDescription();
+        public string Title => RefactoringMessages.IfAndElseBlockEqualsTitle();
+        public string Description => RefactoringMessages.IfAndElseBlockEqualsDescription();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.IfStatement };
@@ -114,7 +114,7 @@ namespace Refactoring.Refactorings.IfAndElseBlockEquals
         }
         
         private static DiagnosticInfo CreateFailedDiagnosticResult(IfStatementSyntax ifNode) => 
-            DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IfAndElseBlockEqualsMessage(),
+            DiagnosticInfo.CreateFailedResult(RefactoringMessages.IfAndElseBlockEqualsMessage(),
                 markableLocation: ifNode.IfKeyword.GetLocation());
     }
 }

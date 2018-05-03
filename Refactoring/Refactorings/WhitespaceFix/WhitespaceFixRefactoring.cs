@@ -10,8 +10,8 @@ namespace Refactoring.Refactorings.WhitespaceFix
     public sealed class WhitespaceFixRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.WhitespaceFix.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.WhitespaceFixTitle();
-        public string Description => RefactoringMessageFactory.WhitespaceFixDescription();
+        public string Title => RefactoringMessages.WhitespaceFixTitle();
+        public string Description => RefactoringMessages.WhitespaceFixDescription();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
@@ -42,7 +42,7 @@ namespace Refactoring.Refactorings.WhitespaceFix
             node.NormalizeWhitespace().WithLeadingTrivia(SyntaxFactory.CarriageReturnLineFeed);
 
         private static DiagnosticInfo GetFailedDiagnosticInfo(NamespaceDeclarationSyntax namespaceNode) =>
-            DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.WhitespaceFixMessage()
+            DiagnosticInfo.CreateFailedResult(RefactoringMessages.WhitespaceFixMessage()
                 , null, GetLocation(namespaceNode));
 
         private static Location GetLocation(NamespaceDeclarationSyntax node) =>

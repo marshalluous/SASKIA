@@ -19,12 +19,8 @@ namespace Refactoring.Refactorings.DictionaryRefactoring
 		{
 			var identifierSymbol = semanticModel.GetSymbolInfo(identifierNode);
 
-			if (identifierSymbol.Symbol == memberSymbol)
-			{
-				return SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("hallo"));
-			}
-
-			return base.VisitIdentifierName(identifierNode);
+			return identifierSymbol.Symbol == memberSymbol ? 
+			    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("hallo")) : base.VisitIdentifierName(identifierNode);
 		}
 	}
 }

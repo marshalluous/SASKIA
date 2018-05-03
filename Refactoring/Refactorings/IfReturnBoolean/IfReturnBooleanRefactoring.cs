@@ -11,8 +11,8 @@ namespace Refactoring.Refactorings.IfReturnBoolean
     public sealed class IfReturnBooleanRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.IfReturnBoolean.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.IfReturnBooleanTitle();
-        public string Description => RefactoringMessageFactory.IfReturnBooleanDescription();
+        public string Title => RefactoringMessages.IfReturnBooleanTitle();
+        public string Description => RefactoringMessages.IfReturnBooleanDescription();
         
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
@@ -28,7 +28,7 @@ namespace Refactoring.Refactorings.IfReturnBoolean
             return fixableNodes == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
                 DiagnosticInfo.CreateFailedResult(
-                    RefactoringMessageFactory.IfReturnBooleanMessage(fixableNodes.First().ToString()), 
+                    RefactoringMessages.IfReturnBooleanMessage(fixableNodes.First().ToString()), 
                     markableLocation: ifNode.IfKeyword.GetLocation());
         }
 

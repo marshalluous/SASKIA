@@ -11,7 +11,7 @@ namespace Refactoring.Refactorings.ConditionalComplexity
         private const int ConditionalComplexityThreshold = 10;
 
         public string DiagnosticId => RefactoringId.ConditionalComplexity.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.ConditionalComplexityTitle();
+        public string Title => RefactoringMessages.ConditionalComplexityTitle();
         public string Description => Title;
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
@@ -29,7 +29,7 @@ namespace Refactoring.Refactorings.ConditionalComplexity
 
         private static DiagnosticInfo CreateFailedDiagnosticResult(MethodDeclarationSyntax methodNode, int complexity) => 
             DiagnosticInfo.CreateFailedResult
-                (RefactoringMessageFactory.ConditionalComplexityMessage(complexity), complexity, methodNode.Identifier.GetLocation());
+                (RefactoringMessages.ConditionalComplexityMessage(complexity), complexity, methodNode.Identifier.GetLocation());
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
             new[] {node};

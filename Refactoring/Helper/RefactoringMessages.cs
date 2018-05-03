@@ -1,6 +1,6 @@
 ﻿namespace Refactoring.Helper
 {
-    internal static class RefactoringMessageFactory
+    internal static class RefactoringMessages
     {
         /* BooleanConstantComparison */
         public static string BooleanConstantComparisonTitle() =>
@@ -21,7 +21,7 @@
 
         public static string BooleanConstantSimplifierMessage(bool simplifiedValue) =>
              $"Constant boolean expression can be simplified to {BooleanToString(simplifiedValue)}";
-
+        
         private static string BooleanToString(bool boolValue) =>
             boolValue ? "true" : "false";
 
@@ -89,6 +89,13 @@
         public static string IntegerConstantSimplifierMessage(int simplifiedValue) =>
              $"Constant integer expression can be simplified to {simplifiedValue}";
 
+        /* LinesOfCode */
+        public static string LinesOfCodeTitle() =>
+            "Lines of code explosion";
+
+        public static string LinesOfCodeMessage(string nodeType, string name, int lineOfCode) =>
+            $"{nodeType} {name} has {lineOfCode} lines";
+
         /* LongConstantSimplifier */
         public static string LongConstantSimplifierTitle() =>
             "Long constant simplifier";
@@ -108,6 +115,26 @@
 
         public static string LongParameterListMessage(int parameterCount) =>
             $"Long parameter with {parameterCount} parameters list detected";
+
+        /* MethodPropertyIdentifierConvention */
+        public static string MethodPropertyIdentifierConventionTitle() =>
+            "Unusual method or property name";
+
+        public static string MethodPropertyIdentifierConventionDescription() =>
+            "To upper camel case";
+
+        public static string MethodPropertyIdentifierConventionMessage(string newMethodName) =>
+            $"Method or property should be renamed to {newMethodName}";
+
+        /* NotOperatorInversion */
+        public static string NotOperatorInversionTitle() =>
+            "Negated binary operator expression";
+
+        public static string NotOperatorInversionDescription() =>
+            "Simplify negated binary operation expression";
+
+        public static string NotOperatorInversionMessage() =>
+            $"Negated binary operation expression can be simplified";
 
         /* LackOfCohesion */
         public static string LackOfCohesionTitle() =>
@@ -145,5 +172,15 @@
 
         public static string WhitespaceFixMessage() =>
             "Correct formatted code makes the source code easier to read";
+
+        /* PotentialStaticMethod */
+        public static string PotentialStaticMethodTitle() =>
+            "Method can be made static";
+
+        public static string PotentialStaticMethodDescription() =>
+            "Make method static";
+
+        public static string PotentialStaticMethodMessage() =>
+            "Method can be made static";
     }
 }

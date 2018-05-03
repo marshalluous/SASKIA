@@ -10,8 +10,8 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
     public sealed class BooleanConstantSimplifierRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.BooleanConstantSimplifier.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.BooleanConstantSimplifierTitle();
-        public string Description => RefactoringMessageFactory.BooleanConstantSimplifierDescription();
+        public string Title => RefactoringMessages.BooleanConstantSimplifierTitle();
+        public string Description => RefactoringMessages.BooleanConstantSimplifierDescription();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             SyntaxNodeHelper.GetExpressionSyntaxKinds();
@@ -25,7 +25,7 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
         }
 
         private static DiagnosticInfo CreateFailedDiagnosticNode(bool value) =>
-            DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory
+            DiagnosticInfo.CreateFailedResult(RefactoringMessages
                 .BooleanConstantSimplifierMessage(value));
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

@@ -10,8 +10,8 @@ namespace Refactoring.Refactorings.LongConstantSimplifier
     public sealed class LongConstantSimplifierRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.LongConstantSimplifier.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.LongConstantSimplifierTitle();
-        public string Description => RefactoringMessageFactory.LongConstantSimplifierDescription();
+        public string Title => RefactoringMessages.LongConstantSimplifierTitle();
+        public string Description => RefactoringMessages.LongConstantSimplifierDescription();
         
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
@@ -30,7 +30,7 @@ namespace Refactoring.Refactorings.LongConstantSimplifier
 
             return value == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.LongConstantSimplifierMessage(value.Value));
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages.LongConstantSimplifierMessage(value.Value));
         }
         
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

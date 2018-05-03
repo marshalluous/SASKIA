@@ -11,8 +11,8 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
     public sealed class IllegalFieldAccessRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.IllegalFieldAccess.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.IllegalFieldAccessTitle();
-        public string Description => RefactoringMessageFactory.IllegalFieldAccessDescription();
+        public string Title => RefactoringMessages.IllegalFieldAccessTitle();
+        public string Description => RefactoringMessages.IllegalFieldAccessDescription();
         
         public IEnumerable<SyntaxNode> ApplyFix(SyntaxNode node) =>
             new[] {node};
@@ -24,7 +24,7 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
         {
             return GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
-                : DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IllegalFieldAccessMessage());
+                : DiagnosticInfo.CreateFailedResult(RefactoringMessages.IllegalFieldAccessMessage());
         }
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

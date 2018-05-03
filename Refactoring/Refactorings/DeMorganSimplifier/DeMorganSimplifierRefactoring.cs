@@ -10,8 +10,8 @@ namespace Refactoring.Refactorings.DeMorganSimplifier
     public sealed class DeMorganSimplifierRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.DeMorganSimplifier.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.DeMorganSimplifierTitle();
-        public string Description => RefactoringMessageFactory.DeMorganSimplifierDescription();
+        public string Title => RefactoringMessages.DeMorganSimplifierTitle();
+        public string Description => RefactoringMessages.DeMorganSimplifierDescription();
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
@@ -20,7 +20,7 @@ namespace Refactoring.Refactorings.DeMorganSimplifier
             
             return fixedNodes == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.DeMorganSimplifierMessage(actualExpression));
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages.DeMorganSimplifierMessage(actualExpression));
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

@@ -14,7 +14,7 @@ namespace Refactoring.Refactorings.LinesOfCode
         private const int MethodLinesOfCodeThreshold = 15;
 
         public string DiagnosticId => RefactoringId.LinesOfCode.GetDiagnosticId();
-        public string Title => DiagnosticId;
+        public string Title => RefactoringMessages.LinesOfCodeTitle();
         public string Description => Title;
         
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
@@ -47,8 +47,21 @@ namespace Refactoring.Refactorings.LinesOfCode
         {
             var linesOfCode = CountLines(node);
             return linesOfCode > threshold ? 
-                DiagnosticInfo.CreateFailedResult($"{nodeType} {identifier.Text} is too long") :
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages.LinesOfCodeMessage(nodeType, identifier.Text, linesOfCode), null, Identifier(node).GetLocation()) :
                 DiagnosticInfo.CreateSuccessfulResult();
+        }
+
+        private static SyntaxToken Identifier(SyntaxNode node)
+        {
+            switch (node)
+            {
+                case ClassDeclarationSyntax classNode:
+                    return classNode.Identifier;
+                case MethodDeclarationSyntax methodNode:
+                    return methodNode.Identifier;
+            }
+
+            return default(SyntaxToken);
         }
 
         private static int CountLines(SyntaxNode syntaxNode) => 

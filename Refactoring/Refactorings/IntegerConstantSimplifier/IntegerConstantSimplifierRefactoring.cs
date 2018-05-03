@@ -10,8 +10,8 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
     public sealed class IntegerConstantSimplifierRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.IntegerConstantSimplifier.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.IntegerConstantSimplifierTitle();
-        public string Description => RefactoringMessageFactory.IntegerConstantSimplifierDescription();
+        public string Title => RefactoringMessages.IntegerConstantSimplifierTitle();
+        public string Description => RefactoringMessages.IntegerConstantSimplifierDescription();
         
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
@@ -30,7 +30,7 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
 
             return value == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.IntegerConstantSimplifierMessage(value.Value));
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages.IntegerConstantSimplifierMessage(value.Value));
         }
         
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)

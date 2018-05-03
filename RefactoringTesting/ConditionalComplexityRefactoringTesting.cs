@@ -35,7 +35,7 @@ namespace RefactoringTesting
             TestDiagnostic("int a = 0; bool x = true; if (x && x) { return x ? x : !x; } if(x) { a = 5; }" +
                                          "if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; }" +
                                          "if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; } if (x) { a = 5; }",
-                                         RefactoringMessageFactory.ConditionalComplexityMessage(13));
+                                         RefactoringMessages.ConditionalComplexityMessage(13));
         }
 
         [TestMethod]

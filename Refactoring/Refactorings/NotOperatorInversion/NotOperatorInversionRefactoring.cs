@@ -10,15 +10,12 @@ namespace Refactoring.Refactorings.NotOperatorInversion
     public sealed class NotOperatorInversionRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.NotOperatorInversion.GetDiagnosticId();
-
-        public string Title => DiagnosticId;
-
-        public string Description => Title;
+        public string Title => RefactoringMessages.NotOperatorInversionTitle();
+        public string Description => RefactoringMessages.NotOperatorInversionDescription();
         
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
-
-
+        
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] {SyntaxKind.LogicalNotExpression};
             
@@ -27,7 +24,7 @@ namespace Refactoring.Refactorings.NotOperatorInversion
             var resultNode = GetFixableNodes(node);
             return resultNode == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() : 
-                DiagnosticInfo.CreateFailedResult("failed result");
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages.NotOperatorInversionMessage());
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
@@ -41,16 +38,19 @@ namespace Refactoring.Refactorings.NotOperatorInversion
                 return null;
 
             var expression = operandExpression.Expression;
-            
+            SyntaxNode replaceableNode = null;
+
             switch (expression)
             {
                 case BinaryExpressionSyntax binaryExpression:
-                    return new [] { ExpressionNotInverter.InvertBinaryExpression(binaryExpression) };
+                    replaceableNode = ExpressionNotInverter.InvertBinaryExpression(binaryExpression);
+                    break;
                 case PrefixUnaryExpressionSyntax unaryExpression when unaryExpression.OperatorToken.Kind() == SyntaxKind.ExclamationToken && unaryExpression.Operand is ParenthesizedExpressionSyntax nestedExpression:
-                    return new[] { nestedExpression.Expression.NormalizeWhitespace() };
+                    replaceableNode = nestedExpression.Expression.NormalizeWhitespace();
+                    break;
             }
 
-            return null;
+            return replaceableNode == null ? null : new [] { replaceableNode };
         }
         
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>

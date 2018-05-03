@@ -57,6 +57,12 @@ namespace RefactoringTesting
             TestCodeFix("!((X()) && Y())", "!(X()) || !Y()");
             TestCodeFix("!((4 < 12) || ((3 > 43))", "!(4 < 12) && !((3 > 43))");
         }
+
+        [TestMethod]
+        public void TestNotInNot()
+        {
+            TestCodeFix("!(x == 4 && !(x < 12))", "!(x == 4) || !!(x < 12)");
+        }
         
         private static void TestCodeFix(string sourceCode, string expectedNodeText)
         {

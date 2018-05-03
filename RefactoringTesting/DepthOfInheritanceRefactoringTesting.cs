@@ -45,7 +45,7 @@ namespace RefactoringTesting
         public void TestDepthOfInheritanceSmellDiagnostic()
         {
             const string source = "class E : D {} class A : object {} class B : A {} class C : B{} class D : C {}";
-            TestDiagnostic(source, RefactoringMessageFactory.DepthOfInheritanceMessage("E", 5));
+            TestDiagnostic(source, RefactoringMessages.DepthOfInheritanceMessage("E", 5));
         }
 
         private static void TestDepthOfInheritance(string inputCode, bool diagnosticFound, int metricValue)

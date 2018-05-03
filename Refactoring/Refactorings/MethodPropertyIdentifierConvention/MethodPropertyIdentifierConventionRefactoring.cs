@@ -10,38 +10,43 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
     public sealed class MethodPropertyIdentifierConventionRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.MethodPropertyIdentifierConvention.GetDiagnosticId();
-
-        public string Title => DiagnosticId;
-
-        public string Description => DiagnosticId;
-
-
+        public string Title => RefactoringMessages.MethodPropertyIdentifierConventionTitle();
+        public string Description => RefactoringMessages.MethodPropertyIdentifierConventionDescription();
+        
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{
-		    return GetFixableNodes(node) == null ? DiagnosticInfo.CreateSuccessfulResult() : DiagnosticInfo.CreateFailedResult("sadfkjl", null, GetIdentifierToken(node).GetLocation());
+		    return GetFixableNodes(node, out var newIdentifierText) == null ? 
+		        DiagnosticInfo.CreateSuccessfulResult() : 
+		        DiagnosticInfo.CreateFailedResult(RefactoringMessages.MethodPropertyIdentifierConventionMessage(newIdentifierText), null, GetIdentifierToken(node).GetLocation());
 		}
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
+            return GetFixableNodes(node, out _);
+        }
+
+        private static IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node, out string newIdentifierText)
+        {
             var identifierToken = GetIdentifierToken(node);
-            var newIdentifierText = IdentifierChecker.ToUpperCamelCaseIdentifier(identifierToken.Text);
+            newIdentifierText = IdentifierChecker.ToUpperCamelCaseIdentifier(identifierToken.Text);
 
-            if (identifierToken.Text == newIdentifierText)
-                return null;
-
-            return new[] { node.ReplaceToken(identifierToken, SyntaxFactory.Identifier(newIdentifierText)) };
+            return identifierToken.Text == newIdentifierText ?
+                null :
+                new[] { node.ReplaceToken(identifierToken, SyntaxFactory.Identifier(newIdentifierText)) };
         }
 
         private static SyntaxToken GetIdentifierToken(SyntaxNode node)
         {
-            if (node is MethodDeclarationSyntax methodNode)
-                return methodNode.Identifier;
-
-            if (node is PropertyDeclarationSyntax propertyNode)
-                return propertyNode.Identifier;
+            switch (node)
+            {
+                case MethodDeclarationSyntax methodNode:
+                    return methodNode.Identifier;
+                case PropertyDeclarationSyntax propertyNode:
+                    return propertyNode.Identifier;
+            }
 
             return default(SyntaxToken);
         }

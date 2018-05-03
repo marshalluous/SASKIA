@@ -22,7 +22,7 @@ namespace RefactoringTesting
         public void MixedBooleanConstantExpressionDiagnosticTest()
         {
             const string source = "var x = true && false || !true;";
-            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(false));
+            TestDiagnostic(source, RefactoringMessages.BooleanConstantSimplifierMessage(false));
         }
         
         [TestMethod]
@@ -36,7 +36,7 @@ namespace RefactoringTesting
         public void SimpleAndExpressionDiagnosticTest()
         {
             const string source = "var y = true && false;";
-            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(false));
+            TestDiagnostic(source, RefactoringMessages.BooleanConstantSimplifierMessage(false));
         }
         
         [TestMethod]
@@ -50,7 +50,7 @@ namespace RefactoringTesting
         public void SimpleOrExpressionDiagnosticTest()
         {
             const string source = "var z = true || false;";
-            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(true));
+            TestDiagnostic(source, RefactoringMessages.BooleanConstantSimplifierMessage(true));
         }
         
         [TestMethod]
@@ -65,7 +65,7 @@ namespace RefactoringTesting
         public void SimpleNotExpressionDiagnosticTest()
         {
             const string source = "var z = !false;";
-            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(true));
+            TestDiagnostic(source, RefactoringMessages.BooleanConstantSimplifierMessage(true));
         }
         
         [TestMethod]
@@ -79,7 +79,7 @@ namespace RefactoringTesting
         public void SimpleBracketExpressionDiagnosticTest()
         {
             const string source = "var z = !(false || true);";
-            TestDiagnostic(source, RefactoringMessageFactory.BooleanConstantSimplifierMessage(false));
+            TestDiagnostic(source, RefactoringMessages.BooleanConstantSimplifierMessage(false));
         }
 
         [TestMethod]

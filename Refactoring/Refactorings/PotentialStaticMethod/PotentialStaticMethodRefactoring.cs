@@ -11,8 +11,8 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
     public sealed class PotentialStaticMethodRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.PotentialStaticMethod.GetDiagnosticId();
-        public string Title => DiagnosticId;
-        public string Description => Title;
+        public string Title => RefactoringMessages.PotentialStaticMethodTitle();
+        public string Description => RefactoringMessages.PotentialStaticMethodDescription();
         
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
@@ -40,7 +40,7 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
 
             return fixedNode == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult("Method can be static", null, methodNode.Identifier.GetLocation());
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages.PotentialStaticMethodMessage(), null, methodNode.Identifier.GetLocation());
         }
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>

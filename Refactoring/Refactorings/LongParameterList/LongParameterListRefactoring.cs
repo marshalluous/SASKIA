@@ -13,10 +13,8 @@ namespace Refactoring.Refactorings.LongParameterList
         private const int ParameterCountThreshold = 3;
 
         public string DiagnosticId => RefactoringId.LongParameterList.GetDiagnosticId();
-
-        public string Title => RefactoringMessageFactory.LongParameterListTitle();
-
-        public string Description => RefactoringMessageFactory.LongParameterListDescription();
+        public string Title => RefactoringMessages.LongParameterListTitle();
+        public string Description => RefactoringMessages.LongParameterListDescription();
         
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
@@ -41,7 +39,7 @@ namespace Refactoring.Refactorings.LongParameterList
 
         private static DiagnosticInfo CreateFailedDiagnostics(int parameterCount, Location markableLocation)
         {
-            var diagnosticMessage = RefactoringMessageFactory.LongParameterListMessage(parameterCount);
+            var diagnosticMessage = RefactoringMessages.LongParameterListMessage(parameterCount);
             return DiagnosticInfo.CreateFailedResult(diagnosticMessage, parameterCount, markableLocation);
         }
 

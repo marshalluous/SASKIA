@@ -4,7 +4,6 @@ using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Refactoring;
-using Refactoring.Helper;
 
 namespace SASKIA
 {
@@ -45,24 +44,21 @@ namespace SASKIA
             try
             {
                 var diagnosticInfo = refactoring.DoDiagnosis(context.Node);
-
                 if (!diagnosticInfo.DiagnosticFound)
                     return;
-
-                var markableLocation = diagnosticInfo.MarkableLocation ?? context.Node.GetLocation();
-                
-                var diagnostic = Diagnostic.Create(CreateRule(diagnosticInfo.Message), markableLocation);
+                var diagnostic = CreateDiagnostic(ref context, diagnosticInfo);
                 context.ReportDiagnostic(diagnostic);
-
-                if (diagnosticInfo.DiagnosticFound)
-                {
-                    //StatisticsLogger.Log("", );
-                }
             }
             catch (Exception exception)
             {
                 File.AppendAllText("log.txt", exception.Message + "\r\n");
             }
+        }
+
+        private Diagnostic CreateDiagnostic(ref SyntaxNodeAnalysisContext context, DiagnosticInfo diagnosticInfo)
+        {
+            var markableLocation = diagnosticInfo.MarkableLocation ?? context.Node.GetLocation();
+            return Diagnostic.Create(CreateRule(diagnosticInfo.Message), markableLocation);
         }
     }
 }

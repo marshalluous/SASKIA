@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -50,10 +51,7 @@ namespace SASKIA
             try
             {
                 var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-
-                var diagnostic = context.Diagnostics.First();
-                var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
-                var replaceableNode = refactoring.GetReplaceableNode(token);
+                var replaceableNode = GetReplaceableNode(context, root);
 
                 if (replaceableNode == null)
                     return document.WithSyntaxRoot(root);
@@ -62,26 +60,39 @@ namespace SASKIA
                     .GetFixableNodes(replaceableNode)
                     .ToArray();
 
-                if (replaceNodes.Length <= 0)
+                if (replaceNodes.Length == 0)
                     return document.WithSyntaxRoot(root);
 
                 replaceNodes = replaceNodes
-                    //.Select(node => node.NormalizeWhitespace())
                     .ToArray();
 
-				var replaceableRootNode = refactoring.GetReplaceableRootNode(token);
-				
-				root = FormatRoot(replaceNodes.Length == 1
-			                    ? root.ReplaceNode(replaceableNode, replaceNodes.First())
-			                    : root.ReplaceNode(replaceableNode, replaceNodes));
-
-				return document.WithSyntaxRoot(root);
+                root = CreateNewRoot(root, replaceableNode, replaceNodes);
+                return document.WithSyntaxRoot(root);
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
                 return document;
             }
+        }
+
+        private SyntaxNode GetReplaceableNode(CodeFixContext context, SyntaxNode root)
+        {
+            var token = GetSelectedToken(context, root);
+            return refactoring.GetReplaceableNode(token);
+        }
+
+        private static SyntaxToken GetSelectedToken(CodeFixContext context, SyntaxNode root)
+        {
+            var diagnostic = context.Diagnostics.First();
+            return root.FindToken(diagnostic.Location.SourceSpan.Start);
+        }
+
+        private static SyntaxNode CreateNewRoot(SyntaxNode root, SyntaxNode replaceableNode, IReadOnlyCollection<SyntaxNode> replaceNodes)
+        {
+            return FormatRoot(replaceNodes.Count == 1
+                            ? root.ReplaceNode(replaceableNode, replaceNodes.First())
+                            : root.ReplaceNode(replaceableNode, replaceNodes));
         }
     }
 }

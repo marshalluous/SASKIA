@@ -11,8 +11,8 @@ namespace Refactoring.Refactorings.UseOfVar
     public sealed class UseOfVarRefactoring : IRefactoring
     {
         public string DiagnosticId => RefactoringId.UseOfVar.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.UseOfVarTitle();
-        public string Description => RefactoringMessageFactory.UseOfVarDescription();
+        public string Title => RefactoringMessages.UseOfVarTitle();
+        public string Description => RefactoringMessages.UseOfVarDescription();
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.LocalDeclarationStatement };
@@ -82,6 +82,6 @@ namespace Refactoring.Refactorings.UseOfVar
             variableNode.Declaration.Type.GetLocation();
 
         private static string CreateFixMessage(LocalDeclarationStatementSyntax variableNode) =>
-            RefactoringMessageFactory.UseOfVarMessage(SyntaxNodeHelper.GetText(variableNode.Declaration.Type));
+            RefactoringMessages.UseOfVarMessage(SyntaxNodeHelper.GetText(variableNode.Declaration.Type));
     }
 }

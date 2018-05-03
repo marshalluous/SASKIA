@@ -12,7 +12,7 @@ namespace Refactoring.Refactorings.DepthOfInheritance
         private const int ThresholdDepthOfInheritance = 4;
 
         public string DiagnosticId => RefactoringId.DepthOfInheritance.GetDiagnosticId();
-        public string Title => RefactoringMessageFactory.DepthOfInheritanceTitle();
+        public string Title => RefactoringMessages.DepthOfInheritanceTitle();
         public string Description => Title;
 
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
@@ -25,7 +25,7 @@ namespace Refactoring.Refactorings.DepthOfInheritance
             var depthOfInheritance = CalculateDepthOfInheritance(classSymbol);
 
             return depthOfInheritance > ThresholdDepthOfInheritance
-                ? DiagnosticInfo.CreateFailedResult(RefactoringMessageFactory.DepthOfInheritanceMessage(classSymbol.Name, depthOfInheritance),
+                ? DiagnosticInfo.CreateFailedResult(RefactoringMessages.DepthOfInheritanceMessage(classSymbol.Name, depthOfInheritance),
                 depthOfInheritance, classNode.Identifier.GetLocation())
                 : DiagnosticInfo.CreateSuccessfulResult(depthOfInheritance);
         }
