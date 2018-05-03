@@ -6,7 +6,7 @@ using Refactoring.DictionaryRefactorings;
 namespace SASKIA.CodeFixProviders
 {
     [ExportCodeFixProvider(LanguageNames.CSharp), Shared]
-    class TypoCodeFixProvider : CodeSmellCodeFixProvider
+    public sealed class TypoCodeFixProvider : CodeSmellCodeFixProvider
     {
         public TypoCodeFixProvider()
             : base(new TypoRefactoring())

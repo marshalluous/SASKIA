@@ -114,7 +114,7 @@
             "Weak cohesion in class";
 
         public static string LackOfCohesionMessage(double lcomValue) =>
-            $"Weak cohesion in class detected (LCOM*={lcomValue}";
+            $"Weak cohesion in class detected (LCOM*={lcomValue})";
 
         /* TypeIdentifier */
         public static string TypeIdentifierTitle() =>

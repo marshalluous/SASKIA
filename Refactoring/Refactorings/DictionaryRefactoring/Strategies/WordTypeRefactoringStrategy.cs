@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
+using Refactoring.WordHelper;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-	public sealed class WordTypeRefactoringStrategy : Dictionary, IRefactoringBaseStrategy
+	internal sealed class WordTypeRefactoringStrategy : DictionaryClass, IRefactoringBaseStrategy
 	{
 		private AbstractRefactoringStrategy strategy;
 

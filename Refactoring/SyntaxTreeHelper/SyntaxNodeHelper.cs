@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Simplification;
 
-namespace Refactoring.Helper
+namespace Refactoring.SyntaxTreeHelper
 {
     internal static class SyntaxNodeHelper
     {

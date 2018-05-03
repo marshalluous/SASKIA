@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
+using Refactoring.SyntaxTreeHelper;
 
 namespace Refactoring.Refactorings.IfReturnBoolean
 {

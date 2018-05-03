@@ -1,10 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
+using Microsoft.CodeAnalysis;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses
 {
-    abstract class FieldTypeDeclarationSyntaxStrategy : AbstractRefactoringStrategy
+    internal abstract class FieldTypeDeclarationSyntaxStrategy : AbstractRefactoringStrategy
     {
         internal override IEnumerable<SyntaxNode> EvaluateWordType(SyntaxNode syntaxNode, SQLiteConnection database)
         {

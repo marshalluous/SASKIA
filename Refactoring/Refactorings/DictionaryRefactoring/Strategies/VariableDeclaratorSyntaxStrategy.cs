@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-    class VariableDeclaratorSyntaxStrategy : FieldTypeDeclarationSyntaxStrategy
+    internal sealed class VariableDeclaratorSyntaxStrategy : FieldTypeDeclarationSyntaxStrategy
     {
 		internal override IEnumerable<string> IgnorableWords => new List<string> { "_" };
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>>();

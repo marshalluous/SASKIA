@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-	class FieldDeclarationSyntaxStrategy : FieldTypeDeclarationSyntaxStrategy
+	internal sealed class FieldDeclarationSyntaxStrategy : FieldTypeDeclarationSyntaxStrategy
     {
 		internal override IEnumerable<string> IgnorableWords => new List<string>();
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> { };

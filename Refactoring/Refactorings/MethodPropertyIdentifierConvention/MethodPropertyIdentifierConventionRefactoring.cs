@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
+using Refactoring.SyntaxTreeHelper;
 
 namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
 {
@@ -19,11 +20,9 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
 			GetReplaceableNode(token);
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
-        {
-            if (GetFixableNodes(node) == null)
-                return DiagnosticInfo.CreateSuccessfulResult();
-            return DiagnosticInfo.CreateFailedResult("sadfkjl", null, GetIdentifierToken(node).GetLocation());
-        }
+		{
+		    return GetFixableNodes(node) == null ? DiagnosticInfo.CreateSuccessfulResult() : DiagnosticInfo.CreateFailedResult("sadfkjl", null, GetIdentifierToken(node).GetLocation());
+		}
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {

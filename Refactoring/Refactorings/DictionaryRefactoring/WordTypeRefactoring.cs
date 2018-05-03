@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Refactoring.Helper;
-using Refactoring.Helper.Strategies;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies;
 
 namespace Refactoring.Refactorings.DictionaryRefactoring
 {
@@ -21,13 +21,13 @@ namespace Refactoring.Refactorings.DictionaryRefactoring
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
 		{
-			var strategy = DictionaryRefactoryFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
+			var strategy = DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
 			return strategy.Diagnose(node, Description);
 		}
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
 		{
-			var strategy = DictionaryRefactoryFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
+			var strategy = DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
 			return strategy.EvaluateNodes(node);
 		}
 

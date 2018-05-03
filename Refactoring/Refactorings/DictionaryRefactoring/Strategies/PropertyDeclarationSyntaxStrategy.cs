@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-	class ClassDeclarationSyntaxStrategy : ClassTypeDeclarationSyntaxStrategy
+    internal sealed class PropertyDeclarationSyntaxStrategy : FieldTypeDeclarationSyntaxStrategy
     {
 		internal override IEnumerable<string> IgnorableWords => new List<string>();
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> {
 			{ "_", new List<string> { "" } }
 		};
+
+		internal override string NamePrefix => string.Empty;
+
 		internal override Type BaseType { get; }
 
-		public ClassDeclarationSyntaxStrategy(Type baseType)
+		public PropertyDeclarationSyntaxStrategy(Type baseType)
 		{
 			BaseType = baseType;
 		}
 
-		internal override string NamePrefix => string.Empty;
-
-
 		internal override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
-			return ((ClassDeclarationSyntax)syntaxNode).Identifier;
+			return ((PropertyDeclarationSyntax)syntaxNode).Identifier;
 		}
 	}
 }

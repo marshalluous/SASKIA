@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 using System.Linq;
+using Refactoring.SyntaxTreeHelper;
 
 namespace Refactoring.Refactorings.IllegalFieldAccess
 {

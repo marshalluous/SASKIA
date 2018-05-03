@@ -3,10 +3,14 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Helper;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
+using Refactoring.SyntaxTreeHelper;
+using Refactoring.WordHelper;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-	sealed class TypoRefactoringStrategy : Dictionary, IRefactoringBaseStrategy
+	sealed class TypoRefactoringStrategy : DictionaryClass, IRefactoringBaseStrategy
 	{
 		private AbstractRefactoringStrategy strategy;
 

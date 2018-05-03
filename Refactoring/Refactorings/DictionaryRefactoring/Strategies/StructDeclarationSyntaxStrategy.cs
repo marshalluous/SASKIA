@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-	class EnumDeclarationSyntaxStrategy : ClassTypeDeclarationSyntaxStrategy
+	internal sealed class StructDeclarationSyntaxStrategy : ClassTypeDeclarationSyntaxStrategy
     {
 		internal override IEnumerable<string> IgnorableWords => new List<string>();
 		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> { { "_", new List<string> { "" } } };
@@ -15,14 +15,14 @@ namespace Refactoring.Helper.Strategies
 
 		internal override Type BaseType { get; }
 
-		public EnumDeclarationSyntaxStrategy(Type baseType)
+		public StructDeclarationSyntaxStrategy(Type baseType)
 		{
 			BaseType = baseType;
 		}
 
 		internal override SyntaxToken GetSyntaxToken(SyntaxNode syntaxNode)
 		{
-			return ((EnumDeclarationSyntax)syntaxNode).Identifier;
+			return ((StructDeclarationSyntax)syntaxNode).Identifier;
 		}
 	}
 }

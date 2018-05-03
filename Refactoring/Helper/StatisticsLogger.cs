@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -13,33 +14,27 @@ namespace Refactoring.Helper
         {
             get
             {
-                if (database == null || database.State != System.Data.ConnectionState.Open)
-                {
-                    var databaseFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Statistics.db";
-                    database = new SQLiteConnection($"Data Source={databaseFilePath}");
-                    database.Open();
-                }
+                if (database != null && database.State == System.Data.ConnectionState.Open)
+                    return database;
+                var databaseFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Statistics.db";
+                database = new SQLiteConnection($"Data Source={databaseFilePath}");
+                database.Open();
                 return database;
             }
         }
 
         public static void Log(string projectname, string className, [CallerFilePath] string callerClassPath = null, [CallerMemberName] string refactoringMethod = null)
         {
-            try
-            {
-                if (callerClassPath == null || refactoringMethod == null) return;
-                var refactoringClass = Path.GetFileName(callerClassPath);
-                var dateString = DateTime.Now.ToString();
+            if (callerClassPath == null || refactoringMethod == null)
+                return;
 
-                using (SQLiteCommand saveToDatabase = new SQLiteCommand(Database))
-                {
-                    saveToDatabase.CommandText = $"insert into entries (project, date, refactoring_class, refactoring_method) values ('{projectname}', '{dateString}', '{refactoringClass}', '{refactoringMethod}')";
-                    saveToDatabase.ExecuteNonQuery();
-                }
-            }
-            catch (Exception e)
+            var refactoringClass = Path.GetFileName(callerClassPath);
+            var dateString = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+
+            using (var saveToDatabase = new SQLiteCommand(Database))
             {
-                var str = e.StackTrace;
+                saveToDatabase.CommandText = $"insert into entries (project, date, refactoring_class, refactoring_method) values ('{projectname}', '{dateString}', '{refactoringClass}', '{refactoringMethod}')";
+                saveToDatabase.ExecuteNonQuery();
             }
         }
     }

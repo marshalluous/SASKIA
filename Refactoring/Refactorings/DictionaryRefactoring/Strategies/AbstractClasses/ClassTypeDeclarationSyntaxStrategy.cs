@@ -1,13 +1,16 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Refactoring.Helper;
+using Refactoring.SyntaxTreeHelper;
+using Refactoring.WordHelper;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses
 {
-    abstract class ClassTypeDeclarationSyntaxStrategy : AbstractRefactoringStrategy
+    internal abstract class ClassTypeDeclarationSyntaxStrategy : AbstractRefactoringStrategy
     {
         internal override IEnumerable<SyntaxNode> EvaluateWordType(SyntaxNode syntaxNode, SQLiteConnection database)
         {

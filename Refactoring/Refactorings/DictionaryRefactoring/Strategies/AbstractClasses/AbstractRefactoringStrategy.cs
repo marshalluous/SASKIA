@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using Microsoft.CodeAnalysis;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses
 {
-    public abstract class AbstractRefactoringStrategy
+    internal abstract class AbstractRefactoringStrategy
 	{
 		internal abstract IEnumerable<string> IgnorableWords { get; }
 		internal abstract IDictionary<string, List<string>> DefaultSuggestions { get; }

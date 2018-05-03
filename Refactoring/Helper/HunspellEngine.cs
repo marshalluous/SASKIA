@@ -9,7 +9,7 @@ namespace Refactoring.Helper
 {
 	public sealed class HunspellEngine
 	{
-		private string ExecutableAssemlyPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+		private static string ExecutableAssemlyPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 	    private static volatile bool dllLoaded;
 
 		public HunspellEngine()
@@ -31,7 +31,7 @@ namespace Refactoring.Helper
 			});
 		}
 
-		private string MorphWord(string word, Func<char, char> function)
+		private static string MorphWord(string word, Func<char, char> function)
 		{
 			var firstLetter = word.First();
 			var morphedFirst = function(firstLetter);
@@ -45,7 +45,7 @@ namespace Refactoring.Helper
 				var list = hunspell.Suggest(word);
 				if (threshold > 0)
 					list = list.Take(5).ToList();
-				List<string> suggestions = new List<string>();
+				var suggestions = new List<string>();
 				foreach (var suggestion in list)
 				{
 					suggestions.Add(suggestion.Replace(" ", ""));
@@ -54,7 +54,7 @@ namespace Refactoring.Helper
 			});
 		}
 
-		private T ExecuteHunspellQuery<T>(Func<Hunspell, T> query)
+		private static T ExecuteHunspellQuery<T>(Func<Hunspell, T> query)
 		{
 			using (var hunspell = new Hunspell(GetFileInProjectFolder("en_us.aff"), GetFileInProjectFolder("en_us.dic")))
 			{
@@ -62,7 +62,7 @@ namespace Refactoring.Helper
 			}
 		}
 
-		private string GetFileInProjectFolder(string fileName)
+		private static string GetFileInProjectFolder(string fileName)
 		{
 			return ExecutableAssemlyPath + $"\\{fileName}";
 		}

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
+using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
 
-namespace Refactoring.Helper.Strategies
+namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-	interface IRefactoringBaseStrategy
+    internal interface IRefactoringBaseStrategy
 	{
 		void RegisterStrategy(AbstractRefactoringStrategy strategy);
 		DiagnosticInfo Diagnose(SyntaxNode syntaxNode, string description);

@@ -31,32 +31,20 @@ namespace Refactoring.Helper
             this.compilationUnitSyntax = compilationUnitSyntax;
         }
 
-        public override bool DefaultVisit(SyntaxNode node)
-        {
-            return false;
-        }
+        public override bool DefaultVisit(SyntaxNode node) => 
+            false;
 
-        public override bool VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
-        {
-            return node.Expression.Accept(this);
-        }
+        public override bool VisitMemberAccessExpression(MemberAccessExpressionSyntax node) => 
+            node.Expression.Accept(this);
 
-        public override bool VisitLiteralExpression(LiteralExpressionSyntax node)
-        {
-            return true;
-        }
-        
-        public override bool VisitIdentifierName(IdentifierNameSyntax node)
-        {
-            return node != null &&
-                   !IsProperty(node);
-        }
+        public override bool VisitLiteralExpression(LiteralExpressionSyntax node) => 
+            true;
 
-        public override bool VisitBinaryExpression(BinaryExpressionSyntax node)
-        {
-            return node.Left.Accept(this) &&
-                   node.Right.Accept(this);
-        }
+        public override bool VisitIdentifierName(IdentifierNameSyntax node) => 
+            node != null && !IsProperty(node);
+
+        public override bool VisitBinaryExpression(BinaryExpressionSyntax node) => 
+            node.Left.Accept(this) && node.Right.Accept(this);
 
         public override bool VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
@@ -70,14 +58,10 @@ namespace Refactoring.Helper
             return node.Operand.Accept(this);
         }
 
-        public override bool VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
-        {
-            return false;
-        }
-        
-        public override bool VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
-        {
-            return node.Expression.Accept(this);
-        }
+        public override bool VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node) => 
+            false;
+
+        public override bool VisitParenthesizedExpression(ParenthesizedExpressionSyntax node) => 
+            node.Expression.Accept(this);
     }
 }
