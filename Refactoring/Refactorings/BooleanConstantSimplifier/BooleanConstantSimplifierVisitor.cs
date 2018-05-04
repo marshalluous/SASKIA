@@ -23,10 +23,8 @@ namespace Refactoring.Refactorings.BooleanConstantSimplifier
             return null;
         }
 
-        public override bool? VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
-        {
-            return node.Expression.Accept(this);
-        }
+        public override bool? VisitParenthesizedExpression(ParenthesizedExpressionSyntax node) => 
+            node.Expression.Accept(this);
 
         public override bool? VisitBinaryExpression(BinaryExpressionSyntax node)
         {

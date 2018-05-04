@@ -24,12 +24,9 @@ namespace Refactoring.Refactorings.IfReturnBoolean
         {
             var fixableNodes = GetFixableNodes(node);
             var ifNode = (IfStatementSyntax)node;
-
-            return fixableNodes == null ? 
+            return fixableNodes == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult(
-                    RefactoringMessages.IfReturnBooleanMessage(fixableNodes.First().ToString()), 
-                    markableLocation: ifNode.IfKeyword.GetLocation());
+                CreateFailedDiagnosticResult(fixableNodes, ifNode);
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
@@ -55,10 +52,8 @@ namespace Refactoring.Refactorings.IfReturnBoolean
         public SyntaxNode GetReplaceableNode(SyntaxToken token) => 
             SyntaxNodeHelper.FindAncestorOfType<IfStatementSyntax>(token);
 
-        private static IEnumerable<SyntaxNode> CreateReturnNode(ExpressionSyntax expressionNode)
-        {
-            return new[] {SyntaxFactory.ReturnStatement(expressionNode).NormalizeWhitespace()};
-        }
+        private static IEnumerable<SyntaxNode> CreateReturnNode(ExpressionSyntax expressionNode) => 
+            new[] {SyntaxFactory.ReturnStatement(expressionNode).NormalizeWhitespace()};
 
         private static PrefixUnaryExpressionSyntax Not(ExpressionSyntax condition)
         {
@@ -91,5 +86,9 @@ namespace Refactoring.Refactorings.IfReturnBoolean
 
             return node;
         }
+
+        private static DiagnosticInfo CreateFailedDiagnosticResult(IEnumerable<SyntaxNode> fixableNodes, IfStatementSyntax ifNode) =>
+            DiagnosticInfo.CreateFailedResult(RefactoringMessages.IfReturnBooleanMessage(fixableNodes.First().ToString()),
+                markableLocation: ifNode.IfKeyword.GetLocation());
     }
 }

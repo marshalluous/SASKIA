@@ -17,12 +17,10 @@ namespace Refactoring.Refactorings.UseOfVar
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.LocalDeclarationStatement };
 
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
-        {
-            return GetFixableNodes(node) == null
+        public DiagnosticInfo DoDiagnosis(SyntaxNode node) => 
+            GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
                 : CreateFailedDiagnosticResult(node as LocalDeclarationStatementSyntax);
-        }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
@@ -41,6 +39,23 @@ namespace Refactoring.Refactorings.UseOfVar
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<LocalDeclarationStatementSyntax>(token);
+
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+            GetReplaceableNode(token);
+        
+        private static TypeSyntax VarType() => SyntaxFactory.ParseTypeName("var");
+
+        private static bool IsConstVariable(LocalDeclarationStatementSyntax variableNode) =>
+            variableNode.Modifiers.Any(modifier => modifier.Kind() == SyntaxKind.ConstKeyword);
+
+        private static DiagnosticInfo CreateFailedDiagnosticResult(LocalDeclarationStatementSyntax variableNode) =>
+            DiagnosticInfo.CreateFailedResult(CreateFixMessage(variableNode), null, GetMarkableLocation(variableNode));
+
+        private static Location GetMarkableLocation(LocalDeclarationStatementSyntax variableNode) =>
+            variableNode.Declaration.Type.GetLocation();
+
+        private static string CreateFixMessage(LocalDeclarationStatementSyntax variableNode) =>
+            RefactoringMessages.UseOfVarMessage(SyntaxNodeHelper.GetText(variableNode.Declaration.Type));
 
         private static bool CanUseVarKeyword(LocalDeclarationStatementSyntax variableNode,
             VariableDeclarationSyntax declaration)
@@ -66,22 +81,5 @@ namespace Refactoring.Refactorings.UseOfVar
             var classNode = SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(declaration.Type.GetFirstToken());
             return SemanticSymbolBuilder.GetSemanticModel(classNode);
         }
-
-        public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
-            GetReplaceableNode(token);
-        
-        private static TypeSyntax VarType() => SyntaxFactory.ParseTypeName("var");
-
-        private static bool IsConstVariable(LocalDeclarationStatementSyntax variableNode) =>
-            variableNode.Modifiers.Any(modifier => modifier.Kind() == SyntaxKind.ConstKeyword);
-
-        private static DiagnosticInfo CreateFailedDiagnosticResult(LocalDeclarationStatementSyntax variableNode) =>
-            DiagnosticInfo.CreateFailedResult(CreateFixMessage(variableNode), null, GetMarkableLocation(variableNode));
-
-        private static Location GetMarkableLocation(LocalDeclarationStatementSyntax variableNode) =>
-            variableNode.Declaration.Type.GetLocation();
-
-        private static string CreateFixMessage(LocalDeclarationStatementSyntax variableNode) =>
-            RefactoringMessages.UseOfVarMessage(SyntaxNodeHelper.GetText(variableNode.Declaration.Type));
     }
 }

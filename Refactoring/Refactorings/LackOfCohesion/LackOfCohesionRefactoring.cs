@@ -23,8 +23,7 @@ namespace Refactoring.Refactorings.LackOfCohesion
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             const double lackOfCohesionThreshold = 0.6d;
-
-            var classNode = (ClassDeclarationSyntax)node;
+            var classNode = (ClassDeclarationSyntax) node;
             var semanticModel = SemanticSymbolBuilder.GetSemanticModel(classNode);
 
             var methodNodeList = classNode.Members.OfType<MethodDeclarationSyntax>().ToList();
@@ -34,9 +33,18 @@ namespace Refactoring.Refactorings.LackOfCohesion
             var lackOfCohesionValue = CalculateLackOfCohesionValue(fieldSymbolList, methodNodeList, fieldAccessCounterMap);
 
             return lackOfCohesionValue > lackOfCohesionThreshold ?
-                DiagnosticInfo.CreateFailedResult(RefactoringMessages.LackOfCohesionMessage(lackOfCohesionValue), lackOfCohesionValue, classNode.Identifier.GetLocation()) :
+                CreateFailedDiagnosticResult(classNode, lackOfCohesionValue) :
                 DiagnosticInfo.CreateSuccessfulResult(lackOfCohesionValue);
         }
+        
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(token);
+
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            new[] { SyntaxKind.ClassDeclaration };
+
+        private static DiagnosticInfo CreateFailedDiagnosticResult(BaseTypeDeclarationSyntax classNode, double lackOfCohesionValue) => 
+            DiagnosticInfo.CreateFailedResult(RefactoringMessages.LackOfCohesionMessage(lackOfCohesionValue), lackOfCohesionValue, classNode.Identifier.GetLocation());
 
         private static Dictionary<IFieldSymbol, int> CountMethodsFieldAccesses(SemanticModel semanticModel,
             IEnumerable<MethodDeclarationSyntax> methodNodeList,
@@ -47,9 +55,7 @@ namespace Refactoring.Refactorings.LackOfCohesion
 
             foreach (var method in methodNodeList)
             {
-                var visitedFields = counterVisitor.Visit(method);
-
-                foreach (var visitedField in visitedFields)
+                foreach (var visitedField in counterVisitor.Visit(method))
                 {
                     ++fieldAccessCounterMap[visitedField];
                 }
@@ -57,25 +63,27 @@ namespace Refactoring.Refactorings.LackOfCohesion
 
             return fieldAccessCounterMap;
         }
-
+        
         private static double CalculateLackOfCohesionValue(IEnumerable<IFieldSymbol> fieldSymbolList, IReadOnlyCollection<MethodDeclarationSyntax> methodNodeList, Dictionary<IFieldSymbol, int> fieldAccessCounterMap)
         {
-            var averageFieldAccessCount = fieldAccessCounterMap.Values.Sum() / (double)fieldSymbolList.Count();
-            var numberOfMethods = methodNodeList.Count;
-            return numberOfMethods < 2 ? 0d : (numberOfMethods - averageFieldAccessCount) /
-                                                 (numberOfMethods - 1);
+            var averageAccessCount = AverageFieldAccesses(fieldSymbolList, fieldAccessCounterMap);
+            return ShouldCalculateMetric(methodNodeList) ? 0d : CalculateLackOfCohesionValue(methodNodeList, averageAccessCount);
         }
 
-        private static List<IFieldSymbol> GetFieldSymbolList(SemanticModel semanticModel, BaseTypeDeclarationSyntax typeNode)
-        {
-            var typeSymbol = semanticModel.GetDeclaredSymbol(typeNode);
-            return typeSymbol.GetMembers().OfType<IFieldSymbol>().ToList();
-        }
-        
-        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
-            SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(token);
+        private static bool ShouldCalculateMetric(IReadOnlyCollection<MethodDeclarationSyntax> methodNodeList) => 
+            methodNodeList.Count < 2;
 
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            new[] {SyntaxKind.ClassDeclaration};
+        private static double CalculateLackOfCohesionValue(IReadOnlyCollection<MethodDeclarationSyntax> methodNodeList, double averageAccessCount) => 
+            (methodNodeList.Count - averageAccessCount) / (methodNodeList.Count - 1);
+
+        private static double AverageFieldAccesses(IEnumerable<IFieldSymbol> fieldSymbolList, Dictionary<IFieldSymbol, int> fieldAccessCounterMap) => 
+            fieldAccessCounterMap.Values.Sum() / (double)fieldSymbolList.Count();
+
+        private static List<IFieldSymbol> GetFieldSymbolList(SemanticModel semanticModel, BaseTypeDeclarationSyntax typeNode) => 
+            semanticModel
+                .GetDeclaredSymbol(typeNode)
+                .GetMembers()
+                .OfType<IFieldSymbol>()
+                .ToList();
     }
 }

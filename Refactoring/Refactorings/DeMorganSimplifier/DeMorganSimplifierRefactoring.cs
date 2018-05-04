@@ -16,46 +16,41 @@ namespace Refactoring.Refactorings.DeMorganSimplifier
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var actualExpression = node.ToString();
-            var fixedNodes = GetFixableNodes(node);
-            
-            return fixedNodes == null ?
+            return GetFixableNodes(node) == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
-                DiagnosticInfo.CreateFailedResult(RefactoringMessages.DeMorganSimplifierMessage(actualExpression));
+                CreateFailedDiagnosticResult(actualExpression);
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var notNode = (PrefixUnaryExpressionSyntax) node;
+            var notNode = (PrefixUnaryExpressionSyntax)node;
             var binaryExpressionNode = GetBinaryExpression(notNode);
-
-            if (binaryExpressionNode == null)
-                return null;
-
-            var notLeftNode = Not(binaryExpressionNode.Left);
-            var notRightNode = Not(binaryExpressionNode.Right);
-
-            // ReSharper disable once SwitchStatementMissingSomeCases
-            switch (binaryExpressionNode.OperatorToken.Kind())
-            {
-                case SyntaxKind.BarBarToken:
-                    return CreateResultNode(SyntaxKind.LogicalAndExpression, notLeftNode, notRightNode);
-                case SyntaxKind.AmpersandAmpersandToken:
-                    return CreateResultNode(SyntaxKind.LogicalOrExpression, notLeftNode, notRightNode);
-                default:
-                    return null;
-            }
+            return binaryExpressionNode == null ? null : ApplyDeMorgan(binaryExpressionNode);
         }
+        
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            GetReplaceableRootNode(token);
+
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            new[] { SyntaxKind.LogicalNotExpression };
+
+        public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
+
+        private static DiagnosticInfo CreateFailedDiagnosticResult(string actualExpression) =>
+            DiagnosticInfo.CreateFailedResult(RefactoringMessages.DeMorganSimplifierMessage(actualExpression));
+
+        private static SyntaxKind GetInvertedSyntaxKind(SyntaxKind syntaxKind) =>
+            syntaxKind == SyntaxKind.BarBarToken ?
+                SyntaxKind.LogicalAndExpression 
+                : SyntaxKind.LogicalOrExpression;
 
         private static BinaryExpressionSyntax GetBinaryExpression(PrefixUnaryExpressionSyntax prefixNode)
         {
             if (!(prefixNode.Operand is ParenthesizedExpressionSyntax parenthesizedNode))
                 return null;
-
-            var expressionNode = parenthesizedNode.Expression;
-
-            if (!(expressionNode is BinaryExpressionSyntax binaryExpressionNode))
+            if (!(parenthesizedNode.Expression is BinaryExpressionSyntax binaryExpressionNode))
                 return null;
-
             return binaryExpressionNode;
         }
 
@@ -66,14 +61,18 @@ namespace Refactoring.Refactorings.DeMorganSimplifier
             ExpressionSyntax rightHandSide) =>
             new[] { SyntaxFactory.BinaryExpression(operatorKind, leftHandSide, rightHandSide)
                 .NormalizeWhitespace() };
+        
+        private static IEnumerable<SyntaxNode> ApplyDeMorgan(BinaryExpressionSyntax binaryExpressionNode)
+        {
+            var operatorKind = binaryExpressionNode.OperatorToken.Kind();
 
-        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
-            GetReplaceableRootNode(token);
+            if (operatorKind == SyntaxKind.BarBarToken || operatorKind == SyntaxKind.AmpersandAmpersandToken)
+            {
+                return CreateResultNode(GetInvertedSyntaxKind(operatorKind), Not(binaryExpressionNode.Left),
+                    Not(binaryExpressionNode.Right));
+            }
 
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            new[] { SyntaxKind.LogicalNotExpression };
-
-		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
-            SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
+            return null;
+        }
 	}
 }

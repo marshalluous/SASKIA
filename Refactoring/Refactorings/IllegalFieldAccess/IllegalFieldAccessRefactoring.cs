@@ -28,43 +28,39 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
         }
 
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
-		{
-            var fieldNode = (FieldDeclarationSyntax) node;
+        {
+            var fieldNode = (FieldDeclarationSyntax)node;
 
-		    if (HasOnlyPrivateModifier(fieldNode))
-		        return null;
+            return HasOnlyPrivateModifier(fieldNode) ?
+                null :
+                new[] { CreatePrivateField(fieldNode, GetNonVisibilityModifiers(fieldNode)) };
+        }
 
-            var nonVisibilityModifiers = GetNonVisibilityModifiers(fieldNode);
-            
-            return new [] { fieldNode
-                .WithModifiers(new SyntaxTokenList(new[] { SyntaxFactory.Token(SyntaxKind.PrivateKeyword) }))
+        private static FieldDeclarationSyntax CreatePrivateField(FieldDeclarationSyntax fieldNode, IEnumerable<SyntaxToken> nonVisibilityModifiers) => 
+            fieldNode.WithModifiers(new SyntaxTokenList(new[] { SyntaxFactory.Token(SyntaxKind.PrivateKeyword) }))
                 .AddModifiers(nonVisibilityModifiers.ToArray())
                 .NormalizeWhitespace()
-                .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed)
-            };
-		}
+                .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed);
 
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorOfType<FieldDeclarationSyntax>(token);
+
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            new[] {SyntaxKind.FieldDeclaration};
+        
         private static IEnumerable<string> GetVisibilityModifiers() =>
             new[] { "private", "public", "protected", "internal" };
 
         private static bool IsVisibilityModifier(string modifier) =>
             GetVisibilityModifiers().Contains(modifier);
-    
-        private static IEnumerable<SyntaxToken> GetNonVisibilityModifiers(BaseFieldDeclarationSyntax fieldNode)
-        {
-            return fieldNode.Modifiers.Where(modifier => !IsVisibilityModifier(modifier.Text));
-        }
+
+        private static IEnumerable<SyntaxToken> GetNonVisibilityModifiers(BaseFieldDeclarationSyntax fieldNode) =>
+            fieldNode.Modifiers.Where(modifier => !IsVisibilityModifier(modifier.Text));
 
         private static bool HasOnlyPrivateModifier(BaseFieldDeclarationSyntax fieldNode)
         {
             var presentModifiers = fieldNode.Modifiers.Where(modifier => IsVisibilityModifier(modifier.Text.Trim())).ToArray();
             return presentModifiers.Length == 1 && presentModifiers.First().Text == "private";
         }
-        
-        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
-            SyntaxNodeHelper.FindAncestorOfType<FieldDeclarationSyntax>(token);
-
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            new[] {SyntaxKind.FieldDeclaration};
     }
 }

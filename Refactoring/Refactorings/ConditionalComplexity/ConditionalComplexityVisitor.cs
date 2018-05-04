@@ -7,10 +7,8 @@ namespace Refactoring.Refactorings.ConditionalComplexity
 {
     internal sealed class ConditionalComplexityVisitor : CSharpSyntaxVisitor<int>
     {
-        public override int DefaultVisit(SyntaxNode node)
-        {
-            return node.ChildNodes().Sum(Visit);
-        }
+        public override int DefaultVisit(SyntaxNode node) =>
+            node.ChildNodes().Sum(Visit);
 
         public override int VisitBinaryExpression(BinaryExpressionSyntax node)
         {

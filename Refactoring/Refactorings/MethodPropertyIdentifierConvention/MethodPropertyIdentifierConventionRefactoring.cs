@@ -32,7 +32,6 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
         {
             var identifierToken = GetIdentifierToken(node);
             newIdentifierText = IdentifierChecker.ToUpperCamelCaseIdentifier(identifierToken.Text);
-
             return identifierToken.Text == newIdentifierText ?
                 null :
                 new[] { node.ReplaceToken(identifierToken, SyntaxFactory.Identifier(newIdentifierText)) };

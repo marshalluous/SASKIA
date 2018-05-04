@@ -15,24 +15,18 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
             return null;
         }
 
-        public override int? VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
-        {
-            return node.Expression.Accept(this);
-        }
+        public override int? VisitParenthesizedExpression(ParenthesizedExpressionSyntax node) => 
+            node.Expression.Accept(this);
 
         public override int? VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
             var value = node.Operand?.Accept(this);
-
             return value == null ? 
                 null : 
                 IntegerConstantOperatorSimplifier.ReducePrefixUnaryOperation(node.OperatorToken.Kind(), value.Value);
         }
 
-        public override int? VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
-        {
-            return null;
-        }
+        public override int? VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node) => null;
 
         public override int? VisitBinaryExpression(BinaryExpressionSyntax node)
         {

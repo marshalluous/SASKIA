@@ -22,6 +22,9 @@ namespace Refactoring.SyntaxTreeHelper
         public static string GetText(SyntaxNode syntaxNode) => 
             syntaxNode.GetText().ToString().Trim();
 
+        public static string GetText(SyntaxToken syntaxToken) =>
+            syntaxToken.Text.Trim();
+
         public static T FindAncestorOfType<T>(SyntaxToken syntaxToken)
             where T : SyntaxNode => 
             (T) FindAncestorWithPredicate(syntaxToken, node => node is T);

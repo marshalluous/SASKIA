@@ -29,12 +29,11 @@ namespace Refactoring.Refactorings.LinesOfCode
             {
                 case ClassDeclarationSyntax classNode:
                     return CheckNodesLinesOfCode(node, classNode.Identifier, "Class", ClassLinesOfCodeThreshold);
-
                 case MethodDeclarationSyntax methodNode:
                     return CheckNodesLinesOfCode(node, methodNode.Identifier, "Method", MethodLinesOfCodeThreshold);
+                default:
+                    return DiagnosticInfo.CreateSuccessfulResult();
             }
-
-            return DiagnosticInfo.CreateSuccessfulResult();
         }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>

@@ -22,12 +22,9 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var parentValue = EvaluateValue(node.Parent);
-
             if (node is LiteralExpressionSyntax || parentValue != null)
                 return DiagnosticInfo.CreateSuccessfulResult();
-            
             var value = EvaluateValue(node);
-
             return value == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() :
                 DiagnosticInfo.CreateFailedResult(RefactoringMessages.IntegerConstantSimplifierMessage(value.Value));
@@ -36,10 +33,8 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var value = EvaluateValue(node);
-
             if (value == null || node is LiteralExpressionSyntax)
                 return null;
-            
             var literal = SyntaxFactory.Literal(value.Value);
             return new [] { SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, literal) };
         }
@@ -53,10 +48,8 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
         public SyntaxNode GetReplaceableNode(SyntaxToken token)
         {
             var node = token.Parent;
-
             while (EvaluateValue(node.Parent) != null)
                 node = node.Parent;
-
             return node;
         }
     }

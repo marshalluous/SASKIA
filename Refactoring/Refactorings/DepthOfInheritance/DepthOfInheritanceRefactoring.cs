@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -20,19 +19,13 @@ namespace Refactoring.Refactorings.DepthOfInheritance
 
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            var classNode = (ClassDeclarationSyntax) node;
+            var classNode = (ClassDeclarationSyntax)node;
             var classSymbol = SemanticSymbolBuilder.GetTypeSymbol(classNode);
             var depthOfInheritance = CalculateDepthOfInheritance(classSymbol);
-
-            return depthOfInheritance > ThresholdDepthOfInheritance
-                ? DiagnosticInfo.CreateFailedResult(RefactoringMessages.DepthOfInheritanceMessage(classSymbol.Name, depthOfInheritance),
-                depthOfInheritance, classNode.Identifier.GetLocation())
-                : DiagnosticInfo.CreateSuccessfulResult(depthOfInheritance);
+            return CreateDiagnosticResult(classNode, classSymbol, depthOfInheritance);
         }
 
-        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) =>
-            new[] {node};
-
+        public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) => null;
         public SyntaxNode GetReplaceableNode(SyntaxToken token) => token.Parent;
 		
         private static int CalculateDepthOfInheritance(ITypeSymbol typeSymbol)
@@ -44,5 +37,17 @@ namespace Refactoring.Refactorings.DepthOfInheritance
 		
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
-	}
+        
+        private static DiagnosticInfo CreateDiagnosticResult(BaseTypeDeclarationSyntax classNode, ISymbol classSymbol, int depthOfInheritance) =>
+            depthOfInheritance > ThresholdDepthOfInheritance
+                ? CreateFailedDiagnosticResult(classNode, classSymbol, depthOfInheritance)
+                : DiagnosticInfo.CreateSuccessfulResult(depthOfInheritance);
+
+        private static DiagnosticInfo CreateFailedDiagnosticResult(BaseTypeDeclarationSyntax classNode, ISymbol classSymbol, int depthOfInheritance) =>
+            CreateFailedDiagnosticMessage(classNode, classSymbol, depthOfInheritance);
+
+        private static DiagnosticInfo CreateFailedDiagnosticMessage(BaseTypeDeclarationSyntax classNode, ISymbol classSymbol, int depthOfInheritance) =>
+            DiagnosticInfo.CreateFailedResult(RefactoringMessages.DepthOfInheritanceMessage(classSymbol.Name, depthOfInheritance),
+                depthOfInheritance, classNode.Identifier.GetLocation());
+    }
 }

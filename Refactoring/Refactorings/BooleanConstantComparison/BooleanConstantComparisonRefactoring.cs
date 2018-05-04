@@ -54,7 +54,7 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
         private static void InternApplyFix(SyntaxNode syntaxNode, ICollection<SyntaxNode> replaceNodes)
         {
             var binaryExpressionNode = (BinaryExpressionSyntax) syntaxNode;
-            var compareOperator = binaryExpressionNode.OperatorToken.Text.Trim();
+            var compareOperator = SyntaxNodeHelper.GetText(binaryExpressionNode.OperatorToken);
             ApplyRefactoring(binaryExpressionNode.Left, binaryExpressionNode.Right, replaceNodes, compareOperator);
             ApplyRefactoring(binaryExpressionNode.Right, binaryExpressionNode.Left, replaceNodes, compareOperator);
         }
@@ -64,13 +64,13 @@ namespace Refactoring.Refactorings.BooleanConstantComparison
         {
             if (!IsBooleanLiteralNode(literalNode, out var _))
                 return;
-
-            var not = IsTrueNode(literalNode) != (compareOperator == "==");
-
-            replaceNodes.Add(not
+            replaceNodes.Add(ShouldNegateExpression(literalNode, compareOperator)
                 ? NegateNode(otherNode)
                 : otherNode);
         }
+
+        private static bool ShouldNegateExpression(SyntaxNode literalNode, string compareOperator) => 
+            IsTrueNode(literalNode) != (compareOperator == "==");
 
         private static PrefixUnaryExpressionSyntax NegateNode(ExpressionSyntax otherNode) =>
             SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression,

@@ -19,28 +19,22 @@ namespace Refactoring.Refactorings.NotOperatorInversion
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] {SyntaxKind.LogicalNotExpression};
             
-        public DiagnosticInfo DoDiagnosis(SyntaxNode node)
-        {
-            var resultNode = GetFixableNodes(node);
-            return resultNode == null ? 
+        public DiagnosticInfo DoDiagnosis(SyntaxNode node) => 
+            GetFixableNodes(node) == null ? 
                 DiagnosticInfo.CreateSuccessfulResult() : 
                 DiagnosticInfo.CreateFailedResult(RefactoringMessages.NotOperatorInversionMessage());
-        }
 
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
-            var logicalNotExpression = (PrefixUnaryExpressionSyntax) node;
+            var logicalNotExpression = (PrefixUnaryExpressionSyntax)node;
 
-            if (logicalNotExpression.OperatorToken.Kind() != SyntaxKind.ExclamationToken)
+            if (IsNotExpression(logicalNotExpression) ||
+                EncapsulatesParenthesizedExpression(logicalNotExpression, out var operandExpression))
                 return null;
-
-            if (!(logicalNotExpression.Operand is ParenthesizedExpressionSyntax operandExpression))
-                return null;
-
-            var expression = operandExpression.Expression;
+            
             SyntaxNode replaceableNode = null;
 
-            switch (expression)
+            switch (operandExpression)
             {
                 case BinaryExpressionSyntax binaryExpression:
                     replaceableNode = ExpressionNotInverter.InvertBinaryExpression(binaryExpression);
@@ -50,9 +44,25 @@ namespace Refactoring.Refactorings.NotOperatorInversion
                     break;
             }
 
-            return replaceableNode == null ? null : new [] { replaceableNode };
+            return replaceableNode == null ? null : new[] { replaceableNode };
         }
-        
+
+        private static bool EncapsulatesParenthesizedExpression(PrefixUnaryExpressionSyntax logicalNotExpression, 
+            out ExpressionSyntax operandExpression)
+        {
+            if (logicalNotExpression.Operand is ParenthesizedExpressionSyntax parenthesizedExpression)
+            {
+                operandExpression = parenthesizedExpression.Expression;
+                return false;
+            }
+
+            operandExpression = null;
+            return true;
+        }
+
+        private static bool IsNotExpression(PrefixUnaryExpressionSyntax logicalNotExpression) => 
+            logicalNotExpression.OperatorToken.Kind() != SyntaxKind.ExclamationToken;
+
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<PrefixUnaryExpressionSyntax>(token);
     }

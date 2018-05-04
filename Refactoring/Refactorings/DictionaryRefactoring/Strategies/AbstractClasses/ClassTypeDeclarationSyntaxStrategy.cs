@@ -33,16 +33,15 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClas
                 var newIdentifier = syntaxToken.Text.Replace(lastWord, clearedSuggestions.Last());
                 return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(newIdentifier)) };
             }
-            else
-            {
-                return new[] { syntaxNode };
-            }
+
+            return new[] { syntaxNode };
         }
 
-        private List<string> FilterNouns(List<string> suggestions, WordTypeChecker wordTypechecker)
+        private static List<string> FilterNouns(List<string> suggestions, WordTypeChecker wordTypechecker)
         {
             var clearedSuggestions = new List<string>();
             var counter = 0;
+
             foreach (var word in suggestions)
             {
                 if (wordTypechecker.IsNoun(word))

@@ -33,11 +33,9 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
             {
                 case InterfaceDeclarationSyntax _:
                     return RefactorInterfaceTypeName(node, identifier);
-
                 case DelegateDeclarationSyntax _:
                 case BaseTypeDeclarationSyntax _:
                     return RefactorNonInterfaceTypeName(node, identifier);
-
                 default:
                     return null;
             }
@@ -82,10 +80,8 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
             return upperCamelCase && correctedIdentifierText.StartsWith("I");
         }
 
-        private static string GetIdentifierText(SyntaxNode node)
-        {
-            return GetIdentifierToken(node).Text;
-        }
+        private static string GetIdentifierText(SyntaxNode node) => 
+            GetIdentifierToken(node).Text;
 
         private static SyntaxToken GetIdentifierToken(SyntaxNode node)
         {
