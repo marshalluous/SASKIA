@@ -39,14 +39,21 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
         private static IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node, out string newIdentifierText)
         {
             var identifierToken = GetIdentifierToken(node);
-            
-            if (IsExternMethod(node))
-            {
-                newIdentifierText = identifierToken.Text;
-                return null;
-            }
+            newIdentifierText = identifierToken.Text;
 
-            newIdentifierText = IdentifierChecker.ToUpperCamelCaseIdentifier(identifierToken.Text);
+            if (IsExternMethod(node))
+                return null;
+
+            switch (node)
+            {
+                case MethodDeclarationSyntax _:
+                    newIdentifierText = IdentifierChecker.ToUpperCamelCaseMethodName(newIdentifierText);
+                    break;
+                case PropertyDeclarationSyntax _:
+                    newIdentifierText = IdentifierChecker.ToUpperCamelCaseIdentifier(newIdentifierText);
+                    break;
+            }
+            
             return identifierToken.Text == newIdentifierText
                 ? null
                 : new[] {node.ReplaceToken(identifierToken, SyntaxFactory.Identifier(newIdentifierText))};

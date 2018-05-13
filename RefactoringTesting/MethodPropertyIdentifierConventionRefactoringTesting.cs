@@ -35,11 +35,25 @@ namespace RefactoringTesting
             TestMethodNaming("fishHans", "FishHans");
             TestMethodNaming("ageOfFish", "AgeOfFish");
         }
-        
+
+        [TestMethod]
+        public void MethodSingleUnderlineTest()
+        {
+            TestMethodNaming("Button_Clicked", string.Empty);
+            TestMethodNaming("List_Loaded", string.Empty);
+        }
+
+        [TestMethod]
+        public void MethodMultipleUnderlinesTest()
+        {
+            TestMethodNaming("Button_Clicked_Fast", "ButtonClickedFast");
+            TestMethodNaming("Hans_Frisst_Fische", "HansFrisstFische");
+        }
+
         [TestMethod]
         public void MethodUnderlineNameTest()
         {
-            TestMethodNaming("james_bond", "JamesBond");
+            TestMethodNaming("james_bond", "James_Bond");
             TestMethodNaming("_joel_egger", "JoelEgger");
         }
 
@@ -56,6 +70,12 @@ namespace RefactoringTesting
             const string inputCode = "public class X { public static extern void Y(); }";
             TestHelper.TestCodeFix<MethodDeclarationSyntax>(new MethodPropertyIdentifierConventionRefactoring(), inputCode,
                 string.Empty);
+        }
+
+        [TestMethod]
+        public void EventMethodNameTest()
+        {
+            TestMethodNaming("Button_Clicked", string.Empty);
         }
 
         private static void TestMethodNaming(string methodName, string expectedMethodName)

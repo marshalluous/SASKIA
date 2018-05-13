@@ -17,7 +17,17 @@ namespace Refactoring.Helper
             var wordList = WordSplitter.GetSplittedWordList(identifierName);
             return char.IsLower(wordList[0][0]) && wordList.Skip(1).All(word => char.IsUpper(word[0]));
         }
-        
+
+        public static string ToUpperCamelCaseMethodName(string identifierName)
+        {
+            if (string.IsNullOrEmpty(identifierName))
+                return string.Empty;
+            var underlineSplit = identifierName.Split('_');
+            return underlineSplit.Length == 2 ? 
+                ToEventMethodName(underlineSplit) :
+                ToUpperCamelCaseIdentifier(identifierName);
+        }
+
         public static string ToUpperCamelCaseIdentifier(string identifierName)
         {
             return string.IsNullOrEmpty(identifierName) ? 
@@ -54,5 +64,9 @@ namespace Refactoring.Helper
 
             return result.ToString();
         }
+        
+        private static string ToEventMethodName(string[] underlineSplit) =>
+            ToUpperCamelCaseIdentifier(underlineSplit.First()) + "_" +
+            ToUpperCamelCaseIdentifier(underlineSplit.Last());
     }
 }
