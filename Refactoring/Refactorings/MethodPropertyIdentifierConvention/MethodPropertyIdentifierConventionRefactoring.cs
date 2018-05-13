@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -28,14 +29,34 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
             return GetFixableNodes(node, out _);
         }
 
+        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
+            SyntaxNodeHelper.FindAncestorWithPredicate(token,
+                node => node is MethodDeclarationSyntax || node is PropertyDeclarationSyntax);
+        
+        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
+            new[] { SyntaxKind.MethodDeclaration, SyntaxKind.PropertyDeclaration };
+
         private static IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node, out string newIdentifierText)
         {
             var identifierToken = GetIdentifierToken(node);
+            
+            if (IsExternMethod(node))
+            {
+                newIdentifierText = identifierToken.Text;
+                return null;
+            }
+
             newIdentifierText = IdentifierChecker.ToUpperCamelCaseIdentifier(identifierToken.Text);
-            return identifierToken.Text == newIdentifierText ?
-                null :
-                new[] { node.ReplaceToken(identifierToken, SyntaxFactory.Identifier(newIdentifierText)) };
+            return identifierToken.Text == newIdentifierText
+                ? null
+                : new[] {node.ReplaceToken(identifierToken, SyntaxFactory.Identifier(newIdentifierText))};
         }
+
+        private static bool IsExternMethod(SyntaxNode node) => 
+            node is MethodDeclarationSyntax methodNode && methodNode.Modifiers.Any(IsExternModifier);
+
+        private static bool IsExternModifier(SyntaxToken token) =>
+            token.Text == "extern";
 
         private static SyntaxToken GetIdentifierToken(SyntaxNode node)
         {
@@ -49,12 +70,5 @@ namespace Refactoring.Refactorings.MethodPropertyIdentifierConvention
 
             return default(SyntaxToken);
         }
-
-        public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
-            SyntaxNodeHelper.FindAncestorWithPredicate(token,
-                node => node is MethodDeclarationSyntax || node is PropertyDeclarationSyntax);
-        
-        public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
-            new[] { SyntaxKind.MethodDeclaration, SyntaxKind.PropertyDeclaration };
     }
-} 
+}

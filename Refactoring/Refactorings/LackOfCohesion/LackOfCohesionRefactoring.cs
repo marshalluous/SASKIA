@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 using Refactoring.SyntaxTreeHelper;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Refactoring.Refactorings.LackOfCohesion
 {
@@ -22,11 +22,17 @@ namespace Refactoring.Refactorings.LackOfCohesion
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
-            const double lackOfCohesionThreshold = 0.6d;
+            const double lackOfCohesionThreshold = 0.9d;
+
             var classNode = (ClassDeclarationSyntax) node;
             var semanticModel = SemanticSymbolBuilder.GetSemanticModel(classNode);
 
-            var methodNodeList = classNode.Members.OfType<MethodDeclarationSyntax>().ToList();
+            var methodNodeList = classNode.Members
+                .OfType<MethodDeclarationSyntax>()
+                .Where(methodNode => !IsStatic(methodNode))
+                .Where(methodNode => !IsAbstract(methodNode))
+                .ToList();
+
             var fieldSymbolList = GetFieldSymbolList(semanticModel, classNode);
 
             var fieldAccessCounterMap = CountMethodsFieldAccesses(semanticModel, methodNodeList, fieldSymbolList);
@@ -43,6 +49,15 @@ namespace Refactoring.Refactorings.LackOfCohesion
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] { SyntaxKind.ClassDeclaration };
 
+        private static bool IsStatic(BaseMethodDeclarationSyntax methodNode) =>
+            HasModifier(methodNode, "static");
+
+        private static bool IsAbstract(BaseMethodDeclarationSyntax methodNode) =>
+            HasModifier(methodNode, "abstract");
+
+        private static bool HasModifier(BaseMethodDeclarationSyntax methodNode, string modifierText) =>
+            methodNode.Modifiers.Any(modifier => modifier.Text == modifierText);
+
         private static DiagnosticInfo CreateFailedDiagnosticResult(BaseTypeDeclarationSyntax classNode, double lackOfCohesionValue) => 
             DiagnosticInfo.CreateFailedResult(RefactoringMessages.LackOfCohesionMessage(lackOfCohesionValue), lackOfCohesionValue, classNode.Identifier.GetLocation());
 
@@ -57,7 +72,8 @@ namespace Refactoring.Refactorings.LackOfCohesion
             {
                 foreach (var visitedField in counterVisitor.Visit(method))
                 {
-                    ++fieldAccessCounterMap[visitedField];
+                    if (fieldAccessCounterMap.ContainsKey(visitedField))
+                        ++fieldAccessCounterMap[visitedField];
                 }
             }
 

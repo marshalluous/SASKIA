@@ -50,6 +50,14 @@ namespace RefactoringTesting
             TestMethodNaming("AugustBurnsRed", string.Empty);
         }
 
+        [TestMethod]
+        public void ExternMethodNameTest()
+        {
+            const string inputCode = "public class X { public static extern void Y(); }";
+            TestHelper.TestCodeFix<MethodDeclarationSyntax>(new MethodPropertyIdentifierConventionRefactoring(), inputCode,
+                string.Empty);
+        }
+
         private static void TestMethodNaming(string methodName, string expectedMethodName)
         {
             var inputCode = "public class X { public void " + methodName + "() {} }";

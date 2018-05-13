@@ -62,7 +62,7 @@ namespace SASKIA
             }
             catch (Exception exception)
             {
-                File.AppendAllText(@"C:\temp\log.txt", this.GetType().Name + ": " + exception.Message + "\r\n");
+                File.AppendAllText(@"C:\temp\log.txt", GetType().Name + ": " + exception + "\r\n");
             }
         }
 

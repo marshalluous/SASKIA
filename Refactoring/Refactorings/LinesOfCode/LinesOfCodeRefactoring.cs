@@ -30,6 +30,9 @@ namespace Refactoring.Refactorings.LinesOfCode
                 case ClassDeclarationSyntax classNode:
                     return CheckNodesLinesOfCode(node, classNode.Identifier, "Class", ClassLinesOfCodeThreshold);
                 case MethodDeclarationSyntax methodNode:
+                    if (methodNode.Body == null)
+                        return DiagnosticInfo.CreateSuccessfulResult();
+
                     return CheckNodesLinesOfCode(methodNode.Body, methodNode.Identifier, "Method", MethodLinesOfCodeThreshold);
                 default:
                     return DiagnosticInfo.CreateSuccessfulResult();

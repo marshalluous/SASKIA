@@ -89,10 +89,8 @@ namespace Refactoring.Refactorings.TypeIdentifierConvention
             {
                 case BaseTypeDeclarationSyntax typeNode:
                     return typeNode.Identifier;
-
                 case DelegateDeclarationSyntax delegateNode:
                     return delegateNode.Identifier;
-
                 default:
                     return default(SyntaxToken);
             }

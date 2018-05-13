@@ -32,7 +32,7 @@ namespace RefactoringTesting
         public void NoLackOfCohesionTest()
         {
             CheckLackOfCohesion("class A { int x; int y; int z; public void X() { x = 12; y = 12; }" +
-                                "public void Y() { y = 12; z = 4; } }", true, 0.66666666666666674d);
+                                "public void Y() { y = 12; z = 4; } }", false, 0.66666666666666674d);
         }
 
         [TestMethod]

@@ -74,7 +74,7 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
 
         private static SyntaxToken StaticKeyword() =>
             SyntaxFactory.Token(SyntaxKind.StaticKeyword);
-
+        
         private static bool MethodIsPrivate(BaseMethodDeclarationSyntax methodNode) => 
             methodNode.Modifiers.Any(SyntaxKind.PrivateKeyword);
 
