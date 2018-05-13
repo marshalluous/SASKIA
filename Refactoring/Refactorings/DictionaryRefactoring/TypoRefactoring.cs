@@ -1,12 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
-using System.Collections.Generic;
 using Refactoring.Refactorings.DictionaryRefactoring.Strategies;
 using Refactoring.SyntaxTreeHelper;
 
-namespace Refactoring.DictionaryRefactorings
+namespace Refactoring.Refactorings.DictionaryRefactoring
 {
 	public sealed class TypoRefactoring : IRefactoring
 	{

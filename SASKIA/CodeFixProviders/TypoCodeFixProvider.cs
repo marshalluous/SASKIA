@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Composition;
-using Refactoring.DictionaryRefactorings;
+using Refactoring.Refactorings.DictionaryRefactoring;
 
 namespace SASKIA.CodeFixProviders
 {

@@ -44,14 +44,25 @@ namespace SASKIA
             try
             {
                 var diagnosticInfo = refactoring.DoDiagnosis(context.Node);
+
                 if (!diagnosticInfo.DiagnosticFound)
                     return;
+
                 var diagnostic = CreateDiagnostic(ref context, diagnosticInfo);
                 context.ReportDiagnostic(diagnostic);
+                
+                var location = diagnostic.Location;
+                var fileName = location.SourceTree.FilePath;
+                var line = location.GetLineSpan().StartLinePosition.Line;
+                var column = location.GetLineSpan().StartLinePosition.Character;
+                    
+                File.AppendAllText(@"C:\temp\evaluation.csv",
+                    GetType().Name + ";" + context.Compilation.Assembly + ";" + fileName + ";" + line + ";" + column + ";" +
+                    diagnosticInfo.AdditionalInformation + ";" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "\r\n");
             }
             catch (Exception exception)
             {
-                File.AppendAllText("log.txt", exception.Message + "\r\n");
+                File.AppendAllText(@"C:\temp\log.txt", this.GetType().Name + ": " + exception.Message + "\r\n");
             }
         }
 

@@ -14,7 +14,6 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 		};
 
 		internal override string NamePrefix => string.Empty;
-
 		internal override Type BaseType { get; }
 
 		public MethodDeclarationSyntaxStrategy(Type baseType)

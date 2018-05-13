@@ -38,9 +38,10 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 			if (!typoCheckResult.IsIdentifierCorrectable)
 				return DiagnosticInfo.CreateSuccessfulResult();
 
-            StatisticsLogger.Log("ProjectName", SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(syntaxToken).Identifier.Text);
+		    var additionalInfo = nameof(TypoRefactoringStrategy) + "." + nameof(Diagnose);
             var suggestionsAsString = "Suggestions:\n" + typoCheckResult.Suggestions.Aggregate((x, y) => $"{x}\r\n{y}");
-			return DiagnosticInfo.CreateFailedResult($"{description}: {typoCheckResult.AffectedWord}.\n{suggestionsAsString}", markableLocation: syntaxToken.GetLocation());
+			return DiagnosticInfo.CreateFailedResult($"{description}: {typoCheckResult.AffectedWord}.\n{suggestionsAsString}",
+			    additionalInfo, syntaxToken.GetLocation());
 		}
 
 		public IEnumerable<SyntaxNode> EvaluateNodes(SyntaxNode syntaxNode)
@@ -63,7 +64,7 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 
 		private static string ConcatNewIdentifier(List<string> allWords, string suggestion, string affectedWord)
 		{
-			int affectedIndex = allWords.FindIndex(word => word == affectedWord);
+			var affectedIndex = allWords.FindIndex(word => word == affectedWord);
 			return allWords
 				.Select(word => (CompareIndex(allWords, word, affectedIndex) ? suggestion : word))
 				.Aggregate((accumulated, word) => accumulated + word);
@@ -74,7 +75,7 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 			return (allWords.FindIndex(w => w == word) == affectedIndex);
 		}
 
-		private TypoCheckResult EvaluateTypo(List<string> wordList)
+		private TypoCheckResult EvaluateTypo(IEnumerable<string> wordList)
 		{
 			var hunspell = new HunspellEngine();
 

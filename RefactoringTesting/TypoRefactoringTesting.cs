@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring;
-using Refactoring.DictionaryRefactorings;
+using Refactoring.Refactorings.DictionaryRefactoring;
 using RefactoringTesting.Helper;
 
 namespace RefactoringTesting

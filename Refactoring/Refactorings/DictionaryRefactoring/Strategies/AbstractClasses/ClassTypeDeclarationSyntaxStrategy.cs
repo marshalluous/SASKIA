@@ -57,12 +57,16 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClas
         internal override DiagnosticInfo DiagnoseWordType(SQLiteConnection database, string identifierText, SyntaxToken syntaxToken, string description)
         {
             var lastWord = WordSplitter.GetLastWord(identifierText);
-            if (!new WordTypeChecker(database).IsNoun(lastWord))
-            {
-                StatisticsLogger.Log("ProjectName", SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(syntaxToken).Identifier.Text);
-                return DiagnosticInfo.CreateFailedResult($"{description}: Missing noun in identifier", markableLocation: syntaxToken.GetLocation());
-            }
-            return DiagnosticInfo.CreateSuccessfulResult();
+            return !new WordTypeChecker(database).IsNoun(lastWord) ?
+                CreateFailedDiagnosticResult(syntaxToken, description) :
+                DiagnosticInfo.CreateSuccessfulResult();
+        }
+
+        private DiagnosticInfo CreateFailedDiagnosticResult(SyntaxToken syntaxToken, string description)
+        {
+            const string additionalInfo = nameof(ClassTypeDeclarationSyntaxStrategy) + "." + nameof(DiagnoseWordType);
+            return DiagnosticInfo.CreateFailedResult($"{description}: Missing noun in identifier",
+                additionalInfo, syntaxToken.GetLocation());
         }
     }
 }
