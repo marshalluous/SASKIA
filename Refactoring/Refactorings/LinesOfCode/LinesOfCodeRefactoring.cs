@@ -10,7 +10,7 @@ namespace Refactoring.Refactorings.LinesOfCode
 {
     public sealed class LinesOfCodeRefactoring : IRefactoring
     {
-        private const int ClassLinesOfCodeThreshold = 100;
+        private const int ClassLinesOfCodeThreshold = 150;
         private const int MethodLinesOfCodeThreshold = 15;
 
         public string DiagnosticId => RefactoringId.LinesOfCode.GetDiagnosticId();
@@ -30,7 +30,7 @@ namespace Refactoring.Refactorings.LinesOfCode
                 case ClassDeclarationSyntax classNode:
                     return CheckNodesLinesOfCode(node, classNode.Identifier, "Class", ClassLinesOfCodeThreshold);
                 case MethodDeclarationSyntax methodNode:
-                    return CheckNodesLinesOfCode(node, methodNode.Identifier, "Method", MethodLinesOfCodeThreshold);
+                    return CheckNodesLinesOfCode(methodNode.Body, methodNode.Identifier, "Method", MethodLinesOfCodeThreshold);
                 default:
                     return DiagnosticInfo.CreateSuccessfulResult();
             }
@@ -46,10 +46,11 @@ namespace Refactoring.Refactorings.LinesOfCode
         {
             var linesOfCode = CountLines(node);
             return linesOfCode > threshold ? 
-                DiagnosticInfo.CreateFailedResult(RefactoringMessages.LinesOfCodeMessage(nodeType, identifier.Text, linesOfCode), null, Identifier(node).GetLocation()) :
+                DiagnosticInfo.CreateFailedResult(RefactoringMessages.LinesOfCodeMessage(nodeType,
+                    identifier.Text, linesOfCode), null, Identifier(node).GetLocation()) :
                 DiagnosticInfo.CreateSuccessfulResult();
         }
-
+        
         private static SyntaxToken Identifier(SyntaxNode node)
         {
             switch (node)
@@ -62,7 +63,7 @@ namespace Refactoring.Refactorings.LinesOfCode
 
             return default(SyntaxToken);
         }
-
+        
         private static int CountLines(SyntaxNode syntaxNode) => 
             SyntaxNodeHelper.GetText(syntaxNode)
                 .Count(character => character == '\n');
