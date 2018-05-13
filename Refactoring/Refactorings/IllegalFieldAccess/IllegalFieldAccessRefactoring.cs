@@ -21,7 +21,7 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
 			GetReplaceableNode(token);
 
 		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
-        {
+		{
             return GetFixableNodes(node) == null
                 ? DiagnosticInfo.CreateSuccessfulResult()
                 : DiagnosticInfo.CreateFailedResult(RefactoringMessages.IllegalFieldAccessMessage());
@@ -30,17 +30,12 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
 		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var fieldNode = (FieldDeclarationSyntax)node;
-
-            return HasOnlyPrivateModifier(fieldNode) ?
+            var nonVisibilityModifiers = GetNonVisibilityModifiers(fieldNode)
+                .ToList();
+            return IsConst(nonVisibilityModifiers) || HasOnlyPrivateModifier(fieldNode) ?
                 null :
-                new[] { CreatePrivateField(fieldNode, GetNonVisibilityModifiers(fieldNode)) };
+                new[] { CreatePrivateField(fieldNode, nonVisibilityModifiers) };
         }
-
-        private static FieldDeclarationSyntax CreatePrivateField(FieldDeclarationSyntax fieldNode, IEnumerable<SyntaxToken> nonVisibilityModifiers) => 
-            fieldNode.WithModifiers(new SyntaxTokenList(new[] { SyntaxFactory.Token(SyntaxKind.PrivateKeyword) }))
-                .AddModifiers(nonVisibilityModifiers.ToArray())
-                .NormalizeWhitespace()
-                .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed);
 
         public SyntaxNode GetReplaceableNode(SyntaxToken token) =>
             SyntaxNodeHelper.FindAncestorOfType<FieldDeclarationSyntax>(token);
@@ -48,6 +43,15 @@ namespace Refactoring.Refactorings.IllegalFieldAccess
         public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
             new[] {SyntaxKind.FieldDeclaration};
         
+        private static bool IsConst(IEnumerable<SyntaxToken> nonVisibilityModifiers) =>
+            nonVisibilityModifiers.Any(modifier => modifier.Text == "const");
+
+        private static FieldDeclarationSyntax CreatePrivateField(FieldDeclarationSyntax fieldNode, IEnumerable<SyntaxToken> nonVisibilityModifiers) =>
+            fieldNode.WithModifiers(new SyntaxTokenList(new[] { SyntaxFactory.Token(SyntaxKind.PrivateKeyword) }))
+                .AddModifiers(nonVisibilityModifiers.ToArray())
+                .NormalizeWhitespace()
+                .WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed);
+
         private static IEnumerable<string> GetVisibilityModifiers() =>
             new[] { "private", "public", "protected", "internal" };
 

@@ -81,6 +81,18 @@ namespace RefactoringTesting
         }
 
         [TestMethod]
+        public void PublicConstFieldTest()
+        {
+            TestCodeFix("class X { public const int a; }", string.Empty);
+        }
+
+        [TestMethod]
+        public void ProtectedConstFieldTest()
+        {
+            TestCodeFix("class X { protected const float b; }", string.Empty);
+        }
+
+        [TestMethod]
         public void MixedVisibilityTest()
         {
             TestCodeFix("class X { private int a; }", string.Empty);
