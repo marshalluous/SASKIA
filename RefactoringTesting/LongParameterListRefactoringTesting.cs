@@ -35,11 +35,17 @@ namespace RefactoringTesting
         [TestMethod]
         public void FourParameterMethodTest()
         {
-            TestParameterList("public void X(int x, int y, int z, int a) { }", true, 4);
+            TestParameterList("public void X(int x, int y, int z, int a) { }", false, 4);
         }
 
         [TestMethod]
         public void FiveParameterMethodTest()
+        {
+            TestParameterList("public void X(int x, int y, int z, int a, bool b) { }", true, 5);
+        }
+        
+        [TestMethod]
+        public void SixParameterMethodTest()
         {
             TestParameterList("public void X(int x, int y, int z, int a, bool b) { }", true, 5);
         }

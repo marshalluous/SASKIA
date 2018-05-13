@@ -10,7 +10,7 @@ namespace Refactoring.Refactorings.LongParameterList
 {
     public sealed class LongParameterListRefactoring : IRefactoring
     {
-        private const int ParameterCountThreshold = 3;
+        private const int ParameterCountThreshold = 4;
 
         public string DiagnosticId => RefactoringId.LongParameterList.GetDiagnosticId();
         public string Title => RefactoringMessages.LongParameterListTitle();
