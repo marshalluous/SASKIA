@@ -94,7 +94,7 @@ namespace RefactoringTesting
         {
             TestCodeFix("var x = ~34;", (~34).ToString());
         }
-
+        
         private static void TestCodeFix(string inputCode, string expectedNodeText)
         {
             TestHelper.TestCodeFix<BinaryExpressionSyntax>(new IntegerConstantSimplifierRefactoring(), inputCode, expectedNodeText, FindNode);

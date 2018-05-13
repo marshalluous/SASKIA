@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,19 +23,29 @@ namespace Refactoring.Refactorings.IntegerConstantSimplifier
         public DiagnosticInfo DoDiagnosis(SyntaxNode node)
         {
             var parentValue = EvaluateValue(node.Parent);
-            if (node is LiteralExpressionSyntax || parentValue != null)
+
+            if (node is LiteralExpressionSyntax || parentValue != null || IsUnaryMinusLiteral(node))
                 return DiagnosticInfo.CreateSuccessfulResult();
+            
             var value = EvaluateValue(node);
-            return value == null ? 
+            return value == null ?
                 DiagnosticInfo.CreateSuccessfulResult() :
                 DiagnosticInfo.CreateFailedResult(RefactoringMessages.IntegerConstantSimplifierMessage(value.Value));
         }
-        
+
+        private static bool IsUnaryMinusLiteral(SyntaxNode node) => 
+            node is PrefixUnaryExpressionSyntax prefixNode &&
+            prefixNode.OperatorToken.Kind() == SyntaxKind.MinusToken &&
+            node.ChildNodes().Count() == 1 &&
+            node.ChildNodes().First() is LiteralExpressionSyntax;
+
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var value = EvaluateValue(node);
+
             if (value == null || node is LiteralExpressionSyntax)
                 return null;
+
             var literal = SyntaxFactory.Literal(value.Value);
             return new [] { SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, literal) };
         }
