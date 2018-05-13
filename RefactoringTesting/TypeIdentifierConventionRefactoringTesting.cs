@@ -125,6 +125,12 @@ namespace RefactoringTesting
             TestInterfaceNameFix("IMarcelStocker", "IMarcelStocker");
         }
 
+        [TestMethod]
+        public void AllowNumbersInTypeName()
+        {
+            TestClassNameFix("Utf8", "Utf8");
+        }
+
         private static void TestEnumNameFix(string enumName, string expectedEnumName)
         {
             TestTypeFix<EnumDeclarationSyntax>("enum", enumName, expectedEnumName);
@@ -144,7 +150,7 @@ namespace RefactoringTesting
         {
             TestTypeFix<StructDeclarationSyntax>("struct", structName, expectedStructName);
         }
-
+        
         private static void TestDelegateNameFix(string delegateName, string expectedDelegateName)
         {
             var delegateCode = "delegate void " + delegateName + "();";

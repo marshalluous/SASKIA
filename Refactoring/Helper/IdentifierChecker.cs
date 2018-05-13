@@ -9,7 +9,7 @@ namespace Refactoring.Helper
         public static bool IsUpperCamelCase(string identifierName)
         {
             var wordList = WordSplitter.GetSplittedWordList(identifierName);
-            return wordList.All(word => char.IsUpper(word[0]));
+            return wordList.All(word => char.IsUpper(word[0]) || char.IsDigit(word[0]));
         }
 
         public static bool IsLowerCamelCase(string identifierName)
