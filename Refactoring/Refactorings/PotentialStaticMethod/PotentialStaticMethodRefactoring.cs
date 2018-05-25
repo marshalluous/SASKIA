@@ -25,14 +25,15 @@ namespace Refactoring.Refactorings.PotentialStaticMethod
         public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
         {
             var methodNode = (MethodDeclarationSyntax)node;
-            var classNode = (ClassDeclarationSyntax)node.Parent;
-            var semanticModel = SemanticSymbolBuilder.GetSemanticModel(classNode);
+            var typeNode = (BaseTypeDeclarationSyntax)node.Parent;
+            var semanticModel = SemanticSymbolBuilder.GetSemanticModel(typeNode);
 
             if (MethodIsStatic(methodNode) || !MethodIsPrivate(methodNode))
                 return null;
 
-            var classSymbol = semanticModel.GetDeclaredSymbol(classNode);
-            return IsPotentialStaticMethod(methodNode.Body, semanticModel, classSymbol) ? new[] { StaticMethodNode(methodNode) } : null;
+            var typeSymbol = semanticModel.GetDeclaredSymbol(typeNode);
+            return IsPotentialStaticMethod(methodNode.Body, semanticModel, typeSymbol) ? 
+                new[] { StaticMethodNode(methodNode) } : null;
         }
 
         private static MethodDeclarationSyntax StaticMethodNode(MethodDeclarationSyntax methodNode) => 

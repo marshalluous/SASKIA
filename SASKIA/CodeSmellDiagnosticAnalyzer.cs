@@ -52,7 +52,7 @@ namespace SASKIA
                 context.ReportDiagnostic(diagnostic);
                 
                 var location = diagnostic.Location;
-                /*
+
                 var fileName = location?.SourceTree?.FilePath;
                 var line = location?.GetLineSpan().StartLinePosition.Line;
                 var column = location?.GetLineSpan().StartLinePosition.Character;
@@ -60,14 +60,14 @@ namespace SASKIA
                 
                 File.AppendAllText(@"C:\temp\evaluation.csv",
                     GetType().Name + ";" + context.Compilation.Assembly + ";" + fileName + ";" + line + ";" + column + ";" +
-                    diagnosticInfo.AdditionalInformation + ";" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "\r\n");*/
+                    diagnosticInfo.AdditionalInformation + ";" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "\r\n");
             }
             catch (Exception exception)
             {
                 if (exception is IOException)
                     return;
 
-                File.AppendAllText(@"log.txt", GetType().Name + ": " + exception + "\r\n");
+                File.AppendAllText(@"C:\temp\log.txt", GetType().Name + ": " + exception + "\r\n");
             }
         }
 
