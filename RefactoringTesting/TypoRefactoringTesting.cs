@@ -265,6 +265,5 @@ namespace RefactoringTesting
                 "}";
             TypoTest<MethodDeclarationSyntax>(new TypoRefactoring(), source, "private void Room_Count(){}");
         }
-
     }
 }
