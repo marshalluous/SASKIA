@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Refactoring.Helper
+namespace Refactoring.SyntaxTreeHelper
 {
     internal sealed class PureExpressionCheckerVisitor : CSharpSyntaxVisitor<bool>
     {

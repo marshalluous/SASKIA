@@ -194,7 +194,6 @@
     <Compile Include="DiagnosticInfo.cs" />
     <Compile Include="Refactorings\DictionaryRefactoring\TypoRefactoring.cs" />
     <Compile Include="SyntaxTreeHelper\SyntaxNodeHelper.cs" />
-    <Compile Include="Refactorings\DictionaryRefactoring\TypoRefactoringVisitor.cs" />
     <Compile Include="Refactorings\DictionaryRefactoring\WordTypeRefactoring.cs" />
     <Compile Include="Refactorings\IfAndElseBlockEquals\IfAndElseBlockEqualsRefactoring.cs" />
     <Compile Include="Refactorings\IfReturnBoolean\IfReturnBooleanRefactoring.cs" />

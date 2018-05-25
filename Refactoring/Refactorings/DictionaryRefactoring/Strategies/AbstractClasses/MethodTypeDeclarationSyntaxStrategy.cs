@@ -2,7 +2,6 @@
 using System.Data.SQLite;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Refactoring.Helper;
 using Refactoring.WordHelper;
 
 namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses
@@ -14,10 +13,10 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClas
             var wordTypeChecker = new WordTypeChecker(database);
             var words = WordSplitter.GetSplittedWordList(identifierText);
             var hasVerb = words.Any(wordTypeChecker.IsVerb);
-            var additionalInfo = nameof(MethodTypeDeclarationSyntaxStrategy) + "." + nameof(DiagnoseWordType);
+            const string additionalInfo = nameof(MethodTypeDeclarationSyntaxStrategy) + "." + nameof(DiagnoseWordType);
             return hasVerb ?
                 DiagnosticInfo.CreateSuccessfulResult() : 
-                DiagnosticInfo.CreateFailedResult($"Missing verb in identifier", additionalInfo, syntaxToken.GetLocation());
+                DiagnosticInfo.CreateFailedResult("Missing verb in identifier", additionalInfo, syntaxToken.GetLocation());
         }
 
         internal override IEnumerable<SyntaxNode> EvaluateWordType(SyntaxNode syntaxNode, SQLiteConnection database)

@@ -14,7 +14,7 @@ namespace Refactoring.Helper
 
         public static bool IsLowerCamelCase(string identifierName)
         {
-            var wordList = WordSplitter.GetSplittedWordList(identifierName);
+            var wordList = WordSplitter.GetSplittedWordList(identifierName).ToList();
             return char.IsLower(wordList[0][0]) && wordList.Skip(1).All(word => char.IsUpper(word[0]));
         }
 

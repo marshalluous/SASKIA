@@ -9,7 +9,7 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 	internal sealed class FieldDeclarationSyntaxStrategy : FieldTypeDeclarationSyntaxStrategy
     {
 		internal override IEnumerable<string> IgnorableWords => new List<string>();
-		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>> { };
+		internal override IDictionary<string, List<string>> DefaultSuggestions => new Dictionary<string, List<string>>();
 		internal override string NamePrefix => "_";
 
 		internal override Type BaseType { get; }

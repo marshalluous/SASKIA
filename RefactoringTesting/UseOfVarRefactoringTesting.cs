@@ -9,6 +9,12 @@ namespace RefactoringTesting
     public sealed class UseOfVarRefactoringTesting
     {
         [TestMethod]
+        public void PolymorphismTest()
+        {
+            TestCodeFix("Vehicle vehicle = new Car();", string.Empty);
+        }
+
+        [TestMethod]
         public void SimpleLocalVariableWithoutAssignmentTest()
         {
             TestCodeFix("int x;", string.Empty);
@@ -53,7 +59,8 @@ namespace RefactoringTesting
         
         private static void TestCodeFix(string declaration, string refactoredDeclaration)
         {
-            var source = "class X { void Y() { " + declaration + " } }";
+            var source = "class X { void Y() { " + declaration + " } }" +
+                         "class Vehicle {} class Car : Vehicle {}";
             TestHelper.TestCodeFix<LocalDeclarationStatementSyntax>
                 (new UseOfVarRefactoring(), source, refactoredDeclaration);
         }

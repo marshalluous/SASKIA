@@ -134,7 +134,7 @@
             "Simplify negated binary operation expression";
 
         public static string NotOperatorInversionMessage() =>
-            $"Negated binary operation expression can be simplified";
+            "Negated binary operation expression can be simplified";
 
         /* LackOfCohesion */
         public static string LackOfCohesionTitle() =>

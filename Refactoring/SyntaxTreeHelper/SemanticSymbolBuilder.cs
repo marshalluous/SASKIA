@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Refactoring.Helper
+namespace Refactoring.SyntaxTreeHelper
 {
 	public static class SemanticSymbolBuilder
 	{

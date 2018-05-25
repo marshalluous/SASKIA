@@ -65,9 +65,24 @@ namespace Refactoring.Refactorings.UseOfVar
             if (IsConstVariable(variableNode) || declarationType == null ||
                 declaration.Variables.Count != 1 || declarationType.IsValueType)
                 return false;
-
             var variable = declaration.Variables.First();
-            return variable.Initializer != null && !declaration.Type.IsVar;
+            var typeNode = SyntaxNodeHelper
+                .FindAncestorOfType<BaseTypeDeclarationSyntax>(declaration.GetFirstToken());
+
+            return variable.Initializer != null && 
+                   CheckConvertedType(variable, typeNode) && 
+                   typeNode != null && variable.Initializer != null && 
+                   !declaration.Type.IsVar;
+        }
+
+        private static bool CheckConvertedType(VariableDeclaratorSyntax variable, BaseTypeDeclarationSyntax typeNode)
+        {
+            var semanticModel = SemanticSymbolBuilder.GetSemanticModel(typeNode);
+            var typeInfo = semanticModel.GetTypeInfo(variable.Initializer?.Value);
+
+            return typeInfo.Type != null && 
+                   typeInfo.ConvertedType != null && 
+                   typeInfo.Type == typeInfo.ConvertedType;
         }
 
         private static ITypeSymbol GetDeclarationType(VariableDeclarationSyntax declaration)

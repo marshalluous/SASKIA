@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 
-namespace Refactoring.Helper
+namespace Refactoring.WordHelper
 {
     internal sealed class WordTypeChecker
 	{

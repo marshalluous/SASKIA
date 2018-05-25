@@ -2,15 +2,13 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
-using Refactoring.SyntaxTreeHelper;
 using Refactoring.WordHelper;
 
 namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 {
-	sealed class TypoRefactoringStrategy : DictionaryClass, IRefactoringBaseStrategy
+	internal sealed class TypoRefactoringStrategy : DictionaryClass, IRefactoringBaseStrategy
 	{
 		private AbstractRefactoringStrategy strategy;
 
@@ -27,7 +25,7 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 				namePrefixPresent = true;
 			}
 
-			allWords = WordSplitter.GetSplittedWordList(identifier);
+			allWords = WordSplitter.GetSplittedWordList(identifier).ToList();
 			return EvaluateTypo(allWords);
 		}
 
@@ -38,7 +36,7 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 			if (!typoCheckResult.IsIdentifierCorrectable)
 				return DiagnosticInfo.CreateSuccessfulResult();
 
-		    var additionalInfo = nameof(TypoRefactoringStrategy) + "." + nameof(Diagnose);
+		    const string additionalInfo = nameof(TypoRefactoringStrategy) + "." + nameof(Diagnose);
             var suggestionsAsString = "Suggestions:\n" + typoCheckResult.Suggestions.Aggregate((x, y) => $"{x}\r\n{y}");
 			return DiagnosticInfo.CreateFailedResult($"{description}: {typoCheckResult.AffectedWord}.\n{suggestionsAsString}",
 			    additionalInfo, syntaxToken.GetLocation());
@@ -52,7 +50,7 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 				return null;
 
 			var suggestion = typoCheckResult.Suggestions.First();
-			string newIdentifier = ConcatNewIdentifier(allWords, suggestion, typoCheckResult.AffectedWord);
+			var newIdentifier = ConcatNewIdentifier(allWords, suggestion, typoCheckResult.AffectedWord);
 
 			if (namePrefixPresent)
 			{
@@ -66,22 +64,24 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 		{
 			var affectedIndex = allWords.FindIndex(word => word == affectedWord);
 			return allWords
-				.Select(word => (CompareIndex(allWords, word, affectedIndex) ? suggestion : word))
+				.Select(word => CompareIndex(allWords, word, affectedIndex) ? suggestion : word)
 				.Aggregate((accumulated, word) => accumulated + word);
 		}
 
 		private static bool CompareIndex(List<string> allWords, string word, int affectedIndex)
 		{
-			return (allWords.FindIndex(w => w == word) == affectedIndex);
+			return allWords.FindIndex(w => w == word) == affectedIndex;
 		}
 
 		private TypoCheckResult EvaluateTypo(IEnumerable<string> wordList)
 		{
 			var hunspell = new HunspellEngine();
+		    var checkableWordList = wordList
+		        .Where(word => word.Length > 1)
+		        .Where(word => !strategy.IgnorableWords.Contains(word));
 
-			foreach (var word in wordList.Where(w => hunspell.HasTypo(w)))
+			foreach (var word in checkableWordList.Where(w => hunspell.HasTypo(w)))
 			{
-				if (strategy.IgnorableWords.Contains(word)) continue;
 				return new TypoCheckResult(word, true, strategy.DefaultSuggestions.ContainsKey(word) ? strategy.DefaultSuggestions[word] : hunspell.GetSuggestions(word,5));
 			}
 			
@@ -89,9 +89,9 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 		}
 
 
-		public void RegisterStrategy(AbstractRefactoringStrategy strategy)
+		public void RegisterStrategy(AbstractRefactoringStrategy newStrategy)
 		{
-			this.strategy = strategy;
+		    strategy = newStrategy;
 		}
 
 		private sealed class TypoCheckResult
@@ -104,7 +104,7 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 			}
 
 			public string AffectedWord { get; }
-			public bool TypoFound { get; }
+		    private bool TypoFound { get; }
 			public List<string> Suggestions { get; }
 			public bool IsIdentifierCorrectable => TypoFound && Suggestions != null;
 		}

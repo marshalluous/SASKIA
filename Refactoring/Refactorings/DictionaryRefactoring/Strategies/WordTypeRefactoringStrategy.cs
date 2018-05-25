@@ -9,9 +9,9 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies
 	{
 		private AbstractRefactoringStrategy strategy;
 
-		public void RegisterStrategy(AbstractRefactoringStrategy strategy)
+		public void RegisterStrategy(AbstractRefactoringStrategy newStrategy)
 		{
-			this.strategy = strategy;
+			strategy = newStrategy;
 		}
 
 		public DiagnosticInfo Diagnose(SyntaxNode syntaxNode, string description)

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Refactoring.WordHelper
 {
@@ -8,13 +7,34 @@ namespace Refactoring.WordHelper
 	{
 		public static string GetLastWord(string input) => 
 		    GetSplittedWordList(input).Last();
+        
+	    public static IEnumerable<string> GetSplittedWordList(string identifier)
+	    {
+	        var word = string.Empty;
+            
+	        foreach (var currentChar in identifier)
+	        {
+	            if (char.IsUpper(currentChar))
+	            {
+	                if (!string.IsNullOrEmpty(word))
+	                    yield return word;
+	                word = string.Empty;
+                }
 
-	    public static List<string> GetSplittedWordList(string input)
-		{
-			var words = Regex
-				.Replace(input, @"(\p{Ll})(\P{Ll})", "$1 $2")
-				.Replace("_","_ ");
-			return words.Split(' ').ToList();
-		}
+	            if (currentChar == '_')
+	            {
+	                if (!string.IsNullOrEmpty(word))
+	                    yield return word;
+	                yield return "_";
+	                word = string.Empty;
+	            }
+	            else
+	            {
+	                word += currentChar;
+                }
+	        }
+
+	        yield return word;
+	    }
 	}
 }

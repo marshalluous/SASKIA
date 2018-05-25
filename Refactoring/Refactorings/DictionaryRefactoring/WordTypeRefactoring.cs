@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Refactoring.Helper;
 using Refactoring.Refactorings.DictionaryRefactoring.Strategies;
+using Refactoring.WordHelper;
 
 namespace Refactoring.Refactorings.DictionaryRefactoring
 {
@@ -14,26 +15,20 @@ namespace Refactoring.Refactorings.DictionaryRefactoring
 
 		public IEnumerable<SyntaxKind> GetSyntaxKindsToRecognize() =>
 			new[] { SyntaxKind.ClassDeclaration, SyntaxKind.InterfaceDeclaration, SyntaxKind.EnumDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.MethodDeclaration };
-
-
+        
 		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			GetReplaceableNode(token);
 
-		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
-		{
-			var strategy = DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
-			return strategy.Diagnose(node, Description);
-		}
+		public DiagnosticInfo DoDiagnosis(SyntaxNode node) => 
+		    Strategy(node).Diagnose(node, Description);
 
-		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
-		{
-			var strategy = DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
-			return strategy.EvaluateNodes(node);
-		}
+	    public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) => 
+		    Strategy(node).EvaluateNodes(node);
 
-		public SyntaxNode GetReplaceableNode(SyntaxToken token)
-		{
-			return token.Parent;
-		}
+	    private static IRefactoringBaseStrategy Strategy(SyntaxNode node) => 
+            DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(WordTypeRefactoringStrategy));
+
+	    public SyntaxNode GetReplaceableNode(SyntaxToken token) => 
+	        token.Parent;
 	}
 }

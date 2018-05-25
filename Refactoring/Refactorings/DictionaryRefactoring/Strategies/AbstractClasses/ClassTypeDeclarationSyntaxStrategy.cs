@@ -3,9 +3,7 @@ using System.Data.SQLite;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
-using Refactoring.SyntaxTreeHelper;
 using Refactoring.WordHelper;
 
 namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses
@@ -28,27 +26,25 @@ namespace Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClas
             var wordTypechecker = new WordTypeChecker(database);
             var clearedSuggestions = FilterNouns(suggestions, wordTypechecker);
 
-            if (clearedSuggestions.Count > 0)
-            {
-                var newIdentifier = syntaxToken.Text.Replace(lastWord, clearedSuggestions.Last());
-                return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(newIdentifier)) };
-            }
+            if (clearedSuggestions.Count <= 0)
+                return new[] {syntaxNode};
 
-            return new[] { syntaxNode };
+            var newIdentifier = syntaxToken.Text.Replace(lastWord, clearedSuggestions.Last());
+            return new[] { syntaxNode.ReplaceToken(syntaxToken, SyntaxFactory.Identifier(newIdentifier)) };
         }
 
-        private static List<string> FilterNouns(List<string> suggestions, WordTypeChecker wordTypechecker)
+        private static List<string> FilterNouns(IEnumerable<string> suggestions, WordTypeChecker wordTypechecker)
         {
             var clearedSuggestions = new List<string>();
             var counter = 0;
 
             foreach (var word in suggestions)
             {
-                if (wordTypechecker.IsNoun(word))
-                {
-                    clearedSuggestions.Add(word);
-                    if (++counter >= 5) break;
-                }
+                if (!wordTypechecker.IsNoun(word))
+                    continue;
+
+                clearedSuggestions.Add(word);
+                if (++counter >= 5) break;
             }
 
             return clearedSuggestions;

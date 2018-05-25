@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Refactorings.DictionaryRefactoring.Strategies;
 using Refactoring.Refactorings.DictionaryRefactoring.Strategies.AbstractClasses;
 
-namespace Refactoring.Helper
+namespace Refactoring.WordHelper
 {
     internal sealed class DictionaryRefactoringFactory
 	{

@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactoring.Helper;
 using Refactoring.Refactorings.DictionaryRefactoring.Strategies;
 using Refactoring.SyntaxTreeHelper;
+using Refactoring.WordHelper;
 
 namespace Refactoring.Refactorings.DictionaryRefactoring
 {
@@ -18,24 +19,19 @@ namespace Refactoring.Refactorings.DictionaryRefactoring
 			new[] { SyntaxKind.ClassDeclaration, SyntaxKind.InterfaceDeclaration, SyntaxKind.MethodDeclaration,
 				SyntaxKind.VariableDeclarator, SyntaxKind.PropertyDeclaration, SyntaxKind.FieldDeclaration };
 
-		public DiagnosticInfo DoDiagnosis(SyntaxNode node)
-		{
-			var strategy = DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(TypoRefactoringStrategy));
-			return strategy.Diagnose(node, Description);
-		}
+		public DiagnosticInfo DoDiagnosis(SyntaxNode node) => 
+		    Strategy(node).Diagnose(node, Description);
 
-		public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node)
-        {
-			var strategy = DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(TypoRefactoringStrategy));
-			return strategy.EvaluateNodes(node);
-		}
+	    public IEnumerable<SyntaxNode> GetFixableNodes(SyntaxNode node) => 
+		    Strategy(node).EvaluateNodes(node);
 
-		public SyntaxNode GetReplaceableNode(SyntaxToken token)
-		{
-			return token.Parent;
-		}
+	    private static IRefactoringBaseStrategy Strategy(SyntaxNode node) => 
+	        DictionaryRefactoringFactory.GetStrategy(node.GetType(), typeof(TypoRefactoringStrategy));
 
-		public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
+	    public SyntaxNode GetReplaceableNode(SyntaxToken token) => 
+	        token.Parent;
+
+	    public SyntaxNode GetReplaceableRootNode(SyntaxToken token) =>
 			SyntaxNodeHelper.FindAncestorOfType<ClassDeclarationSyntax>(token);
 	}
 }
